@@ -1,7 +1,7 @@
 # Economy
 
-> **Status 2026-11-13:** [Payouts](#payouts) and the [economy pass](#economy-pass) are built;
-> the pass is untested in game. Unlocks, challenges and what money buys are in [Progression](./Progression.md).
+> **Status 2026-11-13:** [Payouts](#payouts) and the [economy pass](#economy-pass) are built
+> and played; pacing is checked by the [tests](#tests). Unlocks, challenges and what money buys are in [Progression](./Progression.md).
 
 - [Today](#today)
 - [Payouts](#payouts)
@@ -61,12 +61,12 @@ Built.
 
 ## Economy pass
 
-Built 2026-11-13, untested. [Today](#today) describes the game before it.
+Built and played 2026-11-13. [Today](#today) describes the game before it.
 
 - **Raise payouts, don't cut prices.** Bikes stay well above cosmetics. Starting money and
   prices don't change.
-- **No difficulty tiers.** Every event shares the default base; payouts ramp with rider
-  **level** instead:
+- **No difficulty tiers.** Every event shares the default base (except crash launch, below);
+  payouts ramp with rider **level** instead:
   `(event base × place mult + score × rate) × level mult`.
 - **Level mult:** `1 + 0.5 × (level − 1)`, linear, no cap. It nearly cancels each level costing
   more XP than the last, so each level settles at ~6 wins instead of slowing to a crawl.
@@ -80,6 +80,9 @@ Built 2026-11-13, untested. [Today](#today) describes the game before it.
 - **Mode balance:** all modes pay about the same; stunt race pays the most, through score
   (more tricks = more money); crash launch pays the least. Crash launch's score runs ~10× the
   others, so its `_payout_score` scales it down rather than adding a per-mode rate.
+- **Balanced per minute, not per event.** Crash launch runs ~37 s against ~70 s for the others,
+  so at the shared base it paid ~2× per minute. Its event definition in `stunt_city.tscn`
+  overrides the base to $110 / 28 XP.
 - **Tutorial** keeps its existing one-off payout.
 
 **Numbers:**
@@ -91,7 +94,8 @@ Built 2026-11-13, untested. [Today](#today) describes the game before it.
 | `PAYOUT_SCORE_MONEY_RATE` | 0.01 | 0.08 |
 | `PAYOUT_SCORE_XP_RATE` | 0.02 | 0.02 |
 | Level mult step (new constant) | — | 0.5 |
-| Crash launch `_payout_score` | `_score` | `_score / 20` |
+| Crash launch `_payout_score` | `_score` | `_score × PAYOUT_SCORE_SCALE` (0.05) |
+| Crash launch event base (`stunt_city.tscn`) | $100 / 50 XP | $110 / 28 XP |
 
 **A level 1 win** (scores read off real results screens):
 
@@ -100,7 +104,7 @@ Built 2026-11-13, untested. [Today](#today) describes the game before it.
 | Stunt race, trick heavy | ~1,500 | — | ~$320 / 80 XP |
 | Stunt race | 770 | $107 / 65 XP | $262 / 65 XP |
 | Trick battle | 425 | $104 / 58 XP | $234 / 58 XP |
-| Crash launch | 4,517 | $145 / 140 XP | $218 / 54 XP |
+| Crash launch | 4,517 | $145 / 140 XP | $128 / 32 XP |
 
 Multiply by the level mult: ×1.5 at level 2, ×3 at level 5.
 
@@ -119,14 +123,34 @@ Targets to tune toward. Prices, levels and payout bases are set on the definitio
 - Three dailies are worth about ten races of XP.
 - Cosmetics are cheap next to bikes, so buying one doesn't wreck the bike savings.
 
-**The pass against the targets** (hand-simulated: a rider who wins most events at ~770-score
-stunt race payouts; one event ≈ 1–1.5 min):
+**The pass against the targets**, for the "regular" profile in `test_economy_pacing.gd` (rerun
+it for current numbers):
 
-- Level 2 after ~2 events; level 5 after ~13.
-- Naked bought around event 6.
-- Sport: ~event 23 if naked was bought first (≈ 30 min, on target); ~event 14 if the rider
-  saves straight for it (faster than target).
+- Naked at ~8 min; level 6 after 30 min.
+- Sport: ~32 min if naked was bought first (on target); ~20 min if the rider saves straight for
+  it (faster than target; raising sport's `unlock_level` from 5 to 6 is the likely fix).
 - The 100%er hour can't be sized until challenges, variants and mods pay and cost something.
+
+
+## Tests
+
+GUT (`addons/gut`, excluded from exports), in `tests/unit/`:
+
+```
+<godot> --headless --path . -s addons/gut/gut_cmdln.gd
+```
+
+- `test_payouts.gd`: the formula's shape (`RunnerGameMode.place_payout` / `level_payout`).
+- `test_economy_pacing.gd`: beginner / regular / pro **profiles** (what they ride in each mode,
+  where they place) play the demo's events through the real payout, `ComboRules` and level code,
+  then shop for bikes from a new save. It prints a table of payouts per mode and per minute and
+  minutes until each bike, and asserts the [Pacing](#pacing) targets. "regular" is calibrated to
+  real results screens. Scoring tunables are read from `main_game.tscn`, event payouts from
+  `stunt_city.tscn`, prices and starting money from the `.tres` files. To rebalance: change the
+  numbers, rerun, read the table.
+- **Event timing:** `RunnerGameMode` logs `[economy]` lines (start, results, earn, restart, end,
+  with seconds from `DebugUtils.TimerStart` / `TimerSecs`) to `user://godot*.log`. The sim's
+  per-mode minutes come from them; replay events and update `MODES` when events change length.
 
 
 ## Later

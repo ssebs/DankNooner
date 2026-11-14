@@ -10,6 +10,8 @@ static var auto_join := "--autojoin" in OS.get_cmdline_user_args()
 ## Console `dbg_gamepad_prompts`: show gamepad glyphs on keyboard/mouse. Display only, input is untouched.
 static var gamepad_prompts := false
 
+## key -> Time.get_ticks_msec() at TimerStart.
+static var _timers: Dictionary[String, int] = {}
 static var prof_enabled := false  # PROF: temp - set from PlayerEntity.debug_prof
 static var _prof: Dictionary[String, Vector3i] = {}  # key -> (total_usec, calls, max_usec)  # PROF: temp
 static var _prof_window_start_ms := 0  # PROF: temp
@@ -25,6 +27,18 @@ static func DebugMsg(s: String, should_print: bool = true):
 static func DebugErrMsg(s: String, should_print: bool = true):
 	if should_print:
 		printerr(s)
+
+
+## Start (or restart) a named wall-clock stopwatch; read it with TimerSecs.
+static func TimerStart(key: String) -> void:
+	_timers[key] = Time.get_ticks_msec()
+
+
+## Seconds since TimerStart(key); -1 if it was never started (e.g. before the session's first event).
+static func TimerSecs(key: String) -> float:
+	if !_timers.has(key):
+		return -1.0
+	return (Time.get_ticks_msec() - _timers[key]) / 1000.0
 
 
 ## Whether a node's inspector debug toggle is live: set in a debug build, or forced by a flag.

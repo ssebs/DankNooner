@@ -46,6 +46,7 @@
   - [x] wipe old saves
   - [x] lock bikes behind XP level
   - [ ] update economy (XP+$ for events / scoring calculations)
+    - [ ] add unit tests
     - [ ] SAVE TO NEW DOC
 
 ### Steam Prep

@@ -146,6 +146,8 @@ script = ExtResource("24_l8nu3")
 name = "EVENT_CRASH_LAUNCH_NAME"
 description = "EVENT_CRASH_LAUNCH_DESC"
 target_gamemode = 9
+payout_money = 110
+payout_xp = 28
 metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
 [sub_resource type="Resource" id="Resource_mn4lr"]

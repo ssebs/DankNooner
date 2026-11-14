@@ -47,7 +47,8 @@
 >   sounds come later. Traffic rolls every skin, which is fine.
 > - Answered 2026-11-10: characters are price-only; naked and sport both need a rider level;
 >   Claude drafts the challenge lists for the user to edit; stats cover a broad Career page.
-> - Still open: the actual level numbers for naked and sport (economy pass).
+> - Still open: sport's level gate. The economy pass kept naked at 2 and sport at 5; the pacing
+>   test suggests 6 (see [Economy](./Economy.md#pacing)).
 
 > **Demo scope.** The full release adds a story on top ([Story](./Story.md)); the big map's plans
 > are in TODO's New Large Map. Neither is covered here.
@@ -94,7 +95,8 @@ free roam and in events, unlocks that show progress, and money to spend on what 
   priced `FreeRoamActivity`s and fuel-up pumps (`SaveManager.spend`), and earned from event
   [payouts](./Economy.md#payouts) (`SaveManager.earn`).
 - `PlayerDefinition.xp` is earned the same way. `level()` derives the rider level shown on the
-  riding HUD from `XP_PER_LEVEL`; each level costs more than the last. It gates nothing yet.
+  riding HUD from `XP_PER_LEVEL`; each level costs more than the last. It gates bikes
+  (`unlock_level`).
 - `current_save["progression"]` holds per-event time attack PBs and `owned` skin paths.
   `TimeAttackComponent` and `RunnerGameMode.rpc_earn` are the pattern for writing a client's save
   from a server-run event: the server RPCs each client, which writes its own save.
@@ -294,5 +296,5 @@ tricks for unique challenges, and the tutorial (which comes before all of this f
 
 ## Open questions
 
-- **Bike level gates:** the rider levels for naked and sport (economy pass).
+- **Bike level gates:** sport at 5 or 6 (see [Economy](./Economy.md#pacing)).
 - **Gamba wheel** on level up (in TODO): out for now.

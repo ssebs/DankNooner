@@ -31,6 +31,13 @@ func Enter(state_context: StateContext):
 	var ctx := state_context as GamemodeStateContext
 	_event = ctx.event
 	_payouts.clear()
+	DebugUtils.DebugMsg(
+		(
+			"[economy] start %s '%s', %.0fs since the last event ended"
+			% [name, _event.definition.name, DebugUtils.TimerSecs("economy_event_end")]
+		)
+	)
+	DebugUtils.TimerStart("economy_event")
 	if shows_event_props():
 		_event.get_circle().set_active_event(_event)
 	_runners = _event.get_runners()
@@ -56,6 +63,8 @@ func Update(delta: float):
 func Exit(_state_context: StateContext):
 	if Engine.is_editor_hint():
 		return
+	DebugUtils.DebugMsg("[economy] end %s after %.0fs" % [name, DebugUtils.TimerSecs("economy_event")])
+	DebugUtils.TimerStart("economy_event_end")
 	gamemode_manager.player_crashed.disconnect(_on_player_crashed)
 	gamemode_manager.player_disconnected.disconnect(_on_player_disconnected)
 	gamemode_manager.player_latejoined.disconnect(_on_player_latejoined)
@@ -183,31 +192,51 @@ func _payout_score(_peer_id: int) -> float:
 	return 0.0
 
 
+## Money or XP for finishing at `place` (0 = 1st): base × place multiplier + score × rate, before
+## level_payout. In score modes, a 0 score gets the floor multiplier whatever its place.
+static func place_payout(
+	base: int, score_rate: float, place: int, score: float, is_score_mode: bool
+) -> int:
+	var mults := UtilsConstants.PAYOUT_PLACE_MULTS
+	var is_ranked := place < mults.size() and (score > 0.0 or !is_score_mode)
+	var mult := mults[place] if is_ranked else UtilsConstants.PAYOUT_PLACE_FLOOR
+	return int(base * mult + score * score_rate)
+
+
+## A payout scaled by the rider's level, so later levels don't slow to a crawl (see Economy.md).
+static func level_payout(amount: int, level: int) -> int:
+	return int(amount * (1.0 + UtilsConstants.PAYOUT_LEVEL_MULT_STEP * (level - 1)))
+
+
 ## Pays each rider by their row in `data` (rows are ranked, NPCs included) plus _payout_score.
-## In score modes, a 0 score gets the floor multiplier whatever its row.
 func _pay_out(data: ResultsData):
 	_payouts.clear()
 	var def := _event.definition
-	var mults := UtilsConstants.PAYOUT_PLACE_MULTS
 	for place in data.rows.size():
 		var peer_id: int = data.rows[place].get("_peer_id", 0)
 		# NPC rows don't get paid — skip is intentional
 		if !lobby_manager.lobby_players.has(peer_id):
 			continue
 		var score := _payout_score(peer_id) if _is_score_mode() else 0.0
-		var is_ranked := place < mults.size() and (score > 0.0 or !_is_score_mode())
-		var mult := mults[place] if is_ranked else UtilsConstants.PAYOUT_PLACE_FLOOR
-		var money := int(def.payout_money * mult + score * UtilsConstants.PAYOUT_SCORE_MONEY_RATE)
-		var xp := int(def.payout_xp * mult + score * UtilsConstants.PAYOUT_SCORE_XP_RATE)
+		var money_rate := UtilsConstants.PAYOUT_SCORE_MONEY_RATE
+		var xp_rate := UtilsConstants.PAYOUT_SCORE_XP_RATE
+		var money := place_payout(def.payout_money, money_rate, place, score, _is_score_mode())
+		var xp := place_payout(def.payout_xp, xp_rate, place, score, _is_score_mode())
+		DebugUtils.DebugMsg("[economy] results peer %d: place %d, score %.0f" % [peer_id, place, score])
 		earn(peer_id, money, xp)
 
 
 ## Server: pay one rider, scaled by their rider level, and add it to their results columns.
 func earn(peer_id: int, money: int, xp: int):
 	var player_def := lobby_manager.lobby_players[peer_id]
-	var level_mult := 1.0 + UtilsConstants.PAYOUT_LEVEL_MULT_STEP * (player_def.level() - 1)
-	money = int(money * level_mult)
-	xp = int(xp * level_mult)
+	money = level_payout(money, player_def.level())
+	xp = level_payout(xp, player_def.level())
+	DebugUtils.DebugMsg(
+		(
+			"[economy] earn peer %d: $%d, %d XP at level %d, %.0fs into %s"
+			% [peer_id, money, xp, player_def.level(), DebugUtils.TimerSecs("economy_event"), name]
+		)
+	)
 	# Saves don't re-push metadata mid-race, so keep the server's copy of the level current
 	player_def.xp += xp
 	var payout: Dictionary = _payouts.get_or_add(peer_id, {"money": 0, "xp": 0})
@@ -285,6 +314,8 @@ func _on_results_restart_pressed():
 	results_hud.rpc_hide.rpc()
 	# Already stopped (results show only after all_completed), unless restart races the countdown.
 	_stop_active_runner()
+	DebugUtils.DebugMsg("[economy] restart %s after %.0fs" % [name, DebugUtils.TimerSecs("economy_event")])
+	DebugUtils.TimerStart("economy_event")
 	_restart()
 
 

@@ -310,7 +310,8 @@ launch from the bike wins each heat.
 - **Heat end:** every rider has launched, or `heat_timeout_secs` (counted from the grid) runs out and
   the stragglers score nothing.
 - **Score:** distance × `points_per_meter` plus `placement_points` by heat rank, summed over the
-  heats, plus `longest_launch_bonus` for the match's longest launch. Payout reads that score.
+  heats, plus `longest_launch_bonus` for the match's longest launch. Payout reads that score
+  scaled by `PAYOUT_SCORE_SCALE` (see [Economy](./Economy.md#economy-pass)).
 - **HUD:** heat + time left on the progress line once the countdown ends; the live board shows total
   and this heat's distance; results show total and best launch. Cancel Event goes straight to free
   roam.

@@ -114,6 +114,7 @@ Broadcast RPCs are server-only and must reject non-server senders. See
 - [PlayerController](./planning_docs/PlayerController.md) — physics, gearbox, crash, tricks, rollback
 - [AnimationController](./planning_docs/AnimationController.md) — pose pipeline, procedural animation, IK, ragdoll
 - [ComboAndBoost](./planning_docs/ComboAndBoost.md) — trick combos, boost economy, scoring, tunables
+- [Economy](./planning_docs/Economy.md) — payouts, rider level, pacing targets, economy tests
 - [GamemodeSystem](./planning_docs/GamemodeSystem.md) — gamemode taxonomy, task/runner system
 - [LobbyGameFlowMP](./planning_docs/LobbyGameFlowMP.md) — host/join through game start
 - [Skins](./planning_docs/Skins.md) — slot-based color customization, bike/character definitions

@@ -15,6 +15,9 @@ class_name CrashLaunchGameMode extends RunnerGameMode
 @export var placement_points: PackedInt32Array = PackedInt32Array([300, 200, 150, 100, 50])
 @export var longest_launch_bonus: int = 500
 
+## Points run ~10× the other score modes; scaled so crash launch pays the least (see Economy.md).
+const PAYOUT_SCORE_SCALE: float = 0.05
+
 var _heat: int = 0
 var _heat_time_left: float = 0.0
 var _refresh_accum: float = 0.0
@@ -144,9 +147,8 @@ func _is_score_mode() -> bool:
 
 
 #override
-## Points run ~10× the other score modes; scaled so crash launch pays the least (see Economy.md).
 func _payout_score(peer_id: int) -> float:
-	return _score(peer_id) / 20.0
+	return _score(peer_id) * PAYOUT_SCORE_SCALE
 
 
 func _ranked_peer_ids() -> Array:
