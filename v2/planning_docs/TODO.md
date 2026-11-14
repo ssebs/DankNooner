@@ -27,6 +27,10 @@
 > Don't forget, have fun :D
 - [ ] [WIP MISC](_ScratchPad.md)
 
+- [ ] in game popups fight the pause/menus. too easy to roll thru them, or close on accident and have to drive back over it
+  - [ ] if console is open, no other input should work![alt text](<Screenshot 2026-11-11 at 22.26.28.png>)
+
+
 - [ ] new profile component
   - [x] show in-game instead of current stacked counters
   - [x] should always be clickable
@@ -35,8 +39,11 @@
   - [x] list leaderboard in expandable panel under it
   - [x] move profile customization (username) to under the profile/saves page
   - [ ] list career in expandable panel under it
-  - [ ] use actual challenges instead of placeholders
   - [ ] controller support
+  - [ ] profile/saves menu:
+    - [ ] challenges should show on right 1/4 screen
+    - [ ] tabs take up 3/4 of screen: Save Slots, Career (stats), Bike Challenges
+  - [ ] use actual challenges instead of placeholders
 
 - [ ] dbg_unlock_all (lots of $/xp/all things unlocked/1 loadout per bike)
 

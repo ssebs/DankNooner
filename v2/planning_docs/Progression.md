@@ -266,7 +266,7 @@ A new menu, reachable from the main, play, lobby and pause menus:
 The pause menu also shows challenge progress. The garage must show a lock state with its
 requirement next to the price; locked items can't be bought.
 
-**Idea:** the main menu's profile card (`CurrentSaveCard`, top right) could show the dailies or
+**Idea:** the main menu's profile card (`ProfileCard`, top right) could show the dailies or
 Career at a glance (e.g. daily progress under the level and money), or open the Career / Daily
 pages on click. It opens the Saves menu today, so this needs deciding.
 
@@ -288,7 +288,7 @@ the cloud pattern, never colliding with a full save. Each build lists only its o
   asks first. An empty card is a big `+` that starts a new save there and makes it active.
 - **Preview:** `SavePreview`, a `SubViewport` posing a `RiderVisual`, drawn once each time the
   menu opens. Never written to disk.
-- **Main menu** shows the active save top right (`CurrentSaveCard`, replacing the old greeting):
+- **Main menu** shows the active save top right (`ProfileCard`, replacing the old greeting):
   the rider in a circle, level and money, the save name small. Clicking it opens the Saves menu.
 - **Old versions** (any `version` but `save_version`) are grayed out, show their version, and can
   only be deleted. A migrate button comes later.

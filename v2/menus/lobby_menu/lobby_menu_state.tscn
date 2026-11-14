@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" path="res://menus/lobby_menu/level_select_panel.tscn" id="3_lspanel"]
 [ext_resource type="Script" uid="uid://muodw5580tnr" path="res://addons/tattomoosa.spinner/spinner.gd" id="4_wpkl5"]
 [ext_resource type="PackedScene" path="res://menus/lobby_menu/lobby_panel.tscn" id="6_lpanel"]
-[ext_resource type="PackedScene" path="res://menus/main_menu/components/current_save_card.tscn" id="7_card"]
+[ext_resource type="PackedScene" path="res://menus/main_menu/components/profile_card.tscn" id="7_card"]
 
 [node name="LobbyMenuState" type="Node" unique_id=1093433336]
 script = ExtResource("1_1jh13")

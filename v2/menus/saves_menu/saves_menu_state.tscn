@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://menus/saves_menu/saves_menu_state.gd" id="1_saves"]
 [ext_resource type="Theme" path="res://resources/themes/DankNoonerNeon.tres" id="2_theme"]
-[ext_resource type="PackedScene" path="res://menus/main_menu/components/current_save_card.tscn" id="3_card"]
+[ext_resource type="PackedScene" path="res://menus/main_menu/components/profile_card.tscn" id="3_card"]
 
 [node name="SavesMenuState" type="Node"]
 script = ExtResource("1_saves")

@@ -11,7 +11,7 @@
 [ext_resource type="Script" path="res://player/hud_elements/target_compass.gd" id="99_tcmps"]
 [ext_resource type="Script" path="res://player/hud_elements/trick_stick_indicator.gd" id="99_tstik"]
 [ext_resource type="PackedScene" uid="uid://b1thmb3dtnail" path="res://utils/components/thumbnail_3d.tscn" id="99_thumb"]
-[ext_resource type="PackedScene" path="res://menus/main_menu/components/current_save_card.tscn" id="99_card"]
+[ext_resource type="PackedScene" path="res://menus/main_menu/components/profile_card.tscn" id="99_card"]
 [ext_resource type="Script" path="res://player/hud_elements/trick_feed.gd" id="99_tfeed"]
 [ext_resource type="Script" path="res://player/hud_elements/loadout_bar.gd" id="99_ldbar"]
 

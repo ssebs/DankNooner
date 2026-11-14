@@ -1,6 +1,6 @@
 [gd_scene format=3]
 
-[ext_resource type="Script" path="res://menus/main_menu/components/current_save_card.gd" id="1_card"]
+[ext_resource type="Script" path="res://menus/main_menu/components/profile_card.gd" id="1_card"]
 [ext_resource type="PackedScene" path="res://menus/saves_menu/components/save_preview.tscn" id="2_preview"]
 [ext_resource type="Script" path="res://player/hud_elements/money_label.gd" id="3_money"]
 [ext_resource type="Texture2D" path="res://resources/img/Icons/arrowUp.png" id="4_arrow"]
@@ -51,7 +51,7 @@ border_color = Color(0.255, 0.686, 1, 0.5)
 corner_radius_bottom_right = 16
 corner_radius_bottom_left = 16
 
-[node name="CurrentSaveCard" type="VBoxContainer"]
+[node name="ProfileCard" type="VBoxContainer"]
 mouse_filter = 2
 theme_override_constants/separation = 0
 script = ExtResource("1_card")

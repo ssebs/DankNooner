@@ -2,7 +2,7 @@
 ## opens the Saves menu (main + pause menus). The caret drops a panel with two tabs: up to
 ## MAX_CHALLENGES ChallengeRows, and the live leaderboard (fed by RidingHUDState). Open/closed and
 ## the tab are shared by every card for the run, so the pause menu's pick is what the HUD shows.
-class_name CurrentSaveCard extends VBoxContainer
+class_name ProfileCard extends VBoxContainer
 
 signal pressed
 

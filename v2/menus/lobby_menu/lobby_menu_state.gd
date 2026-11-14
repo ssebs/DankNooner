@@ -21,7 +21,7 @@ const AUTO_HOST_LOBBY_SIZE := 2
 
 @onready var back_btn: Button = %BackBtn
 @onready var level_select_panel: LevelSelectPanel = %LevelSelectPanel
-@onready var profile_card: CurrentSaveCard = %ProfileCard
+@onready var profile_card: ProfileCard = %ProfileCard
 @onready var customize_btn: Button = %CustomizeBtn
 
 @onready var lobby_panel: LobbyPanel = %LobbyPanel

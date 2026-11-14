@@ -12,7 +12,7 @@ const SAVE_CARD_SCENE := preload("res://menus/saves_menu/components/save_card.ts
 
 @onready var _bg_tint: ColorRect = %BGTint
 @onready var _username_edit: LineEdit = %UsernameEdit
-@onready var _profile_card: CurrentSaveCard = %ProfileCard
+@onready var _profile_card: ProfileCard = %ProfileCard
 @onready var _cards: HBoxContainer = %Cards
 @onready var _close_btn: Button = %CloseBtn
 @onready var _confirm_box: Control = %ConfirmBox

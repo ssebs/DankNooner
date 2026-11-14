@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://menus/customize_menu/components/garage_ui.gd" id="1_ui"]
 [ext_resource type="Theme" path="res://resources/themes/DankNoonerNeon.tres" id="2_theme"]
-[ext_resource type="PackedScene" path="res://menus/main_menu/components/current_save_card.tscn" id="3_card"]
+[ext_resource type="PackedScene" path="res://menus/main_menu/components/profile_card.tscn" id="3_card"]
 [ext_resource type="PackedScene" path="res://player/hud_elements/input_prompt.tscn" id="5_prompt"]
 [ext_resource type="Script" path="res://utils/tour/tour.gd" id="6_tour"]
 [ext_resource type="Script" path="res://utils/tour/tour_step.gd" id="7_tourstep"]

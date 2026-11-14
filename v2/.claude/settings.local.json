@@ -21,7 +21,35 @@
       "Bash(gdlint *)",
       "Bash(python -)",
       "Bash(git log *)",
-      "PowerShell(gdlint *)"
+      "PowerShell(gdlint *)",
+      "Bash(git status *)",
+      "Bash(git log)",
+      "Bash(git show *)",
+      "Bash(git diff *)",
+      "Bash(git ls-files *)",
+      "Bash(git ls-tree *)",
+      "Bash(git blame *)",
+      "Bash(git rev-parse *)",
+      "Bash(git branch --list *)",
+      "Bash(git stash list *)",
+      "PowerShell(git status *)",
+      "PowerShell(git log *)",
+      "PowerShell(git show *)",
+      "PowerShell(git diff *)",
+      "PowerShell(git ls-files *)",
+      "PowerShell(git ls-tree *)",
+      "PowerShell(git blame *)",
+      "PowerShell(git rev-parse *)"
+    ],
+    "ask": [
+      "Bash(git commit *)",
+      "Bash(git add *)",
+      "Bash(git rm *)",
+      "Bash(git push *)",
+      "PowerShell(git commit *)",
+      "PowerShell(git add *)",
+      "PowerShell(git rm *)",
+      "PowerShell(git push *)"
     ]
   }
 }

@@ -22,7 +22,7 @@ class_name MainMenuState extends MenuState
 @onready var discord_btn: Button = %DiscordBtn
 @onready var wishlist_btn: Button = %WishlistBtn
 @onready var version_label: Label = %VersionLabel
-@onready var current_save_card: CurrentSaveCard = %CurrentSaveCard
+@onready var profile_card: ProfileCard = %ProfileCard
 @onready var steam_status_label: Label = %SteamStatusLabel
 
 
@@ -49,7 +49,7 @@ func Enter(_state_context: StateContext):
 	ui.show()
 	play_btn.pressed.connect(_on_play_btn_pressed)
 	settings_btn.pressed.connect(_on_settings_btn_pressed)
-	current_save_card.pressed.connect(_on_save_card_pressed)
+	profile_card.pressed.connect(_on_save_card_pressed)
 	quit_btn.pressed.connect(_on_quit_btn_pressed)
 	customize_btn.pressed.connect(_on_customize_btn_pressed)
 	tricks_btn.pressed.connect(_on_tricks_btn_pressed)
@@ -59,7 +59,7 @@ func Enter(_state_context: StateContext):
 	steam_manager.invite_received.connect(_on_invite_received)
 
 	# The save being played; switched from the Saves menu, so refreshed on every Enter.
-	current_save_card.show_save(
+	profile_card.show_save(
 		save_manager.save_slot, save_manager.current_save, save_manager.get_player_definition()
 	)
 	steam_status_label.visible = steam_manager.is_logged_in()
@@ -81,7 +81,7 @@ func Exit(_state_context: StateContext):
 
 	play_btn.pressed.disconnect(_on_play_btn_pressed)
 	settings_btn.pressed.disconnect(_on_settings_btn_pressed)
-	current_save_card.pressed.disconnect(_on_save_card_pressed)
+	profile_card.pressed.disconnect(_on_save_card_pressed)
 	quit_btn.pressed.disconnect(_on_quit_btn_pressed)
 	customize_btn.pressed.disconnect(_on_customize_btn_pressed)
 	tricks_btn.pressed.disconnect(_on_tricks_btn_pressed)

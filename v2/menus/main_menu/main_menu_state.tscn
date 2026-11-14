@@ -5,7 +5,7 @@
 [ext_resource type="Shader" uid="uid://bfe77je5epdua" path="res://resources/shaders/soft_shadow.gdshader" id="3_shadow"]
 [ext_resource type="Material" path="res://resources/shaders/vignette.tres" id="4_vignette"]
 [ext_resource type="Texture2D" uid="uid://b7mda1eajtkqe" path="res://resources/img/Logos/DankNoonerLogo_TextIconOnly.png" id="6_lw7v1"]
-[ext_resource type="PackedScene" path="res://menus/main_menu/components/current_save_card.tscn" id="8_card"]
+[ext_resource type="PackedScene" path="res://menus/main_menu/components/profile_card.tscn" id="8_card"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_shadow"]
 shader = ExtResource("3_shadow")
@@ -87,7 +87,7 @@ grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
 
-[node name="CurrentSaveCard" parent="UI/AspectContainer/Content/MarginContainer" unique_id=1293896951 instance=ExtResource("8_card")]
+[node name="ProfileCard" parent="UI/AspectContainer/Content/MarginContainer" unique_id=1293896951 instance=ExtResource("8_card")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 8

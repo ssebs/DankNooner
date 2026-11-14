@@ -35,7 +35,7 @@ const PAUSE_ICON := preload("res://resources/img/Icons/pause.png")
 @onready var prev_song_btn: Button = %PrevSongBtn
 @onready var play_pause_btn: Button = %PlayPauseBtn
 @onready var skip_song_btn: Button = %SkipSongBtn
-@onready var profile_card: CurrentSaveCard = %ProfileCard
+@onready var profile_card: ProfileCard = %ProfileCard
 
 @onready var bg_tint: ColorRect = %BGTint
 

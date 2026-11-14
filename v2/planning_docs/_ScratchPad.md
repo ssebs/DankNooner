@@ -25,8 +25,6 @@ Make a hoodie
 ## NOW
 
 
-- [ ] in game popups fight the pause/menus. too easy to roll thru them, or close on accident and have to drive back over it
-  - [ ] if console is open, no other input should work![alt text](<Screenshot 2026-11-11 at 22.26.28.png>)
 
 
 ---

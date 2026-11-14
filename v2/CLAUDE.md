@@ -21,7 +21,7 @@ answer. Prefer deleting over adding.
 - Use spatial comments (debug notes in levels) for in-world documentation
 - Don't remove TODO comments unless you're implementing the whole system.
 - Use `DebugUtils.DebugMsg()` for debug/print statements
-- Don't run `gh` or `git` commands
+- Read-only `git` commands (status/log/show/diff) are fine; never commit/add/rm/push without explicit approval. Don't run `gh`.
 - Follow existing patterns, do not add duplicate logic that is found in another file / controller.
 - Do NOT GUESS, VERIFY BY READING EXISTING CODE.
 - Do NOT GUESS, if a decision on how something should work needs to be decided then ask first.

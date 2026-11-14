@@ -7,7 +7,7 @@
 [ext_resource type="Texture2D" path="res://resources/img/Icons/previous.png" id="5_prev"]
 [ext_resource type="Texture2D" path="res://resources/img/Icons/pause.png" id="6_pause"]
 [ext_resource type="Texture2D" path="res://resources/img/Icons/next.png" id="7_next"]
-[ext_resource type="PackedScene" path="res://menus/main_menu/components/current_save_card.tscn" id="8_card"]
+[ext_resource type="PackedScene" path="res://menus/main_menu/components/profile_card.tscn" id="8_card"]
 
 [sub_resource type="StyleBoxLine" id="StyleBoxLine_divider"]
 color = Color(0.149, 0.389, 0.577, 1)
