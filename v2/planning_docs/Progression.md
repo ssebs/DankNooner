@@ -1,59 +1,14 @@
 # Progression
 
-> **WIP 2026-11-10: bike type split + skin variants.** Working on [New systems](#new-systems)
-> step 1 only. Gamba wheel is out for now.
+> **Status 2026-11-13:** see [Built](#built), [Next](#next) and [3D models to make](#3d-models-to-make).
+> Gamba wheel is out for now.
 >
-> **Built (scooter ridden and working 2026-11-10; the other types not re-checked):**
-> - `BikeTypeDefinition` (`resources/bikes/bike_type_definition.gd`) holds the Collision,
->   Gearing, Physics, Tricks and Surfaces groups. The mini, naked and sport `.tres` files in
->   `resources/bikes/types/` carry the old per-bike values. Documented in
->   [Skins](./Skins.md#biketypedefinition).
-> - `BikeSkinDefinition.bike_type` plus read-only forwarders, so callers didn't change.
->   `to_dict`/`from_dict` didn't change either: the type comes with the base def.
-> - **Scooter** (mini type): `player/bikes/scenes/scooter_bike.tscn` and
->   `resources/bikes/skins/scooter_skin_definition.tres`. Mesh scale, offset and wheel markers
->   were computed from the glb. Markers placed by hand. `Top`'s origin must sit on the centreline
->   with zero rotation, because the game overwrites its rotation to steer.
->
-> - **Cruiser** (naked type): `cruiser_bike.tscn` + `cruiser_skin_definition.tres`, built
->   and working 2026-11-10. The glb faces +X and is unscaled, so the skin rotates it -90° and
->   scales it to 0.14; its wheels spin on +Z. Paint is its own material (surface 2) on the
->   body and `Top`; the textured surface 0 stays as is. Markers other than the wheels are copied from the naked bike.
->
-> - **Rider-level gate** (steps 2 + 7, bikes only), built 2026-11-10, untested.
->   `BikeSkinDefinition.unlock_level` + `SaveManager.is_locked()`. Locked garage rows are
->   disabled, show "🔒 Lvl N · $price", and still preview. Mini is free; naked, cruiser and sport
->   are gated, sport higher. `BikeMod.price` has a default (`ColorMod` is 0). New saves start on the
->   mini (`default_player_definition.tres`). Deferred to step 4: the finished-list requirement for variants and mastery gates for mods.
-> - **Save version 2** (`SaveManager.save_version`): a save with another version isn't loaded,
->   so pre-gate saves don't keep bikes they never bought. It stays on disk, grayed out in the
->   [Saves menu](#save-slots); boot starts a new save in a free slot. Settings
->   (`settings.json`) are untouched.
-> - **Saves menu** ([Save slots](#save-slots), step 8): built 2026-11-10, untested.
->
-> **Next:** the retro sport bike (Street Vendor Cart stand-in), once the model is split in Blender.
->
-> **Blender edits needed** for the stand-in (it's one mesh; `bike_skin.gd`
-> needs a steering node for the handlebar IK proxy, and wheel nodes for spin):
-> - Split out separate objects for `FrontWheel`, `RearWheel` and a `Handlebars`/`RotationPoint`
->   that parents the bars, fork and front wheel. Pivots go at the wheel axles and the steering
->   head. This matches Grom (`RotationPoint/FrontWheel`, `RearWheel`) and naked (`Handlebars/FontWheel`).
-> - Split the paintable body into its own object or material slot.
-> - Optional: a separate taillight object, for the brake light and boost trail.
-> - Steering node: origin on the centreline, zero rotation (the game overwrites it).
->
-> **Open questions:**
-> - **Variant audio:** engine sound is per skin already (`engine_sound_id` + pitch/curves); new
->   sounds come later. Traffic rolls every skin, which is fine.
-> - Answered 2026-11-10: characters are price-only; naked and sport both need a rider level;
->   Claude drafts the challenge lists for the user to edit; stats cover a broad Career page.
-> - Still open: sport's level gate. The economy pass kept naked at 2 and sport at 5; the pacing
->   test suggests 6 (see [Economy](./Economy.md#pacing)).
-
 > **Demo scope.** The full release adds a story on top ([Story](./Story.md)); the big map's plans
 > are in TODO's New Large Map. Neither is covered here.
-> Built: [payouts](./Economy.md#payouts), the garage shop, money + XP. Everything else is the plan.
 
+- [Built](#built)
+- [Next](#next)
+- [3D models to make](#3d-models-to-make)
 - [Goal](#goal)
 - [The loop](#the-loop)
 - [What exists](#what-exists)
@@ -70,6 +25,80 @@
 - [New systems](#new-systems)
 - [Avoid](#avoid)
 - [Open questions](#open-questions)
+
+
+## Built
+
+Steps refer to [New systems](#new-systems).
+
+- **Bike type split** (step 1): `BikeTypeDefinition` holds simulation (collision, gearing,
+  physics, tricks, surfaces); skins point at their type. See [Skins](./Skins.md#biketypedefinition).
+- **Skins:** mini (Grom, scooter), naked (naked, cruiser), sport (sport).
+- **Rider-level gate** (steps 2 + 7, bikes only): `BikeSkinDefinition.unlock_level` +
+  `SaveManager.is_locked()`. Locked garage rows show "🔒 Lvl N · $price" and still preview. New
+  saves start on the mini.
+- **Save version 2 + Saves menu** (step 8): old-version saves are kept but grayed out; see
+  [Save slots](#save-slots).
+- **Economy pass** (step 10): level-ramped payouts, tested and balanced per minute. See
+  [Economy](./Economy.md).
+- **UI shells, on stub data:** the profile card's Challenges / Career tabs (`profile_card.gd`
+  `STUB_CHALLENGES`, `STUB_CAREER`) and the Saves menu's Career and Bike Challenges tabs
+  (`saves_menu_state.gd` `_STUB_BIKE_CHALLENGES`).
+- **Console:** `dbg_set_money`, `dbg_set_level`, `dbg_unlock_all`.
+
+
+## Next
+
+In build order:
+
+1. **Stats tracker** (step 3): everything challenges count comes from it.
+2. **Challenges** (step 4): per-bike-type lists + mastery, then dailies. Completion pays through
+   `SaveManager.earn` and plays the [completion](#completion) juice.
+3. **Unlock requirements, the rest of step 2:** mastery level gates mods; a finished list gates a
+   type's other skins.
+4. **Swap the UI stubs for real data** (step 6), plus the pause menu's challenge progress.
+5. **Console commands** (step 9): `add_bike_level <type> <levels>`, `unlock_bike_max <type>`.
+6. **Steam stats + achievements** (step 5): full build only.
+7. **Level-up callout:** a HUD moment naming what a level just unlocked (see
+   [Economy](./Economy.md#later)).
+
+Still open:
+
+- **What mastery unlocks.** Only `ColorMod` exists, so the mod ladder needs content (below)
+  before mastery can reward anything. Deciding later.
+- **Sport's level gate:** 5 or 6 (see [Economy](./Economy.md#pacing)).
+- **Variant audio:** engine sound is per skin already (`engine_sound_id` + pitch/curves); new
+  sounds come later.
+
+
+## 3D models to make
+
+**Bike skins** (unlocked by finishing the type's challenge list):
+
+| Type | Skin | State |
+|---|---|---|
+| Mini | Bicycle | No model |
+| Naked | ADV | No model |
+| Sport | Retro sport | No model |
+| Sport | Street vendor cart | Model exists (one mesh); needs the split below |
+
+**Bike mods** (the mastery ladder; examples from [Bike challenges](#bike-challenges-and-mastery)):
+wheelie bar, exhaust, training wheels. Each needs attach markers on every bike skin, since an
+unlocked mod fits any bike. Textures are mods too, but they aren't models.
+
+**Every bike skin needs** (`bike_skin.gd` drives these):
+
+- Separate objects for `FrontWheel`, `RearWheel` and a steering node (`Handlebars` /
+  `RotationPoint`) that parents the bars, fork and front wheel. Pivots at the wheel axles and the
+  steering head. Matches Grom (`RotationPoint/FrontWheel`, `RearWheel`) and naked
+  (`Handlebars/FontWheel`).
+- The steering node's origin on the centreline with zero rotation (the game overwrites it).
+- The paintable body as its own object or material slot.
+- Optional: a separate taillight object, for the brake light and boost trail.
+
+Lessons from the scooter and cruiser: an unscaled or +X-facing glb is fixed on the skin (the
+cruiser rotates -90° and scales to 0.14; its wheels spin on +Z), and markers can be copied from a
+same-type bike apart from the wheels.
 
 
 ## Goal
@@ -119,7 +148,7 @@ Earning, payouts, rider level and pacing targets are in [Economy](./Economy.md).
 |---|---|---|
 | Mini bike (Grom) | owned on a new save | — |
 | Naked, sport bikes | rider level (sport's is higher) | bought with $ |
-| Other skins of a type | finishing that type's challenge list | bought with $ |
+| Other skins of a type | finishing that type's challenge list (until challenges exist: cruiser uses a rider level, scooter is price-only) | bought with $ |
 | Bike mods | bike-type mastery level | bought with $ (default $200) |
 | Characters | nothing | bought with $ |
 | Horns | nothing | bought with $ |
@@ -133,13 +162,12 @@ them; each skin places its own attach markers.
 
 Three types, each with skins that share its stats:
 
-- **Mini:** Grom; bicycle.
+- **Mini:** Grom; scooter, bicycle.
 - **Naked:** naked; cruiser, ADV.
-- **Sport:** sport; retro sport.
+- **Sport:** sport; retro sport, street vendor cart.
 
 The first skin is the one you buy; the rest unlock when the type's challenge list is finished.
-Today `BikeSkinDefinition` holds both the look and the stats, so the stats move to a shared
-per-type resource (see [New systems](#new-systems)).
+Skins share their type's stats through `BikeTypeDefinition` ([Built](#built)).
 
 
 ## Challenges
@@ -296,5 +324,6 @@ tricks for unique challenges, and the tutorial (which comes before all of this f
 
 ## Open questions
 
-- **Bike level gates:** sport at 5 or 6 (see [Economy](./Economy.md#pacing)).
+See [Next](#next).
+
 - **Gamba wheel** on level up (in TODO): out for now.
