@@ -51,13 +51,12 @@
 
 > **Demo scope.** The full release adds a story on top ([Story](./Story.md)); the big map's plans
 > are in TODO's New Large Map. Neither is covered here.
-> Built: [payouts](#payouts), the garage shop, money + XP. Everything else is the plan.
+> Built: [payouts](./Economy.md#payouts), the garage shop, money + XP. Everything else is the plan.
 
 - [Goal](#goal)
 - [The loop](#the-loop)
 - [What exists](#what-exists)
 - [Economy](#economy)
-	- [Pacing](#pacing)
 	- [What's locked](#whats-locked)
 - [Bike types and skins](#bike-types-and-skins)
 - [Challenges](#challenges)
@@ -67,7 +66,6 @@
 - [Stats and achievements](#stats-and-achievements)
 - [Challenges menu](#challenges-menu)
 - [Save slots](#save-slots)
-- [Payouts](#payouts)
 - [New systems](#new-systems)
 - [Avoid](#avoid)
 - [Open questions](#open-questions)
@@ -82,7 +80,7 @@ free roam and in events, unlocks that show progress, and money to spend on what 
 ## The loop
 
 - **Money buys, levels unlock.** Most things must be unlocked first, then bought with $.
-- **Events** pay money + XP (see [Payouts](#payouts)). They're the main income.
+- **Events** pay money + XP (see [Payouts](./Economy.md#payouts)). They're the main income.
 - **Challenges** pay money + XP and level up the bike type you did them on. Bike levels unlock
   mods and, at the top, the type's other skins.
 - **Dailies** are short challenges that rotate each day, a bonus on top of events.
@@ -94,7 +92,7 @@ free roam and in events, unlocks that show progress, and money to spend on what 
 
 - `PlayerDefinition.money` is spent on garage skins and horns (`SaveManager.purchase`) and on
   priced `FreeRoamActivity`s and fuel-up pumps (`SaveManager.spend`), and earned from event
-  [payouts](#payouts) (`SaveManager.earn`).
+  [payouts](./Economy.md#payouts) (`SaveManager.earn`).
 - `PlayerDefinition.xp` is earned the same way. `level()` derives the rider level shown on the
   riding HUD from `XP_PER_LEVEL`; each level costs more than the last. It gates nothing yet.
 - `current_save["progression"]` holds per-event time attack PBs and `owned` skin paths.
@@ -111,64 +109,7 @@ free roam and in events, unlocks that show progress, and money to spend on what 
 
 ## Economy
 
-### XP and money today
-
-- **Where it comes from:** only event [payouts](#payouts) and time attack laps. Free roam,
-  challenges and dailies pay nothing yet. No event overrides the `payout_money` / `payout_xp`
-  defaults on `GameModeEventDefinition`, so every event pays the same base.
-- **Rider level** is derived from total XP (`PlayerDefinition.level()`, `XP_PER_LEVEL`); each level
-  costs more XP than the last. Reaching a level pays nothing and plays nothing; it only lifts
-  bike `unlock_level` gates and shows on the riding HUD.
-- **Money** starts at the default definition's amount and is spent in the garage, on priced free
-  roam activities and on fuel-ups.
-- **Off target:** with flat payouts, the gated bikes take far longer to afford than
-  [Pacing](#pacing) wants.
-
-**Next:**
-1. [Economy pass](#economy-pass): payouts that ramp with rider level, sized to the pacing
-   targets. Planned, not built.
-2. Challenges and dailies as a second income (steps 3 and 4), which also unlock variants and mods.
-3. A level-up moment: a HUD callout when a level is crossed, naming anything it just unlocked.
-   Not designed yet.
-
-### Economy pass
-
-Decided 2026-11-10, not built.
-
-- **Raise payouts, don't cut prices.** Bikes stay well above cosmetics.
-- **No difficulty tiers.** Every event shares one base payout; it ramps with the rider's
-  **level** instead: `(event base × place multiplier + score × rate) × level multiplier`. This
-  changes the [payout](#payouts) formula. The level multiplier also offsets each level costing
-  more XP than the last, so levels don't slow to a crawl.
-- **Demo scope:** only Stunt City ships, so the demo's events are its stunt races, track race,
-  time attacks, trick battle and crash launch. One event runs about 30 s to 2 min.
-- **Tutorial** keeps its existing one-off payout.
-
-Open, to settle before building:
-
-- **Score magnitudes:** the user reads score and earned columns off a few stunt race and trick
-  battle results screens. The score rates are tuned so the score adds to the base without
-  swamping it.
-- **Multiplier shape:** linear per level (simplest), capped or not.
-- **Where the server gets the level:** payouts are computed on the server, so it needs each
-  rider's level. Check whether the lobby's synced player data carries `xp` before adding
-  anything.
-- **The numbers:** event base money and XP, the level multiplier, and starting money, sized
-  against [Pacing](#pacing) with a quick simulation of a grinder and a 100%er.
-
-### Pacing
-
-Targets to tune toward. Prices, levels and payout bases are set on the definitions.
-
-- A new save owns the mini bike, at rider level 1, with starting money that buys neither of the
-  other bikes.
-- The naked bike is a short save-up plus a low rider level.
-- A player grinding toward the sport bike gets it in about **30 minutes** of events.
-- A 100%er (every bike, variant, mod and challenge) takes about **an hour**; challenges and mods
-  add to the run beyond events.
-- Payouts ramp with rider level (see [Economy pass](#economy-pass)), not with event difficulty.
-- Three dailies are worth about ten races of XP.
-- Cosmetics are cheap next to bikes, so buying one doesn't wreck the bike savings.
+Earning, payouts, rider level and pacing targets are in [Economy](./Economy.md).
 
 ### What's locked
 
@@ -298,32 +239,6 @@ the cloud pattern, never colliding with a full save. Each build lists only its o
   are left.
 
 
-## Payouts
-
-Built.
-
-- **Formula:** `event base × place multiplier + score × rate`, computed separately for money and
-  XP. Place multipliers fall off from 1st, with a floor for everyone below the podium. Score
-  only applies in score modes (stunt race, trick battle, long jump); pure races and stunt
-  challenges pay on placement alone. In score modes a rider who scored 0 gets the floor whatever
-  their row, so idling never pays 1st.
-- **Tunables:** the base money and XP are per event, on `GameModeEventDefinition`. Place
-  multipliers, score rates and the time attack lap fraction are shared constants.
-- **Placement** is the rider's row on the results screen they see, NPCs included, so beating
-  bots counts.
-- **Where:** the server computes it in `RunnerGameMode._show_results()`, which every
-  results-showing mode goes through. It RPCs each rider, whose client writes its own save via
-  `RunnerGameMode.rpc_earn`, which also pops `+$N` and `+N XP` off the riding HUD. The results
-  screen shows the earned money and XP columns. Modes add score through the `_payout_score`
-  override (`TimedScoreGameMode`, stunt races).
-- **Time attack** never reaches the results screen: every lap pays a fraction of the base, and a
-  lap that beats the rider's saved PB pays the full base on top. Laps pay through
-  `RunnerGameMode.earn`, so the point-to-point run screen shows the event's earnings so far.
-- **Doesn't pay:** free roam, fuel-up, and events the host cancels without results. Late joiners
-  who never raced aren't in the results, so they get nothing. (Challenges finished in free roam
-  still pay their own reward.)
-
-
 ## New systems
 
 A sketch for whoever builds this, roughly in build order. Calls marked *(builder)* are open to a
@@ -362,7 +277,7 @@ better idea; the rest were decided.
    `add_player_xp <amount>`, `add_bike_level <type> <levels>` (completes that many of the
    type's challenges, since mastery comes from challenges, not XP) and `unlock_bike_max <type>`.
    They write the save like normal progress, so the unlocks behave the same as earned ones.
-10. **Economy pass.** The level-ramped payout (see [Economy pass](#economy-pass)), bike prices and
+10. **Economy pass.** The level-ramped payout (see [Economy pass](./Economy.md#economy-pass)), bike prices and
    level gates, daily rewards, starting money on `default_player_definition.tres`.
 
 Depends on, but isn't part of this: NPC racer AI difficulty ramping with event difficulty, more

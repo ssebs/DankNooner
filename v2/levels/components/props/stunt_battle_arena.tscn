@@ -5,7 +5,9 @@
 [ext_resource type="PackedScene" uid="uid://rervqxotioc4" path="res://levels/components/props/ramp.tscn" id="3_gaum0"]
 [ext_resource type="PackedScene" uid="uid://p7r6xx2hxd7u" path="res://levels/components/props/corkscrew.tscn" id="4_a1dn2"]
 [ext_resource type="PackedScene" uid="uid://cv3uyj3m3nj6t" path="res://levels/components/pickups/pickup_spawner.tscn" id="5_a1dn2"]
+[ext_resource type="Script" uid="uid://dsfcoucwjtequ" path="res://resources/props/pickup_item_definition.gd" id="6_5xhch"]
 [ext_resource type="PackedScene" uid="uid://dtckadkd3wndc" path="res://levels/assets/props/grind_rail.tscn" id="6_aoo65"]
+[ext_resource type="Resource" uid="uid://cqeidudggyae1" path="res://levels/components/pickups/gas_can_pickup_definition.tres" id="7_71v1n"]
 
 [node name="TrickBattleArena" type="Node3D" unique_id=1920932027]
 
@@ -62,22 +64,26 @@ width = 128
 
 [node name="PickupSpawner1" parent="Spawners" unique_id=761218876 instance=ExtResource("5_a1dn2")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.5, 0, -0.035714)
-count = 14
+items = Array[ExtResource("6_5xhch")]([ExtResource("7_71v1n")])
+count = 4
 spacing = 4.77
 
 [node name="PickupSpawner2" parent="Spawners" unique_id=1807387469 instance=ExtResource("5_a1dn2")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.5, 0, -0.035714)
-count = 14
+items = Array[ExtResource("6_5xhch")]([ExtResource("7_71v1n")])
+count = 4
 spacing = 4.77
 
 [node name="PickupSpawner3" parent="Spawners" unique_id=1807297309 instance=ExtResource("5_a1dn2")]
 transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 0, 0, -50.035713)
-count = 14
+items = Array[ExtResource("6_5xhch")]([ExtResource("7_71v1n")])
+count = 4
 spacing = 4.77
 
 [node name="PickupSpawner4" parent="Spawners" unique_id=1884260859 instance=ExtResource("5_a1dn2")]
 transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 0, 0, 46.464287)
-count = 14
+items = Array[ExtResource("6_5xhch")]([ExtResource("7_71v1n")])
+count = 4
 spacing = 4.77
 
 [node name="GrindRail" parent="." unique_id=575280884 instance=ExtResource("6_aoo65")]

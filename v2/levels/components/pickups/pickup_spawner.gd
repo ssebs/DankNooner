@@ -134,6 +134,10 @@ func _on_item_body_entered(body: Node3D, slot: int) -> void:
 	# Players and race bots; traffic sits on a layer the bubble doesn't see
 	if !_active or not (body is PlayerEntity or body is NPCRiderEntity):
 		return
+	# A restart despawns the last race's bots and reactivates pickups in one frame; a dying bot
+	# still overlaps until it's freed — skip is intentional
+	if body.is_queued_for_deletion():
+		return
 	# Rider's slot is full, or a bot passing on this item — the bubble stays for someone else.
 	if !_item_manager.collect(int(body.name), _current[slot].pickup_item_definition):
 		return

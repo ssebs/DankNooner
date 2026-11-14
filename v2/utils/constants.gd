@@ -67,14 +67,16 @@ const CONTROL_CATEGORIES: Dictionary = {
 	],
 }
 
-## Event payouts: event base × place multiplier + score × rate (see Progression.md).
+## Event payouts: (event base × place multiplier + score × rate) × level multiplier (see Economy.md).
 ## Multipliers from 1st; everyone below them gets PAYOUT_PLACE_FLOOR.
 const PAYOUT_PLACE_MULTS: Array[float] = [1.0, 0.7, 0.5]
 const PAYOUT_PLACE_FLOOR: float = 0.3
-const PAYOUT_SCORE_MONEY_RATE: float = 0.01
+const PAYOUT_SCORE_MONEY_RATE: float = 0.08
 const PAYOUT_SCORE_XP_RATE: float = 0.02
 ## Time attack: every lap pays this fraction of the event base; a new PB adds the full base.
 const PAYOUT_LAP_FRACTION: float = 0.1
+## Level multiplier = 1 + step × (level - 1); offsets each level costing more XP than the last.
+const PAYOUT_LEVEL_MULT_STEP: float = 0.5
 ## Level = 1 + sqrt(xp / XP_PER_LEVEL), so each level takes longer than the last.
 const XP_PER_LEVEL: int = 100
 

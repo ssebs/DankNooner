@@ -10,8 +10,8 @@ var description: String = "Sunt nisi id proident veniam ad laboris pariatur mini
 @export var target_gamemode: GameModeType.Kind
 @export var event_type: EventType = EventType.SEQUENTIAL
 
-## Payout base at the results screen, scaled by placement (see Progression.md).
-@export var payout_money: int = 100
+## Payout base at the results screen, scaled by placement and rider level (see Economy.md).
+@export var payout_money: int = 200
 @export var payout_xp: int = 50
 
 ## If set, every participating player's bike is swapped to this for the duration of the event.

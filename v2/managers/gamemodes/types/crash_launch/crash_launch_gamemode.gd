@@ -144,8 +144,9 @@ func _is_score_mode() -> bool:
 
 
 #override
+## Points run ~10× the other score modes; scaled so crash launch pays the least (see Economy.md).
 func _payout_score(peer_id: int) -> float:
-	return _score(peer_id)
+	return _score(peer_id) / 20.0
 
 
 func _ranked_peer_ids() -> Array:

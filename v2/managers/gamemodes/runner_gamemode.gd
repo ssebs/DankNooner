@@ -202,8 +202,14 @@ func _pay_out(data: ResultsData):
 		earn(peer_id, money, xp)
 
 
-## Server: pay one rider and add it to their results columns.
+## Server: pay one rider, scaled by their rider level, and add it to their results columns.
 func earn(peer_id: int, money: int, xp: int):
+	var player_def := lobby_manager.lobby_players[peer_id]
+	var level_mult := 1.0 + UtilsConstants.PAYOUT_LEVEL_MULT_STEP * (player_def.level() - 1)
+	money = int(money * level_mult)
+	xp = int(xp * level_mult)
+	# Saves don't re-push metadata mid-race, so keep the server's copy of the level current
+	player_def.xp += xp
 	var payout: Dictionary = _payouts.get_or_add(peer_id, {"money": 0, "xp": 0})
 	payout["money"] += money
 	payout["xp"] += xp
