@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="AttachmentMod" format=3]
+
+[ext_resource type="Script" path="res://resources/bikes/mods/attachment_mod.gd" id="1_mod"]
+[ext_resource type="PackedScene" path="res://player/bikes/assets/Mods/WheelieBar_Left.glb" id="2_scene"]
+
+[resource]
+script = ExtResource("1_mod")
+scene = ExtResource("2_scene")
+marker = 1
+mirror_x = true

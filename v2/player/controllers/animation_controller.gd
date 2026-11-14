@@ -193,6 +193,8 @@ var _shuv_visual_yaw: float = 0.0
 # from what gets committed to the nodes prevents anim-delta drift across frames —
 # the lerps inside proc need their own continuous state to read from.
 var _proc_pose: _RiderPose
+## Editor: the mirror_x mod previews, re-placed every frame (see _follow_mod_mirrors).
+var _mod_mirrors: Array[Node3D] = []
 
 #endregion
 
@@ -205,6 +207,7 @@ func _ready():
 
 func _process(delta: float):
 	if Engine.is_editor_hint():
+		_follow_mod_mirrors()
 		# Proxies are owned by the editor / AnimationPlayer — never auto-sync in editor.
 		return
 	if not _procedural_enabled:
@@ -733,10 +736,8 @@ func _on_trick_started(trick: TrickController.Trick) -> void:
 func _sync_targets_from_bike() -> void:
 	var hb_parent := bike_skin.steering_handlebar_marker.get_parent() as Node3D
 	var peg_parent: Node3D = bike_skin
-	# In editor, _bd may not be initialized yet — fall back to skin's own definition.
-	var def: BikeSkinDefinition = _bd if _bd else bike_skin.skin_definition
-	if def == null:
-		return
+	# Not _bd: it's cached at _ready, so it goes stale when the editor swaps bike_definition.
+	var def: BikeSkinDefinition = bike_skin.skin_definition
 
 	var left_hand_local := Transform3D(
 		Basis.from_euler(def.left_hand_rotation), def.left_hand_position
@@ -1008,6 +1009,40 @@ func _load_wheel_markers_from_definition(def: BikeSkinDefinition) -> void:
 		player_entity.grind_spot_rear_marker.position = def.grind_spot_rear_position
 	if player_entity.grind_spot_front_marker:
 		player_entity.grind_spot_front_marker.position = def.grind_spot_front_position
+	if player_entity.training_wheels_marker:
+		player_entity.training_wheels_marker.position = def.training_wheels_marker_position
+		player_entity.training_wheels_marker.rotation_degrees = def.training_wheels_marker_rotation_degrees
+	if player_entity.wheelie_bar_marker:
+		player_entity.wheelie_bar_marker.position = def.wheelie_bar_marker_position
+		player_entity.wheelie_bar_marker.rotation_degrees = def.wheelie_bar_marker_rotation_degrees
+	if Engine.is_editor_hint():
+		_show_mod_previews()
+
+
+## Editor: hang each PlayerEntity.mod_previews mesh under its marker (plus its mirror_x copy).
+## Unowned, so never saved.
+func _show_mod_previews() -> void:
+	_mod_mirrors.clear()
+	for marker: Marker3D in [player_entity.training_wheels_marker, player_entity.wheelie_bar_marker]:
+		for child in marker.get_children():
+			child.queue_free()
+	for mod in player_entity.mod_previews:
+		var marker: Marker3D = player_entity.training_wheels_marker
+		if mod.marker == AttachmentMod.Marker.WHEELIE_BAR:
+			marker = player_entity.wheelie_bar_marker
+		marker.add_child(mod.scene.instantiate())
+		if mod.mirror_x:
+			var mirrored: Node3D = mod.scene.instantiate()
+			marker.add_child(mirrored)
+			_mod_mirrors.append(mirrored)
+	_follow_mod_mirrors()
+
+
+## Editor: keep each mirror_x preview at its marker's mirror, as AttachmentMod.apply places it.
+func _follow_mod_mirrors() -> void:
+	for mirrored in _mod_mirrors:
+		var at: Transform3D = (mirrored.get_parent() as Node3D).transform
+		mirrored.transform = at.affine_inverse() * AttachmentMod.MIRROR_X * at
 
 
 ## Exact inverse of _sync_targets_from_bike's `parent.global * Transform3D(from_euler(rot), pos)`:
@@ -1097,6 +1132,12 @@ func _editor_save_default_pose() -> void:
 		def.grind_spot_rear_position = player_entity.grind_spot_rear_marker.position
 	if player_entity.grind_spot_front_marker:
 		def.grind_spot_front_position = player_entity.grind_spot_front_marker.position
+	if player_entity.training_wheels_marker:
+		def.training_wheels_marker_position = player_entity.training_wheels_marker.position
+		def.training_wheels_marker_rotation_degrees = player_entity.training_wheels_marker.rotation_degrees
+	if player_entity.wheelie_bar_marker:
+		def.wheelie_bar_marker_position = player_entity.wheelie_bar_marker.position
+		def.wheelie_bar_marker_rotation_degrees = player_entity.wheelie_bar_marker.rotation_degrees
 
 	var err = ResourceSaver.save(def)
 	if err == OK:

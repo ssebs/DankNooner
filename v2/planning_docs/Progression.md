@@ -79,8 +79,10 @@ In build order:
 1. **Payouts:** size challenge and daily rewards (see [Economy](./Economy.md)).
 2. **Challenge content:** full lists per type (about 10), a bigger daily pool, confetti VFX, the
    Daily tab's time to reset, and auto-opening the card on unseen dailies.
-3. **Mod ladder** (rest of step 2): mastery levels gate mods once mod models exist (see
-   [3D models to make](#3d-models-to-make)); `unlock_mastery` is the pattern.
+3. **Mod ladder** (rest of step 2, see [Bike challenges](#bike-challenges-and-mastery)):
+   `AttachmentMod` + editor previews built 2026-11-14 (see [Skins](./Skins.md#attachmentmod)).
+   Left: place the mod markers on every bike, a texture mod, a garage mods page to buy / fit
+   them into the loadout bike's `mods`, and the mastery gates (`unlock_mastery` is the pattern).
 4. **Career tabs on real stats** (step 6), with achievement progress.
 5. **Console commands** (step 9): `add_bike_level <type> <levels>`, `unlock_bike_max <type>`.
 6. **Steam stats + achievements** (step 5): full build only.
@@ -89,8 +91,8 @@ In build order:
 
 Still open:
 
-- **Mod ladder content.** Mastery unlocks variant skins today; mods need models (below) and a
-  mod shop before they can join the ladder.
+- **Mod shop.** Where unlocked mods are bought and fitted (garage page?), and whether a fitted
+  mod is per loadout.
 - **Sport's level gate:** 5 or 6 (see [Economy](./Economy.md#pacing)).
 - **Variant audio:** engine sound is per skin already (`engine_sound_id` + pitch/curves); new
   sounds come later.
@@ -107,9 +109,18 @@ Still open:
 | Sport | Retro sport | No model |
 | Sport | Street vendor cart | Model exists (one mesh); needs the split below |
 
-**Bike mods** (the mastery ladder; examples from [Bike challenges](#bike-challenges-and-mastery)):
-wheelie bar, exhaust, training wheels. Each needs attach markers on every bike skin, since an
-unlocked mod fits any bike. Textures are mods too, but they aren't models.
+**Bike mods** (the mastery ladder, see [Bike challenges](#bike-challenges-and-mastery)):
+
+| Mod | Model | Marker |
+|---|---|---|
+| Wheelie bar | `player/bikes/assets/Mods/WheelieBar_*.glb` | `wheelie_bar_marker_*` |
+| Training wheels | `player/bikes/assets/Mods/TrainingWheels_*.glb` | `training_wheels_marker_*` |
+| Exhaust | No model | none yet |
+
+An unlocked mod fits any bike, so every bike skin needs each marker placed. Authoring follows the
+other bike markers: `PlayerEntity`'s `TrainingWheelsMarker` / `WheelieBarMarker` (under
+`VisualRoot/IKTargets`) load from the definition and Save Default Pose writes them back.
+Textures are mods too, but they aren't models.
 
 **Every bike skin needs** (`bike_skin.gd` drives these):
 
@@ -174,13 +185,14 @@ Earning, payouts, rider level and pacing targets are in [Economy](./Economy.md).
 | Mini bike (Grom) | owned on a new save | — |
 | Naked, sport bikes | rider level (sport's is higher) | bought with $ |
 | Other skins of a type | that type's mastery (`unlock_mastery`) | bought with $ |
-| Bike mods | bike-type mastery level | bought with $ (default $200) |
+| Bike mods | finishing that type's whole challenge list | bought with $ (default $200) |
+| Bike textures | one per finished challenge (planned) | bought with $ |
 | Characters | nothing | bought with $ |
 | Horns | nothing | bought with $ |
 | Colors | nothing | free |
 
-Bike textures are mods too (later). Unlocked mods fit any bike, not only the type that unlocked
-them; each skin places its own attach markers.
+Unlocked mods and textures fit any bike, not only the type that unlocked them; each skin places
+its own attach markers.
 
 
 ## Bike types and skins
@@ -217,8 +229,11 @@ save (same rule as payouts). NPCs never count.
   type count toward its list. More tricks are planned, so lists will grow.
 - **Mastery:** each finished challenge levels the bike type up by one, to a max of 10. "Mastery"
   is a working name to keep it apart from rider level on screen.
-- Mods unlock at mastery levels (e.g. wheelie bar, exhaust, training wheels). The ladder is
-  per type and will grow.
+- **One mod per type, at the end of its list** (mastery = the full list): mini unlocks the
+  wheelie bar, naked the training wheels, sport a mod still to model (exhaust?).
+- **A texture per challenge:** each finished challenge can unlock a body texture (a `BikeMod`
+  painting the paintable body). The first is the repeating arrow from the arrow walls
+  (`levels/assets/props/repeating_arrow_texture.tres`); more textures come later.
 - A **capstone** (e.g. the airtime total) is naturally the last one done but isn't locked behind
   the others. Finishing the list (max mastery) unlocks the type's other skins.
 

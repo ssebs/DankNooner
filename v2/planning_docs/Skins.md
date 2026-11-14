@@ -238,9 +238,25 @@ Instance `npc_animal_entity.tscn`, set `animal_skin_definition` on **that instan
 
 ## Mods
 
-`BikeMod` (`resources/bikes/mods/bike_mod.gd`) is a base `Resource` with a single `apply(vehicle_skin: Node3D)` method — typed to `Node3D` rather than `BikeSkin` so one mod ecosystem serves both `BikeSkin` and `CarSkin` (any vehicle skin exposing `mesh_skin`). Subclass it to create composable overrides that stack on top of the base definition. Each mod has a garage `price`; `ColorMod` sets 0, since colors are free. Nothing sells mods yet.
+`BikeMod` (`resources/bikes/mods/bike_mod.gd`) is a base `Resource` with a single `apply(vehicle_skin: Node3D)` method — typed to `Node3D` rather than `BikeSkin` so one mod ecosystem serves both `BikeSkin` and `CarSkin` (any vehicle skin exposing `mesh_skin`). Subclass it to create composable overrides that stack on top of the base definition. Each mod has a garage `price`; `ColorMod` sets 0, since colors are free. Nothing sells or fits mods yet.
 
 `BikeSkin._apply_definition()` calls `_apply_mods()` after `_set_mesh_colors()`, so mods always win over base colors.
+
+### AttachmentMod
+
+`AttachmentMod` (`resources/bikes/mods/attachment_mod.gd`) instances `scene` under the bike's
+`MeshNode` at one of the definition's mod markers (`marker`: training wheels or wheelie bar), so a
+re-applied definition drops it with the old mesh. `mirror_x` adds a copy mirrored across the bike's
+centerline (X = 0): model the left side (`*_Left*.glb`), place its marker on the left, and the
+right side follows. Instances: `training_wheels_mod.tres`,
+`wheelie_bar_mod.tres`. A fitted mod lives in the loadout bike's `mods` and saves per loadout
+through `to_dict()`'s `mod_paths`.
+
+Placing the markers: `PlayerEntity.mod_previews` lists the AttachmentMods whose meshes hang under
+`TrainingWheelsMarker` / `WheelieBarMarker` in the editor (unowned, never saved); a `mirror_x`
+mod's mirrored copy follows the marker live. Pick the bike on
+`BikeSkin`, press Init IK from Bike (or Play Default Pose) to load its markers and previews, move
+the markers, then Save Default Pose.
 
 ### ColorMod
 

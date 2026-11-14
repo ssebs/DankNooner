@@ -5,7 +5,7 @@
 [ext_resource type="Curve" path="res://resources/bikes/ninja_rpm_pitch_curve.tres" id="2_y2gru"]
 [ext_resource type="Script" uid="uid://dviinp4otorqm" path="res://resources/bikes/mods/bike_mod.gd" id="4_xypd7"]
 [ext_resource type="Resource" uid="uid://kkayasm0pv2h" path="res://resources/bikes/mods/color_mods/purple_color.tres" id="6_y2gru"]
-[ext_resource type="Resource" path="res://resources/bikes/types/naked_bike_type.tres" id="9_type"]
+[ext_resource type="Resource" uid="uid://dn0nww50th4r6" path="res://resources/bikes/types/naked_bike_type.tres" id="9_type"]
 
 [resource]
 script = ExtResource("2_4wyad")
@@ -16,7 +16,10 @@ bike_type = ExtResource("9_type")
 mesh_res = ExtResource("1_hvuo0")
 mesh_position_offset = Vector3(0, 0.255, -0.1)
 mesh_scale_multiplier = Vector3(0.7, 0.7, 0.7)
-training_wheels_marker_position = Vector3(0, 0.045939356, -0.65252227)
+training_wheels_marker_position = Vector3(0.12740365, 0.29203796, -0.6430792)
+training_wheels_marker_rotation_degrees = Vector3(0, -4.3967986e-11, 0)
+wheelie_bar_marker_position = Vector3(0.108169615, 0.8444962, -0.6952114)
+wheelie_bar_marker_rotation_degrees = Vector3(0, -1.4818839e-10, 0)
 seat_marker_position = Vector3(8.72776e-09, 0.8699445, -0.27442372)
 front_wheel_ground_position = Vector3(4.063193e-08, 0, 0.6847348)
 rear_wheel_ground_position = Vector3(-2.0521185e-09, 0, -0.6426772)

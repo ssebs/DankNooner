@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://bqkmh4ppf72gt" path="res://resources/bikes/bike_skin_definition.gd" id="2_4wyad"]
 [ext_resource type="Curve" path="res://resources/bikes/ninja_rpm_pitch_curve.tres" id="2_dq2nd"]
 [ext_resource type="Script" uid="uid://dviinp4otorqm" path="res://resources/bikes/mods/bike_mod.gd" id="4_bec7v"]
-[ext_resource type="Resource" path="res://resources/bikes/types/naked_bike_type.tres" id="9_type"]
+[ext_resource type="Resource" uid="uid://dn0nww50th4r6" path="res://resources/bikes/types/naked_bike_type.tres" id="9_type"]
 
 [resource]
 script = ExtResource("2_4wyad")
@@ -16,16 +16,19 @@ mesh_res = ExtResource("1_hvuo0")
 mesh_position_offset = Vector3(0, 0.014, 0.004)
 mesh_rotation_offset_degrees = Vector3(0, -90, 0)
 mesh_scale_multiplier = Vector3(0.15, 0.15, 0.15)
-training_wheels_marker_position = Vector3(0, 0.045939356, -0.65252227)
+training_wheels_marker_position = Vector3(0.07420876, 0.32066938, -0.7535724)
+training_wheels_marker_rotation_degrees = Vector3(0, -1.6284439e-12, 0)
+wheelie_bar_marker_position = Vector3(0.116950035, 0.7024222, -0.86557645)
+wheelie_bar_marker_rotation_degrees = Vector3(0, -3.3383102e-11, 0)
 seat_marker_position = Vector3(1.3546188e-08, 0.8980796, -0.30633464)
 front_wheel_ground_position = Vector3(-7.1693265e-09, 0, 0.7484802)
 rear_wheel_ground_position = Vector3(7.965895e-09, 0, -0.7527557)
 rear_wheel_back_position = Vector3(1.09531015e-08, 0, -1.0875391)
 front_wheel_front_position = Vector3(-1.0953116e-08, 0, 1.0885391)
 exhaust_tip_position = Vector3(-0.16667293, 0.2560584, -0.9620907)
-exhaust_tip_rotation_degrees = Vector3(2.966927, 5.0817924, 0.26371798)
+exhaust_tip_rotation_degrees = Vector3(2.9669268, 5.081792, 0.26371798)
 headlight_position = Vector3(-8.010887e-08, 0.9572637, 0.5636448)
-headlight_rotation_degrees = Vector3(0, -179.99995, 0)
+headlight_rotation_degrees = Vector3(0, -179.99994, 0)
 gas_cap_position = Vector3(-1.23408235e-08, 1.0241582, 0.10433705)
 grind_spot_rear_position = Vector3(-4.039542e-10, 0.23086351, -0.36127907)
 grind_spot_front_position = Vector3(9.598789e-09, 0.27369508, 0.34268266)

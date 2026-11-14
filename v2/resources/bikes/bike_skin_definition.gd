@@ -37,9 +37,11 @@ class_name BikeSkinDefinition extends Resource
 
 ## Marker positions
 @export_group("Markers")
-# TODO: use this
+## Where AttachmentMods bolt on (see PlayerEntity's mod markers).
 @export var training_wheels_marker_position: Vector3 = Vector3.ZERO
 @export var training_wheels_marker_rotation_degrees: Vector3 = Vector3.ZERO
+@export var wheelie_bar_marker_position: Vector3 = Vector3.ZERO
+@export var wheelie_bar_marker_rotation_degrees: Vector3 = Vector3.ZERO
 @export var seat_marker_position: Vector3 = Vector3.ZERO
 @export var front_wheel_ground_position: Vector3 = Vector3.ZERO
 @export var rear_wheel_ground_position: Vector3 = Vector3.ZERO
@@ -244,6 +246,8 @@ func _copy_from(other: BikeSkinDefinition) -> void:
 	colors = other.colors.duplicate()
 	training_wheels_marker_position = other.training_wheels_marker_position
 	training_wheels_marker_rotation_degrees = other.training_wheels_marker_rotation_degrees
+	wheelie_bar_marker_position = other.wheelie_bar_marker_position
+	wheelie_bar_marker_rotation_degrees = other.wheelie_bar_marker_rotation_degrees
 	seat_marker_position = other.seat_marker_position
 	front_wheel_ground_position = other.front_wheel_ground_position
 	rear_wheel_ground_position = other.rear_wheel_ground_position

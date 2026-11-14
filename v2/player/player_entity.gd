@@ -79,6 +79,12 @@ signal launch_measured(peer_id: int, meters: float)
 ## Grind spot authoring handles, same flow (grind_spot_rear/front_position).
 @export var grind_spot_rear_marker: Marker3D
 @export var grind_spot_front_marker: Marker3D
+## Bike mod authoring handles (position + rotation), same flow
+## (training_wheels_marker_* / wheelie_bar_marker_*).
+@export var training_wheels_marker: Marker3D
+@export var wheelie_bar_marker: Marker3D
+## Editor only: each one's mesh rides its marker, so the marker can be placed by eye.
+@export var mod_previews: Array[AttachmentMod] = []
 
 
 ## Local cosmetic decel pops / backfires (see _update_exhaust_pops).
