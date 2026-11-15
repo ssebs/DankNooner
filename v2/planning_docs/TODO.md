@@ -231,8 +231,12 @@
 
 ## Done ✅
 
+- [x] in tutorial - "Do a wheelie for 2s" should be in the new profilecard panel instead of showing the challenges
+  - [x] also gold text?
+- [x] number in tutorial doesnt make sense (multiple tut stages shouldnt exist, at least w/ count)
+- [x] "you loop out" => 'you crash'
+- [x] needs to be a way to re-read the tutorial steptutp
 - [x] mini bike should not be so unstable when hitting rear brake / steering. 
-
 - [x] add killbox
 - [x] make tutorial road longer
 - [x] hold tab in game, show mouse cursor. allow toggling profile challenges or clicking on the loadout to change it

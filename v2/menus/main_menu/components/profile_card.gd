@@ -1,8 +1,9 @@
 ## The active save: the rider in a circle, level and money, then the save name small. Clicking it
 ## opens the Saves menu (main + pause menus). The caret drops a panel with three tabs: today's
-## dailies, up to MAX_CHALLENGES bike ChallengeRows, and the live leaderboard (fed by
-## RidingHUDState). Career stats live in the Saves menu. Open/closed and
-## the tab are shared by every card for the run, so the pause menu's pick is what the HUD shows.
+## dailies, up to MAX_CHALLENGES bike ChallengeRows, and the live leaderboard, which a running
+## event takes over with its objective above the board (both fed by RidingHUDState). Career stats
+## live in the Saves menu. Open/closed and the tab are shared by every card for the run, so the
+## pause menu's pick is what the HUD shows.
 class_name ProfileCard extends VBoxContainer
 
 signal pressed
@@ -45,6 +46,12 @@ static var _board_headers: PackedStringArray = PackedStringArray()
 static var _board_rows: Array = []
 ## The board is an event's, not free roam's.
 static var _board_is_event: bool = false
+## The last event pushed (see show_event); empty title = no event up.
+static var _event_title: String = ""
+static var _event_step: String = ""
+static var _event_objective: String = ""
+static var _event_tour_key: String = ""
+static var _event_gamepad: bool = false
 
 ## A MoneyLabel, so a host can flash / pop it (the garage's purchases).
 @onready var money_label: MoneyLabel = %MoneyLabel
@@ -66,6 +73,10 @@ static var _board_is_event: bool = false
 @onready var _dailies_done: Label = %DailiesDone
 @onready var _challenges_done: Label = %ChallengesDone
 @onready var _leaderboard: RaceLeaderboard = %Leaderboard
+@onready var _event_pane: VBoxContainer = %EventPane
+@onready var _event_step_label: Label = %EventStep
+@onready var _event_objective_label: Label = %EventObjective
+@onready var _event_tour: RichTextLabel = %EventTour
 @onready var _prev_tab_prompt: InputPrompt = %PrevTabPrompt
 @onready var _next_tab_prompt: InputPrompt = %NextTabPrompt
 
@@ -252,6 +263,19 @@ func show_board(headers: PackedStringArray, rows: Array, is_event: bool) -> void
 		_leaderboard.set_board(headers, rows)
 
 
+## The running event on the leaderboard tab, named for it: step count, objective, and the last tour
+## page (tour_key, live button icons for `gamepad`). Pre-localized except tour_key; "" title clears.
+func show_event(
+	title: String, step: String, objective: String, tour_key: String, gamepad: bool
+) -> void:
+	_event_title = title
+	_event_step = step
+	_event_objective = objective
+	_event_tour_key = tour_key
+	_event_gamepad = gamepad
+	_apply()
+
+
 ## Opens the panel while `on`, without touching the shared state (HUD: the loadouts hold).
 func set_peek(on: bool) -> void:
 	_peek = on
@@ -386,18 +410,20 @@ func _on_tab_pressed(tab: Tab):
 	_apply()
 
 
-## Shows the shared open/closed state and tab; the leaderboard tab is hidden while no board is
-## up (always on the main menu). `snap`: no slide (first draw).
+## Shows the shared open/closed state and tab; the leaderboard tab is hidden while no board or
+## event is up (always on the main menu). `snap`: no slide (first draw).
 func _apply(snap: bool = false):
 	var has_board := !_board_headers.is_empty()
+	var has_event := _event_title != ""
+	var has_pane := has_board or has_event
 	var expanded := _expanded
 	if !_opened_once:
 		# TODO: also open for an unseen daily (Progression.md#dailies).
-		expanded = has_board
-	var tab := Tab.CHALLENGES if _tab == Tab.LEADERBOARD and !has_board else _tab
+		expanded = has_pane
+	var tab := Tab.CHALLENGES if _tab == Tab.LEADERBOARD and !has_pane else _tab
 	if _challenge_peek_until > 0:
 		expanded = true
-	if board_overrides and has_board and _board_is_event:
+	if board_overrides and (has_event or has_board and _board_is_event):
 		expanded = true
 		tab = Tab.LEADERBOARD
 	expanded = (expanded or _peek) and show_drop
@@ -408,7 +434,8 @@ func _apply(snap: bool = false):
 	var all_tabs := expandable or _peek
 	_daily_tab.visible = all_tabs or tab == Tab.DAILY
 	_challenges_tab.visible = all_tabs or tab == Tab.CHALLENGES
-	_leaderboard_tab.visible = has_board and (all_tabs or tab == Tab.LEADERBOARD)
+	_leaderboard_tab.visible = has_pane and (all_tabs or tab == Tab.LEADERBOARD)
+	_leaderboard_tab.text = _event_title if has_event else "LEADERBOARD_LABEL"
 	for tab_btn: Button in [_daily_tab, _challenges_tab, _leaderboard_tab]:
 		tab_btn.mouse_filter = MOUSE_FILTER_STOP if all_tabs else MOUSE_FILTER_IGNORE
 	_daily_tab.set_pressed_no_signal(tab == Tab.DAILY)
@@ -418,9 +445,18 @@ func _apply(snap: bool = false):
 	_dailies_done.visible = tab == Tab.DAILY and _daily_done
 	_challenge_list.visible = tab == Tab.CHALLENGES and !_bike_done
 	_challenges_done.visible = tab == Tab.CHALLENGES and _bike_done
-	_leaderboard.visible = tab == Tab.LEADERBOARD
+	_leaderboard.visible = tab == Tab.LEADERBOARD and has_board
 	if has_board:
 		_leaderboard.set_board(_board_headers, _board_rows)
+	_event_pane.visible = tab == Tab.LEADERBOARD and has_event
+	if has_event:
+		_event_step_label.text = _event_step
+		_event_step_label.visible = _event_step != ""
+		_event_objective_label.text = _event_objective
+		_event_objective_label.visible = _event_objective != ""
+		_event_tour.clear()
+		ControlBindings.append_tokens(_event_tour, tr(_event_tour_key), _event_gamepad)
+		_event_tour.visible = _event_tour_key != ""
 
 	var delayed := expanded and !_opened_once and auto_open_delay_secs > 0.0 and !_slid_open
 	if snap:

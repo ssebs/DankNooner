@@ -1,7 +1,8 @@
 @tool
 ## Pauses the game and plays its Tour on the active peer's screen until they close it. A pause, not
 ## a freeze, so the rider keeps their speed for the step after (e.g. braking from speed). Solo only:
-## the pause stops every peer, which the tutorial's solo session makes safe.
+## the pause stops every peer, which the tutorial's solo session makes safe. Its last page stays
+## readable on the HUD's event pane until the next tour.
 ##
 ## Tree: ShowTourTask > Tour > TourStep (one or more). Its check task is the next sibling.
 ## Tutorial tours always show, even when already done. tour_manager lives in main_game.tscn while
@@ -34,6 +35,7 @@ func get_tour() -> Tour:
 func _rpc_show_tour():
 	tour_manager.tour_closed.connect(_on_tour_closed, CONNECT_ONE_SHOT)
 	tour_manager.play(get_tour(), true)
+	runner.riding_hud.set_event_tour(get_tour())
 
 
 func _on_tour_closed(_tour: Tour, skipped: bool):

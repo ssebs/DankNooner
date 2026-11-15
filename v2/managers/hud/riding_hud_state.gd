@@ -48,10 +48,6 @@ const _TRICK_ROWS_PER_COLUMN := 3
 @onready var _trick_popups: TrickPopups = %TrickPopups
 @onready var _trick_feed: TrickFeed = %HUD_TrickFeed
 @onready var _target_compass: TargetCompass = %TargetCompass
-@onready var _event_panel: VBoxContainer = %EventPanel
-@onready var _event_title: Label = %HUD_EventTitle
-@onready var _event_step: Label = %HUD_EventStep
-@onready var _event_objective: Label = %HUD_EventObjective
 @onready var _event_progress: Label = %HUD_EventProgress
 @onready var _event_warning: Label = %HUD_EventWarning
 @onready var _event_tricks: Label = %HUD_EventTricks
@@ -118,6 +114,12 @@ var _netfox_dbg_accum: float = 0.0
 var _challenge_tricks := PackedInt32Array()
 ## A TrickRow pin id the running event shows above your own pins (see push_event_pin).
 var _event_pin: String = ""
+## The running event's pane on the profile card (see _show_event_on_card); "" title = none.
+var _event_title: String = ""
+var _event_step: String = ""
+var _event_objective: String = ""
+## Body key of the last tour page the event played (see set_event_tour).
+var _event_tour_key: String = ""
 ## Device the prompts and trick rows currently show glyphs for.
 var _shown_gamepad: bool = false
 ## TrickState the trick prompt currently lists.
@@ -492,6 +494,7 @@ func _refresh_prompts():
 	_shown_gamepad = input_controller.is_gamepad or DebugUtils.gamepad_prompts
 	for prompt in _prompts:
 		prompt.refresh(_shown_gamepad)
+	_show_event_on_card()
 	var rows := _trick_rows.get_children()
 	for column in _trick_prompt_rows.get_children():
 		rows += column.get_children()
@@ -576,7 +579,6 @@ func _rpc_set_leaderboard(
 ):
 	_profile_card.show_board(headers, rows, is_event)
 	_has_leaderboard = true
-	_update_event_panel()
 	# Resent every refresh; only rebuild when it changes.
 	if tricks != _challenge_tricks:
 		_challenge_tricks = tricks
@@ -587,7 +589,6 @@ func _rpc_set_leaderboard(
 func _rpc_clear_leaderboard():
 	_profile_card.clear_board()
 	_has_leaderboard = false
-	_update_event_panel()
 	_challenge_tricks = PackedInt32Array()
 	_set_suggested_tricks()
 
@@ -639,7 +640,7 @@ func _rpc_respawn_point_set(point: Transform3D):
 	player_entity.audio_manager.play_ding()
 
 
-#region Event pane — every runner event's step text, above the race leaderboard
+#region Event pane — every runner event's step text, on the profile card's leaderboard tab
 
 
 ## Server-side, to one peer. objective/hint are pre-localized by the task (it interpolates its
@@ -694,20 +695,26 @@ func show_event_countdown(num: int) -> void:
 
 ## Local, on every peer from RunnerGameMode.Enter: the running event's name.
 func set_event_title(text: String) -> void:
-	_event_title.text = text
-	_event_title.show()
-	_update_event_panel()
+	_event_title = text
+	_show_event_on_card()
+
+
+## Local, from ShowTourTask: keeps the tour's last page readable under the objective.
+func set_event_tour(tour: Tour) -> void:
+	_event_tour_key = tour.get_steps()[-1].body_key
+	_show_event_on_card()
 
 
 ## Local — RunnerGameMode.Exit calls this directly, as the peer may be torn down for an RPC.
 func clear_event_text() -> void:
-	_event_title.hide()
-	_event_step.hide()
-	_event_objective.hide()
+	_event_title = ""
+	_event_step = ""
+	_event_objective = ""
+	_event_tour_key = ""
 	_event_progress.hide()
 	_rpc_clear_event_warning()
 	_rpc_set_event_pin("")
-	_update_event_panel()
+	_show_event_on_card()
 
 
 @rpc("call_local", "reliable")
@@ -719,27 +726,24 @@ func _rpc_clear_event_text():
 func _rpc_set_event_step(
 	index: int, total: int, objective: String, hint: String, show_count: bool
 ):
-	_event_step.text = "%d / %d" % [index + 1, total]
-	_event_step.visible = show_count and total > 1
-	# Grid/countdown steps have no objective — hide rather than leave a blank line.
-	_event_objective.text = objective
-	_event_objective.visible = objective != ""
+	_event_step = "%d / %d" % [index + 1, total] if show_count and total > 1 else ""
+	_event_objective = objective
 	_event_progress.text = hint
 	_event_progress.visible = hint != ""
-	_update_event_panel()
+	_show_event_on_card()
 
 
 @rpc("call_local", "unreliable")
 func _rpc_set_event_progress(text: String):
 	_event_progress.text = text
 	_event_progress.show()
-	_update_event_panel()
 
 
 @rpc("call_local", "reliable")
 func _rpc_set_event_status(text_key: String):
-	_event_step.hide()
-	_event_objective.hide()
+	_event_step = ""
+	_event_objective = ""
+	_show_event_on_card()
 	_rpc_set_event_progress(tr(text_key))
 
 
@@ -779,8 +783,10 @@ func _rpc_clear_event_warning():
 	_event_warning.hide()
 
 
-func _update_event_panel() -> void:
-	_event_panel.visible = _event_title.visible or _event_objective.visible
+func _show_event_on_card() -> void:
+	_profile_card.show_event(
+		_event_title, _event_step, _event_objective, _event_tour_key, _shown_gamepad
+	)
 
 
 #endregion

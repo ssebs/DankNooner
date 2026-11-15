@@ -77,33 +77,6 @@ theme_type_variation = &"DimLabel"
 theme_override_font_sizes/font_size = 16
 text = "HUD_FPS"
 
-[node name="EventPanel" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/TopLeftVBox" unique_id=1156886571]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-size_flags_horizontal = 0
-mouse_filter = 2
-theme_override_constants/separation = 8
-
-[node name="HUD_EventTitle" type="Label" parent="UI/AspectContainer/MarginContainer/TopLeftVBox/EventPanel" unique_id=2138217353]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-theme_type_variation = &"HUDTitleLabel"
-theme_override_font_sizes/font_size = 28
-
-[node name="HUD_EventStep" type="Label" parent="UI/AspectContainer/MarginContainer/TopLeftVBox/EventPanel" unique_id=1247704292]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-
-[node name="HUD_EventObjective" type="Label" parent="UI/AspectContainer/MarginContainer/TopLeftVBox/EventPanel" unique_id=1605934630]
-unique_name_in_owner = true
-visible = false
-custom_minimum_size = Vector2(320, 0)
-layout_mode = 2
-autowrap_mode = 3
-
 [node name="HUD_EventProgress" type="Label" parent="UI/AspectContainer/MarginContainer" unique_id=1723272740]
 unique_name_in_owner = true
 visible = false

@@ -42,13 +42,6 @@ Make a hoodie
   - [ ] Underglow on bike
   - [ ] exhaust
 
-- [ ] in tutorial - "Do a wheelie for 2s" should be in the new profilecard panel instead of showing the challenges
-  - [ ] also gold text?
-- [ ] "you loop out" => 'you crash'
-- [ ] add world border to tutorial
-
-- [ ] needs to be a way to re-read the tutorial step
-- [ ] number in tutorial doesnt make sense (multiple tut stages shouldnt exist, at least w/ count)
 - [ ] make red warn label more obvious
 - [ ] make press A to open eventstartcircle more obvious
 - [ ] gas station minimap icon looks like gun store

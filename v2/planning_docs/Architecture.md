@@ -392,8 +392,8 @@ simulation state. `LevelManager` flips back to `NullHUDState` when leaving gamep
   `ResultsHUDState` and `GamemodeEventHUDState` sit under the same state
   machine but are shown/hidden by their owning gamemode via `@rpc` calls (grep the gamemode for the
   `rpc_*` entry points). They never become the machine's `current_state`.
-- **Riding HUD layout is one job per corner, no panels** — FPS + event pane top-left, money/XP +
-  progress line top-centre, leaderboard + trick feed top-right, held item + minimap bottom-left, speed/gear/RPM + vertical boost gauge
+- **Riding HUD layout is one job per corner, no panels** — FPS top-left, money/XP +
+  progress line top-centre, profile card (event pane + leaderboard) + trick feed top-right, held item + minimap bottom-left, speed/gear/RPM + vertical boost gauge
   bottom-right, trick prompt mid-left. Labels read over the world via the outline/shadow in
   `resources/themes/hud_neon.tres`, set on the HUD's `MarginContainer`.
 - **Button prompts are `InputPrompt`s** (`player/hud_elements/`) — the glyph an action is bound to
@@ -403,7 +403,7 @@ simulation state. `LevelManager` flips back to `NullHUDState` when leaving gamep
   mid-left trick prompt lists every stick trick bound in the current `TrickState`, above the pinned
   tricks.
 - **Event text lives in `RidingHUDState`'s event pane** (title, step, objective, progress, warning)
-  and the live leaderboard sits top-right — every runner event pushes to them server-side via
+  and the live leaderboard, both on the profile card's leaderboard tab — every runner event pushes to them server-side via
   `push_event_*` / `push_leaderboard`. See [GamemodeSystem — Event pane](./GamemodeSystem.md#event-pane-riding-hud).
 - **`RidingHUDState.push_checkpoint_marker()`** is how the race gamemodes mark each racer's next
   checkpoint on that peer's minimap: the state is a single node at a shared path on every peer, so

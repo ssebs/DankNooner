@@ -67,6 +67,12 @@ func can_cancel_event() -> bool:
 
 
 #override
+## Each mission restarts the count, so "2 / 5" reads as stages of the whole tutorial.
+func shows_step_count() -> bool:
+	return false
+
+
+#override
 ## Each mission is a milestone: progress saves only when one completes.
 func _on_runner_all_completed():
 	save_manager.set_tutorial_missions_done(_save_key(), _active_runner_index + 1)

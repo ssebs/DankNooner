@@ -239,6 +239,39 @@ horizontal_alignment = 1
 autowrap_mode = 3
 auto_translate_mode = 2
 
+[node name="EventPane" type="VBoxContainer" parent="Drop/Panel/Content"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 8
+
+[node name="EventStep" type="Label" parent="Drop/Panel/Content/EventPane"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+horizontal_alignment = 1
+auto_translate_mode = 2
+
+[node name="EventObjective" type="Label" parent="Drop/Panel/Content/EventPane"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(256, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.82, 0.25, 1)
+theme_override_font_sizes/font_size = 20
+horizontal_alignment = 1
+autowrap_mode = 3
+auto_translate_mode = 2
+
+[node name="EventTour" type="RichTextLabel" parent="Drop/Panel/Content/EventPane"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/normal_font_size = 15
+bbcode_enabled = true
+fit_content = true
+auto_translate_mode = 2
+
 [node name="Leaderboard" type="Control" parent="Drop/Panel/Content"]
 unique_name_in_owner = true
 layout_mode = 2
