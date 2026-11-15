@@ -217,6 +217,8 @@
 
 ## Done ✅
 
+- [x] mini bike should not be so unstable when hitting rear brake / steering. 
+
 - [x] add killbox
 - [x] make tutorial road longer
 - [x] hold tab in game, show mouse cursor. allow toggling profile challenges or clicking on the loadout to change it

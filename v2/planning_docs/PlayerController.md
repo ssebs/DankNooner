@@ -184,11 +184,13 @@ On `do_respawn`, PlayerEntity iterates `_Controllers` children and calls `do_res
     `_drift_calc()` and `_steer_calc()`, because it carves heading via `rotate_y()` (ORDER MATTERS)
   - Damped oscillator on heading (`wobble_angle` / `wobble_vel`, synced); countersteer and
     off-gas + steer damp it, steering into the swing feeds it
-  - Triggers: 1b high-speed brake entry (inline in `_drift_calc()`), 2 bad landing
+  - Triggers: 1b high-speed brake entry (inline in `_drift_calc()`, above the bike's
+    `brake_slide_wobble_speed_frac`), 2 bad landing
     (`kick_bad_landing()`), 5 wheelie set-down (`kick_from_misalign()`), 6 stick trick off the
     balance point (`trick_feed()`). External kicks (rams, wall glances, drift releases,
     `rb_do_wobble`) add to `wobble_vel` directly
   - CrashController highsides past `WOBBLE_CRASH_ANGLE_DEG`
+  - AnimationController shakes the handlebars on their own, scaled by `get_amplitude()`
 - **GearingController** (`gearing_controller.gd`)
   - `on_movement_rollback_tick()`:
     - Apply `input_controller.nfx_target_gear` (absolute requested gear, synced as netfox

@@ -155,7 +155,7 @@ Resource at `resources/bikes/bike_type_definition.gd`, one `.tres` per type in `
 
 **Gearing** — `gear_ratios`, `num_gears`, `max_rpm`, `idle_rpm`, `stall_rpm`, `power_curve`, `shift_cut_time`
 
-**Physics** — `max_speed`, `acceleration`, `brake_strength`, `friction`, `engine_brake_strength`, `max_lean_angle_deg`, `lean_speed`, `turn_speed`, `lean_curve`, `steer_curve`
+**Physics** — `max_speed`, `acceleration`, `brake_strength`, `friction`, `engine_brake_strength`, `max_lean_angle_deg`, `lean_speed`, `turn_speed`, `lean_curve`, `steer_curve`, `brake_slide_wobble_speed_frac`
 
 **Tricks** — `wheelie_balance_point_deg`, `max_wheelie_angle_deg`, `max_stoppie_angle_deg`, `wheelie_rpm_threshold`, `wheelie_balance_point_width_deg`, `rotation_speed`, `return_speed`
 

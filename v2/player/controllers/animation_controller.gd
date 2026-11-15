@@ -41,6 +41,10 @@ const MAX_CHEST_LEAN_PITCH_DEG: float = -15.0
 const MAX_CHEST_Z_OFFSET: float = 0.2
 ## Max butt z shift when leaning fwd/back. Negate to flip direction.
 const MAX_BUTT_Z_OFFSET: float = 0.1
+## Tank-slapper handlebar shake: Hz, peak bar angle (deg) at the crash angle, bar lerp while shaking.
+const SLAPPER_BAR_FREQ: float = 7.0
+const SLAPPER_BAR_MAX_DEG: float = 30.0
+const SLAPPER_BAR_LERP_SPEED: float = 60.0
 ## Belly grinds ride a grind spot on the rail instead of the wheels: Vector2i(spot, tilt).
 ## spot: -1 rear, 1 front, 0 midpoint. tilt: -1 nose down, 1 tail down, 0 level, by
 ## BELLY_GRIND_TILT_DEG on top of the lean's pitch.
@@ -158,6 +162,7 @@ var _targets_synced_from_bike: bool = true
 # pitched landing rises to its resting pivot offset over a few frames instead of popping there.
 var _pivot_blend: float = 1.0
 var _pivot_suppressed_last: bool = false
+var _slapper_phase: float = 0.0
 var _grind_hinge_offset: Vector3 = Vector3.ZERO
 
 # Cached refs (set in initialize)
@@ -311,7 +316,16 @@ func _update_riding(delta: float) -> void:
 	var steer_input := bars if _targets_synced_from_bike else 0.0
 	if movement_controller.is_reversing:
 		steer_input = - steer_input
-	bike_skin.rotate_steering(steer_input, delta)
+	# Tank-slapper: bars shake lock-to-lock on their own, harder as the wobble nears the crash angle.
+	# Amplitude, not is_wobbling: it's from synced state (valid on remote peers) and steady mid-swing.
+	var swing := player_entity.wobble_controller.get_amplitude()
+	var bar_lerp := BikeSkin.STEERING_LERP_SPEED
+	if swing > WobbleController.WOBBLE_EPS:
+		var severity := clampf(swing / deg_to_rad(WobbleController.WOBBLE_CRASH_ANGLE_DEG), 0.0, 1.0)
+		_slapper_phase = fmod(_slapper_phase + TAU * SLAPPER_BAR_FREQ * delta, TAU)
+		steer_input += sin(_slapper_phase) * deg_to_rad(SLAPPER_BAR_MAX_DEG) * sqrt(severity)
+		bar_lerp = SLAPPER_BAR_LERP_SPEED
+	bike_skin.rotate_steering(steer_input, delta, bar_lerp)
 	# Rear breaks loose in a drift/burnout — spin it by throttle so it keeps lighting up even at 0
 	# road speed (a standstill burnout), where the road-speed spin would read as stopped.
 	var rear_speed := movement_controller.speed

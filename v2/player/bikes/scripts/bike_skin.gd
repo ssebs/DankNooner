@@ -40,12 +40,12 @@ func get_steering_rotation() -> Vector3:
 	return mesh_skin.steering_rotation_node.rotation
 
 
-func rotate_steering(roll_angle: float, delta: float):
+func rotate_steering(roll_angle: float, delta: float, lerp_speed: float = STEERING_LERP_SPEED):
 	if not has_steering():
 		return
 	var target = - mesh_skin.steering_rot_axis * roll_angle * STEERING_VISUAL_MULTIPLIER
 	mesh_skin.steering_rotation_node.rotation = mesh_skin.steering_rotation_node.rotation.lerp(
-		target, STEERING_LERP_SPEED * delta
+		target, minf(lerp_speed * delta, 1.0)
 	)
 
 

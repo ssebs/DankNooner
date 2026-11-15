@@ -18,7 +18,6 @@ const WOBBLE_MIN_SPEED: float = 15.0 # below this no wobble starts, and slowing 
 const WOBBLE_CRASH_ANGLE_DEG: float = 60.0 # |wobble_angle| past this highsides
 # Triggers 1b (high-speed brake entry), 5 (wheelie set-down) and 6 (wheelie trick off the balance
 # point) are always on. A drift released while slid out wobbles via CrashController._detect_drift_crash.
-const WOBBLE_BRAKE_ENTRY_SPEED_FRAC: float = 0.6 # 1b: speed frac above which entry wobbles
 const WOBBLE_BRAKE_ENTRY_STRENGTH: float = 7.0 # 1b kick (rad/s)
 const WOBBLE_LANDING_MIN_AIRTIME: float = 0.5 # trigger 2: only jumps longer than this wobble
 const WOBBLE_LANDING_ANGLE_DEG: float = 20.0 # trigger 2: landing misalignment (deg) window
@@ -48,7 +47,7 @@ func trick_feed(delta: float):
 	if (
 		movement_controller.speed < WOBBLE_MIN_SPEED
 		or miss_deg <= 0.0
-		or _amplitude() >= _trick_target_amp()
+		or get_amplitude() >= _trick_target_amp()
 		or not player_entity.trick_controller.is_wheelie_stick_trick()
 	):
 		return
@@ -68,7 +67,7 @@ func _trick_target_amp() -> float:
 
 
 ## Peak |wobble_angle| this swing reaches (rad), from its angle + velocity.
-func _amplitude() -> float:
+func get_amplitude() -> float:
 	return sqrt(wobble_angle * wobble_angle + wobble_vel * wobble_vel / WOBBLE_SPRING)
 
 
@@ -156,7 +155,7 @@ func tick(delta: float):
 	# Slowing below min speed kills the wobble — a universal low-speed save. A trick wobble swinging
 	# bigger than its pitch warrants (closing in on the balance point) mellows the same way.
 	if movement_controller.speed < WOBBLE_MIN_SPEED or (
-		wobble_from_trick and _amplitude() > _trick_target_amp()
+		wobble_from_trick and get_amplitude() > _trick_target_amp()
 	):
 		damping += WOBBLE_RECOVER_BOOST * 3.0
 	wobble_vel -= WOBBLE_SPRING * wobble_angle * delta

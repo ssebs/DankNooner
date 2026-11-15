@@ -1178,7 +1178,10 @@ func _drift_calc(delta: float):
 
 	if not is_drifting:
 		# Trigger 1b: a high-speed brake-slide entry wobbles instead of starting a drift.
-		if _is_brake_slide_input() and speed_pct > WobbleController.WOBBLE_BRAKE_ENTRY_SPEED_FRAC:
+		if (
+			_is_brake_slide_input()
+			and speed_pct > player_entity.bike_definition.brake_slide_wobble_speed_frac
+		):
 			var kick := signf(input_controller.nfx_steer) * WobbleController.WOBBLE_BRAKE_ENTRY_STRENGTH
 			wobble_controller.wobble_vel += kick
 			DebugUtils.DebugMsg(

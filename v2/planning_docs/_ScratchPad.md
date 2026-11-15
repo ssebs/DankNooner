@@ -51,7 +51,6 @@ Make a hoodie
 - [ ] number in tutorial doesnt make sense (multiple tut stages shouldnt exist, at least w/ count)
 - [ ] make red warn label more obvious
 - [ ] make press A to open eventstartcircle more obvious
-- [ ] mini bike should not be so unstable when hitting rear brake / steering. 
 - [ ] gas station minimap icon looks like gun store
 
 - [ ] new mod for sport bike => wings

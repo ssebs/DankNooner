@@ -33,6 +33,8 @@ class_name BikeTypeDefinition extends Resource
 ## Steer responsiveness vs speed (X=speed%, Y=steer multiplier) — bell curve shape
 ## Low at standstill, peaks ~20mph equiv, tapers at top speed
 @export var steer_curve: Curve = preload("res://player/bikes/resources/steer_speed_curve.tres")
+## Speed fraction above which a rear-brake slide entry wobbles instead of drifting. 1 = never.
+@export_range(0.0, 1.0, 0.05) var brake_slide_wobble_speed_frac: float = 0.6
 
 @export_group("Tricks")
 @export var wheelie_balance_point_deg: float = 70.0

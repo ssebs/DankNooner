@@ -174,6 +174,9 @@ var lean_curve: Curve:
 var steer_curve: Curve:
 	get:
 		return bike_type.steer_curve
+var brake_slide_wobble_speed_frac: float:
+	get:
+		return bike_type.brake_slide_wobble_speed_frac
 var wheelie_balance_point_deg: float:
 	get:
 		return bike_type.wheelie_balance_point_deg
