@@ -25,15 +25,17 @@ Make a hoodie
 ## NOW
 
 - [ ] are we showing all the career stats/per bike stats somewhere?
-- [ ] hold tab in game, show mouse cursor. allow toggling profile challenges or clicking on the loadout to change it
-  - [ ] bike challenge in game alternates w/ daily challenges without me selecting it
-- [ ] stoppie should have timer too
+- [x] hold tab in game, show mouse cursor. allow toggling profile challenges or clicking on the loadout to change it
+- [x] bike challenge in game alternates w/ daily challenges without me selecting it
+- [ ] stoppie should have timer too like wheelie
 - [ ] trick battle needs npcs
+- [ ] new textures as bike mods
+- [ ] more shader texture materials like aurora/lava
 
 
 - [ ] Mods
   - [ ] Wings as mod for sport bike 
-    - [x] mesh
+    - [ ] mesh
     - [ ] (more air time) effect
   - [ ] Scraper/12 bar mod
     - [x] mesh

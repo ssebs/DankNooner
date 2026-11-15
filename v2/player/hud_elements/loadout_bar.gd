@@ -2,6 +2,9 @@
 ## RidingHUDState feeds it the highlighted slot.
 class_name LoadoutBar extends VBoxContainer
 
+## A slot was left-clicked (the cursor is out while the bar is held).
+signal slot_clicked(index: int)
+
 const THUMB_SCENE := preload("res://utils/components/thumbnail_3d.tscn")
 const THUMB_SIZE := Vector2(96, 64)
 ## Loadouts the running event won't let you swap to.
@@ -18,7 +21,9 @@ func open(player_def: PlayerDefinition, can_swap: Callable) -> void:
 	for i in player_def.loadouts.size():
 		var loadout := player_def.loadouts[i]
 		var slot := HBoxContainer.new()
-		slot.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		# PASS, so the scroll wheel still reaches InputStateManager's picking.
+		slot.mouse_filter = Control.MOUSE_FILTER_PASS
+		slot.gui_input.connect(_on_slot_input.bind(i))
 		slot.modulate.a = 1.0 if can_swap.call(i) else LOCKED_ALPHA
 		var panel := PanelContainer.new()
 		panel.theme_type_variation = &"ObjectPanel"
@@ -45,3 +50,10 @@ func pick(index: int) -> void:
 		(get_child(i).get_child(1) as Label).modulate = UtilsConstants.UI_BLUE if i == index else DIM_COLOR
 	# Deferred: a just-opened slot has no size (pop's pivot) until the bar sorts
 	HUDFlash.pop.call_deferred(get_child(index).get_child(0))
+
+
+func _on_slot_input(event: InputEvent, index: int):
+	var mouse := event as InputEventMouseButton
+	if mouse != null and mouse.pressed and mouse.button_index == MOUSE_BUTTON_LEFT:
+		accept_event()
+		slot_clicked.emit(index)

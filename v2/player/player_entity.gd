@@ -83,8 +83,8 @@ signal launch_measured(peer_id: int, meters: float)
 ## (training_wheels_marker_* / wheelie_bar_marker_*).
 @export var training_wheels_marker: Marker3D
 @export var wheelie_bar_marker: Marker3D
-## Editor only: each one's mesh rides its marker, so the marker can be placed by eye.
-@export var mod_previews: Array[AttachmentMod] = []
+## Editor only: attachments ride their marker (place it by eye); texture mods overlay the bike.
+@export var mod_previews: Array[BikeMod] = []
 
 
 ## Local cosmetic decel pops / backfires (see _update_exhaust_pops).

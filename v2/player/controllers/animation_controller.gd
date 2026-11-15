@@ -1019,7 +1019,8 @@ func _load_wheel_markers_from_definition(def: BikeSkinDefinition) -> void:
 		_show_mod_previews()
 
 
-## Editor: hang each PlayerEntity.mod_previews mesh under its marker (plus its mirror_x copy).
+## Editor: hang each PlayerEntity.mod_previews mesh under its marker (plus its mirror_x copy);
+## texture mods overlay the bike instead.
 ## Unowned, so never saved.
 func _show_mod_previews() -> void:
 	_mod_mirrors.clear()
@@ -1027,12 +1028,16 @@ func _show_mod_previews() -> void:
 		for child in marker.get_children():
 			child.queue_free()
 	for mod in player_entity.mod_previews:
+		if mod is TextureMod:
+			mod.apply(bike_skin)
+			continue
+		var attachment := mod as AttachmentMod
 		var marker: Marker3D = player_entity.training_wheels_marker
-		if mod.marker == AttachmentMod.Marker.WHEELIE_BAR:
+		if attachment.marker == AttachmentMod.Marker.WHEELIE_BAR:
 			marker = player_entity.wheelie_bar_marker
-		marker.add_child(mod.scene.instantiate())
-		if mod.mirror_x:
-			var mirrored: Node3D = mod.scene.instantiate()
+		marker.add_child(attachment.scene.instantiate())
+		if attachment.mirror_x:
+			var mirrored: Node3D = attachment.scene.instantiate()
 			marker.add_child(mirrored)
 			_mod_mirrors.append(mirrored)
 	_follow_mod_mirrors()

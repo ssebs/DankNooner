@@ -16,11 +16,19 @@ const CARD_WIDTH := 220.0
 const REWARD_THUMB_SIZE := Vector2(172, 112)
 ## A reward not yet earned, matching LoadoutBar's locked slots.
 const REWARD_LOCKED_ALPHA := LoadoutBar.LOCKED_ALPHA
-## Career column widths, so every section's grid lines up.
-const CAREER_NAME_WIDTH := 220.0
-const CAREER_VALUE_WIDTH := 110.0
+## Career column widths, so every grid lines up.
+const CAREER_NAME_WIDTH := 200.0
+const CAREER_VALUE_WIDTH := 96.0
 ## A bike type's cell for a stat it has no entry for.
 const CAREER_NONE := "-"
+const CAREER_SECTION_FONT_SIZE := 22
+const CAREER_FONT_SIZE := 17
+const CAREER_SMALL_FONT_SIZE := 14
+## Text emphasis on white, Material style: secondary (headers, sub-labels, per-type values) and
+## disabled (no entry).
+const CAREER_SECONDARY := Color(1, 1, 1, 0.6)
+const CAREER_DISABLED := Color(1, 1, 1, 0.3)
+const CAREER_DIVIDER := Color(1, 1, 1, 0.08)
 
 @onready var _bg_tint: ColorRect = %BGTint
 @onready var _tabs: PromptTabContainer = %Tabs
@@ -130,35 +138,60 @@ func _career_run_rows(title: String, key: String) -> Array:
 	]
 
 
-## rows: [title, sub-label, stat key, format(value) -> String]; lines missing from the lifetime
-## scope (scopes[0]) are left out, and the section with them.
+## rows: [title, sub-label, stat key, format(value) -> String]; a titled row starts a stat, its
+## untitled rows follow. Lines missing from the lifetime scope (scopes[0]) are left out, and the
+## section with them. Each stat is its own grid under a divider.
 func _add_career_section(
 	title_key: String, rows: Array, scopes: Array[Dictionary], columns: PackedStringArray
 ):
 	var shown := rows.filter(func(row): return scopes[0].has(row[2]))
 	if shown.is_empty():
 		return
+	var section := VBoxContainer.new()
+	section.add_theme_constant_override("separation", 6)
+	_career_list.add_child(section)
 	var header := Label.new()
-	header.theme_type_variation = &"Heading2Label"
+	header.theme_type_variation = &"TableHeaderLabel"
+	header.add_theme_font_size_override("font_size", CAREER_SECTION_FONT_SIZE)
 	header.text = title_key
-	_career_list.add_child(header)
-	var grid := GridContainer.new()
-	grid.columns = columns.size()
-	_career_list.add_child(grid)
+	section.add_child(header)
+	var grid := _add_career_grid(section, columns.size())
 	for column in columns:
-		_add_career_cell(grid, column)
+		_add_career_cell(grid, column, CAREER_SECONDARY, CAREER_SMALL_FONT_SIZE)
 	for row: Array in shown:
-		_add_career_cell(grid, row[0])
-		_add_career_cell(grid, row[1])
-		for scope in scopes:
-			_add_career_cell(grid, row[3].call(scope[row[2]]) if scope.has(row[2]) else CAREER_NONE)
+		if row[0] != "":
+			var divider := ColorRect.new()
+			divider.color = CAREER_DIVIDER
+			divider.custom_minimum_size.y = 1
+			section.add_child(divider)
+			grid = _add_career_grid(section, columns.size())
+		_add_career_cell(grid, row[0], Color.WHITE, CAREER_FONT_SIZE)
+		_add_career_cell(grid, row[1], CAREER_SECONDARY, CAREER_SMALL_FONT_SIZE)
+		for i in scopes.size():
+			if !scopes[i].has(row[2]):
+				_add_career_cell(grid, CAREER_NONE, CAREER_DISABLED, CAREER_FONT_SIZE)
+				continue
+			# Total reads first; the per-type split is secondary.
+			var color := Color.WHITE if i == 0 else CAREER_SECONDARY
+			_add_career_cell(grid, row[3].call(scopes[i][row[2]]), color, CAREER_FONT_SIZE)
+
+
+func _add_career_grid(section: VBoxContainer, columns: int) -> GridContainer:
+	var grid := GridContainer.new()
+	grid.columns = columns
+	grid.add_theme_constant_override("v_separation", 2)
+	section.add_child(grid)
+	return grid
 
 
 ## Name, sub-label, then values, right-aligned.
-func _add_career_cell(grid: GridContainer, text: String):
+func _add_career_cell(grid: GridContainer, text: String, color: Color, font_size: int):
 	var cell := Label.new()
 	cell.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
 	cell.text = text
+	cell.add_theme_color_override("font_color", color)
+	cell.add_theme_font_size_override("font_size", font_size)
+	cell.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	var column := grid.get_child_count() % grid.columns
 	cell.custom_minimum_size.x = CAREER_NAME_WIDTH if column == 0 else CAREER_VALUE_WIDTH
 	if column >= 2:
@@ -212,9 +245,9 @@ func _build_challenge_lists():
 			_add_challenge_card(cards, base, row, reward[0] if !reward.is_empty() else {})
 
 
-## A card: the reward's name, the reward (base bike wearing it, dimmed until earned; "Do all
-## challenges" over the mastery mod's), then the challenge's row. Cards in a row share its height (the HBox
-## stretches them). reward: a SaveManager.mod_rewards entry, empty for none.
+## A card: the reward's name, the reward (base bike wearing it, dimmed until earned), then the
+## challenge's row. Cards in a row share its height (the HBox stretches them). reward: a
+## SaveManager.mod_rewards entry, empty for none.
 func _add_challenge_card(cards: Container, base: BikeSkinDefinition, row: Dictionary, reward: Dictionary):
 	var card := PanelContainer.new()
 	card.theme_type_variation = &"TrickRowPanel"
@@ -229,26 +262,14 @@ func _add_challenge_card(cards: Container, base: BikeSkinDefinition, row: Dictio
 		title.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
 		title.text = GarageUI.skin_label(GarageUI.mod_file_name(reward["mod"]))
 		body.add_child(title)
-		# Stacks its children, so the note sits over the thumbnail without adding height.
-		var frame := PanelContainer.new()
-		frame.theme_type_variation = &"BarePanel"
-		body.add_child(frame)
 		var thumb: Thumbnail3D = THUMB_SCENE.instantiate()
 		thumb.custom_minimum_size = REWARD_THUMB_SIZE
 		thumb.modulate.a = 1.0 if reward["earned"] else REWARD_LOCKED_ALPHA
-		frame.add_child(thumb)
+		body.add_child(thumb)
 		var fitted: BikeSkinDefinition = base.duplicate()
 		var mods: Array[BikeMod] = [reward["mod"]]
 		fitted.mods = mods
 		thumb.set_skin(Thumbnail3D.Type.BIKE, fitted)
-		if reward["challenge"] == null:
-			var note := Label.new()
-			note.add_theme_font_size_override("font_size", 20)
-			note.vertical_alignment = VERTICAL_ALIGNMENT_TOP
-			note.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-			note.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			note.text = tr("REWARD_ALL_CHALLENGES")
-			frame.add_child(note)
 	var typed: Array[Dictionary] = [row]
 	ProfileCard.build_rows(body, typed)
 

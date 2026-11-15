@@ -141,6 +141,7 @@ func _poll_loadout_bar():
 	if Input.is_action_just_pressed("loadouts"):
 		_loadout_pick = save_manager.get_player_definition().active_loadout_index
 		loadout_pick_changed.emit(_loadout_pick)
+		showhide_mouse_cursor()
 	if _loadout_pick < 0:
 		return
 	if Input.is_action_just_released("loadouts"):
@@ -158,10 +159,16 @@ func _step_loadout_pick(step: int):
 		loadout_pick_changed.emit(_loadout_pick)
 
 
+## A clicked slot (LoadoutBar.slot_clicked); release still swaps.
+func pick_loadout(idx: int):
+	_step_loadout_pick(idx - _loadout_pick)
+
+
 func _close_loadout_bar():
 	if _loadout_pick >= 0:
 		_loadout_pick = -1
 		loadout_pick_changed.emit(-1)
+		showhide_mouse_cursor()
 
 
 ## The loadout bar owns the camera stick while it's open.
@@ -186,11 +193,13 @@ func _unhandled_input(event: InputEvent):
 		InputState.DISABLED, InputState.IN_TOUR, InputState.IN_EVENT_PICKER:
 			return
 		InputStateManager.InputState.IN_GAME:
-			if is_loadout_bar_open() and event is InputEventMouseButton and event.pressed:
-				if event.button_index == MOUSE_BUTTON_WHEEL_UP:
+			if is_loadout_bar_open() and event is InputEventMouseButton:
+				if event.pressed and event.button_index == MOUSE_BUTTON_WHEEL_UP:
 					_step_loadout_pick(-1)
-				elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+				elif event.pressed and event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 					_step_loadout_pick(1)
+				# The cursor is out for the bar and profile card; a stray click isn't an item use.
+				return
 			if event.is_action_pressed("pause"):
 				pause_requested.emit()
 			elif event.is_action_pressed("open_map"):
@@ -287,7 +296,9 @@ func showhide_mouse_cursor():
 		InputState.IN_MAP, InputState.IN_MINIGAME, InputState.IN_TOUR, InputState.IN_EVENT_PICKER:
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 		InputStateManager.InputState.IN_GAME, InputStateManager.InputState.DISABLED:
-			if !is_mobile:
+			if is_loadout_bar_open():
+				Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+			elif !is_mobile:
 				Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 #endregion

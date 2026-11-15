@@ -44,8 +44,10 @@ Steps refer to [New systems](#new-systems).
 - **Challenge UI** (part of step 6, verified 2026-11-14): the profile card's Daily and Bike
   Challenges tabs (every menu card + the riding HUD, live) list today's dailies and the active bike
   type's challenges, unfinished first (`ProfileCard.challenge_rows`). On the HUD a row whose count
-  goes up pops (punches on completion) and the panel peeks open on its tab for a few seconds; the
-  completion callout holds longer than a trick's. The Saves menu's Bike Challenges tab lists every
+  goes up pops (punches on completion) and the panel peeks open for a few seconds on the rider's
+  own tab (progress never switches it); the completion callout holds longer than a trick's.
+  Holding `loadouts` shows the cursor: the card's tabs and the loadout bar's slots take clicks
+  (a slot click moves the pick; release still swaps). The Saves menu's Bike Challenges tab lists every
   type (`SaveManager.bike_types`, `BikeTypeDefinition.name_key`) under a finished / listed
   header, as a row of cards: the challenge's reward thumbnail over its row (built 2026-11-14,
   untested). Every challenge row shows its payout (money green, XP gold). Save Slots is the
@@ -75,10 +77,10 @@ Steps refer to [New systems](#new-systems).
 - **Mod rewards** (step 2, built 2026-11-14, untested): `ChallengeDefinition.reward_mod` (a
   `TextureMod`) and `BikeTypeDefinition.mastery_mod` (an `AttachmentMod` for the whole list: mini
   wheelie bar, naked training wheels), listed by `SaveManager.mod_rewards()`. A type has one reward
-  per challenge: the last challenge has no `reward_mod`, and its card shows the mastery mod. Placeholder
-  textures: the arrow wall's arrows in three tints (`resources/bikes/mods/arrow_*_mod.tres`). The
+  per challenge: the last challenge has no `reward_mod`, and its card shows the mastery mod. Reward
+  textures: neons on the easier challenges, animated lava / aurora on the hardest. The
   Saves menu cards show each reward as a `Thumbnail3D` of the type's base bike wearing it (the
-  mastery mod noted "Do all challenges"), dimmed until earned; the garage preview rebuilds on a mod
+  mod's name as a title), dimmed until earned; the garage preview rebuilds on a mod
   change. The garage's Bike Mods
   page lists every reward mod: locked until a source challenge is done, then bought like a skin,
   then pressed to fit / remove on the loadout bike (`mods`, saved per loadout). One TextureMod at a
@@ -106,8 +108,8 @@ In build order:
 2. **Challenge content:** full lists per type (about 10), a bigger daily pool, confetti VFX, the
    Daily tab's time to reset, and auto-opening the card on unseen dailies.
 3. **Mod ladder** (rest of step 2, see [Bike challenges](#bike-challenges-and-mastery)):
-   built 2026-11-14 (see [Built](#built)). Left: place the mod markers on every bike, real
-   textures to replace the arrow placeholders, and a mod for sport's list.
+   built 2026-11-14 (see [Built](#built)). Left: place the mod markers on every bike,
+   and a mod for sport's list.
 4. **Achievement progress** on the Career tab, with step 5.
 5. **Console commands** (step 9): `add_bike_level <type> <levels>`, `unlock_bike_max <type>`.
 6. **Steam stats + achievements** (step 5): full build only.

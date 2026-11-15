@@ -1,0 +1,35 @@
+[gd_resource type="Resource" script_class="TextureMod" format=3 uid="uid://f4ti06m0opev"]
+
+[ext_resource type="Shader" uid="uid://dcrd21vlkakud" path="res://entities/vfx/exhaust_flame_particles.gdshader" id="1_stcdc"]
+[ext_resource type="Script" uid="uid://cjeqtuj8i15db" path="res://resources/bikes/mods/texture_mod.gd" id="2_pgk1g"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wpb6x"]
+render_priority = 0
+shader = ExtResource("1_stcdc")
+shader_parameter/apply_shape_deform = false
+shader_parameter/top_radius = 0.0
+shader_parameter/bottom_radius = 0.0
+shader_parameter/center_radius = 0.0
+shader_parameter/center_position = 0.0
+shader_parameter/cylinder_height = 1.0
+shader_parameter/bottom_curve = 0.4
+shader_parameter/_vibrate_amplitude = 0.015
+shader_parameter/_vibrate_frequency = 200.0
+shader_parameter/_speed = 0.2
+shader_parameter/_scale = 2.225
+shader_parameter/color_inner = Color(1.353, 0.919, 0.416, 0)
+shader_parameter/color_outer = Color(0.737, 0.141, 0, 0.678)
+shader_parameter/color_threshold = 0.5
+shader_parameter/flame_height = 1.0
+shader_parameter/flame_height_offset = -0.325
+shader_parameter/pattern_scale = 2.5
+shader_parameter/use_additional_texture = false
+shader_parameter/texture_scale = 1.0
+shader_parameter/texture_blend = 1.0
+shader_parameter/outline_enabled = true
+shader_parameter/outline_color = Color(0, 0, 0, 1)
+shader_parameter/outline_thickness = 0.04
+
+[resource]
+script = ExtResource("2_pgk1g")
+material = SubResource("ShaderMaterial_wpb6x")

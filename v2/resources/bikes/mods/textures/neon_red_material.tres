@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="TextureMod" format=3 uid="uid://dufb7tgc4vgvw"]
+
+[ext_resource type="Material" uid="uid://tsxn2jb72gby" path="res://levels/assets/props/neon_red.tres" id="1_hjqeo"]
+[ext_resource type="Script" uid="uid://cjeqtuj8i15db" path="res://resources/bikes/mods/texture_mod.gd" id="2_2lcdp"]
+
+[resource]
+script = ExtResource("2_2lcdp")
+material = ExtResource("1_hjqeo")

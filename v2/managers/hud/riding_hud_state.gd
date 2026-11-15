@@ -168,6 +168,7 @@ func Enter(_state_context: StateContext):
 	input_state_mgr.input_state_changed.connect(_on_input_state_changed)
 	input_state_mgr.respawn_quick_fired.connect(_on_respawn_quick_fired)
 	input_state_mgr.loadout_pick_changed.connect(_on_loadout_pick_changed)
+	_loadout_bar.slot_clicked.connect(input_state_mgr.pick_loadout)
 	save_manager.save_item_updated.connect(_on_save_item_updated)
 	save_manager.leveled_up.connect(_on_leveled_up)
 
@@ -196,6 +197,7 @@ func Exit(_state_context: StateContext):
 	input_state_mgr.input_state_changed.disconnect(_on_input_state_changed)
 	input_state_mgr.respawn_quick_fired.disconnect(_on_respawn_quick_fired)
 	input_state_mgr.loadout_pick_changed.disconnect(_on_loadout_pick_changed)
+	_loadout_bar.slot_clicked.disconnect(input_state_mgr.pick_loadout)
 	save_manager.save_item_updated.disconnect(_on_save_item_updated)
 	save_manager.leveled_up.disconnect(_on_leveled_up)
 

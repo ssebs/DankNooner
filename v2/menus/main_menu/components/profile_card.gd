@@ -85,19 +85,17 @@ var _input_state_manager: InputStateManager
 var _challenge_progress: Dictionary[String, float] = {}
 ## Ticks msec the challenge peek closes at; 0 when not peeking.
 var _challenge_peek_until: int = 0
-## The tab the challenge peek shows.
-var _challenge_peek_tab: Tab = Tab.CHALLENGES
 ## Every challenge in the shown bike type's list is finished.
 var _bike_done: bool = false
 
 
 func _ready():
 	_caret_slot.visible = expandable
-	if !expandable:
-		_daily_tab.mouse_filter = MOUSE_FILTER_IGNORE
-		_challenges_tab.mouse_filter = MOUSE_FILTER_IGNORE
-		_leaderboard_tab.mouse_filter = MOUSE_FILTER_IGNORE
-	else:
+	# Clickable while expandable or peeking (see _apply).
+	_daily_tab.pressed.connect(_on_tab_pressed.bind(Tab.DAILY))
+	_challenges_tab.pressed.connect(_on_tab_pressed.bind(Tab.CHALLENGES))
+	_leaderboard_tab.pressed.connect(_on_tab_pressed.bind(Tab.LEADERBOARD))
+	if expandable:
 		_caret.focus_mode = FOCUS_ALL
 		# A TextureButton draws no focus style, so ring it with the buttons' one, hollow.
 		var ring: StyleBoxFlat = get_theme_stylebox("focus", "Button").duplicate()
@@ -118,9 +116,6 @@ func _ready():
 		for focusable: Control in [_pill, _caret]:
 			focusable.focus_entered.connect(_show_tab_prompts)
 			focusable.focus_exited.connect(_show_tab_prompts)
-		_daily_tab.pressed.connect(_on_tab_pressed.bind(Tab.DAILY))
-		_challenges_tab.pressed.connect(_on_tab_pressed.bind(Tab.CHALLENGES))
-		_leaderboard_tab.pressed.connect(_on_tab_pressed.bind(Tab.LEADERBOARD))
 	_apply(true)
 	if !clickable:
 		_pill.mouse_default_cursor_shape = CURSOR_ARROW
@@ -210,7 +205,7 @@ func show_stats(player_def: PlayerDefinition) -> void:
 
 ## Today's dailies and the bike type's challenges, unfinished first. Rows are updated in place, so
 ## the riding HUD calls this every frame. juice: a row whose count went up pops (punches when it
-## finishes) and the panel peeks open on its tab.
+## finishes) and the panel peeks open.
 func show_challenges(bike_type: BikeTypeDefinition, save_dict: Dictionary, juice: bool) -> void:
 	var shown := _challenge_progress
 	_challenge_progress = {}
@@ -229,7 +224,7 @@ func show_challenges(bike_type: BikeTypeDefinition, save_dict: Dictionary, juice
 		_bike_done = bike_done
 		if bike_done and juice:
 			HUDFlash.punch(_challenges_done)
-			_peek_challenges(Tab.CHALLENGES, CHALLENGE_DONE_PEEK_SECS)
+			_peek_challenges(CHALLENGE_DONE_PEEK_SECS)
 		_apply()
 	if _challenge_peek_until > 0 and Time.get_ticks_msec() >= _challenge_peek_until:
 		_challenge_peek_until = 0
@@ -315,11 +310,11 @@ func _show_rows(tab: Tab, list: VBoxContainer, rows: Array, shown: Dictionary, j
 				HUDFlash.punch(row)
 			else:
 				HUDFlash.pop(row)
-			_peek_challenges(tab, CHALLENGE_DONE_PEEK_SECS if done else CHALLENGE_PEEK_SECS)
+			_peek_challenges(CHALLENGE_DONE_PEEK_SECS if done else CHALLENGE_PEEK_SECS)
 
 
-func _peek_challenges(tab: Tab, secs: float):
-	_challenge_peek_tab = tab
+## Opens the panel on the rider's own tab; progress never switches it.
+func _peek_challenges(secs: float):
 	_challenge_peek_until = maxi(_challenge_peek_until, Time.get_ticks_msec() + int(secs * 1000.0))
 	_apply()
 
@@ -374,17 +369,20 @@ func _apply(snap: bool = false):
 	var tab := Tab.CHALLENGES if _tab == Tab.LEADERBOARD and !has_board else _tab
 	if _challenge_peek_until > 0:
 		expanded = true
-		tab = _challenge_peek_tab
 	if board_overrides and has_board and _board_is_event:
 		expanded = true
 		tab = Tab.LEADERBOARD
 	expanded = (expanded or _peek) and show_drop
 	_shown_tab = tab
 
-	# Display-only (the riding HUD) shows just the active tab.
-	_daily_tab.visible = expandable or tab == Tab.DAILY
-	_challenges_tab.visible = expandable or tab == Tab.CHALLENGES
-	_leaderboard_tab.visible = has_board and (expandable or tab == Tab.LEADERBOARD)
+	# Display-only (the riding HUD) shows just the active tab, except while peeking (loadouts held,
+	# cursor out), when they're all clickable.
+	var all_tabs := expandable or _peek
+	_daily_tab.visible = all_tabs or tab == Tab.DAILY
+	_challenges_tab.visible = all_tabs or tab == Tab.CHALLENGES
+	_leaderboard_tab.visible = has_board and (all_tabs or tab == Tab.LEADERBOARD)
+	for tab_btn: Button in [_daily_tab, _challenges_tab, _leaderboard_tab]:
+		tab_btn.mouse_filter = MOUSE_FILTER_STOP if all_tabs else MOUSE_FILTER_IGNORE
 	_daily_tab.set_pressed_no_signal(tab == Tab.DAILY)
 	_challenges_tab.set_pressed_no_signal(tab == Tab.CHALLENGES)
 	_leaderboard_tab.set_pressed_no_signal(tab == Tab.LEADERBOARD)
