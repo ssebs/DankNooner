@@ -1,6 +1,6 @@
 # Progression
 
-> **Status 2026-11-13:** see [Built](#built), [Next](#next) and [3D models to make](#3d-models-to-make).
+> **Status 2026-11-14:** see [Built](#built), [Next](#next) and [3D models to make](#3d-models-to-make).
 > Gamba wheel is out for now.
 >
 > **Demo scope.** The full release adds a story on top ([Story](./Story.md)); the big map's plans
@@ -17,6 +17,7 @@
 - [Bike types and skins](#bike-types-and-skins)
 - [Challenges](#challenges)
 	- [Bike challenges and mastery](#bike-challenges-and-mastery)
+	- [Mod effects](#mod-effects)
 	- [Dailies](#dailies)
 	- [Completion](#completion)
 - [Stats and achievements](#stats-and-achievements)
@@ -29,7 +30,8 @@
 
 ## Built
 
-Steps refer to [New systems](#new-systems).
+Steps refer to [New systems](#new-systems). "Playtested" items mostly work; any breakage goes in
+TODO.
 
 - **Bike type split** (step 1): `BikeTypeDefinition` holds simulation (collision, gearing,
   physics, tricks, surfaces); skins point at their type. See [Skins](./Skins.md#biketypedefinition).
@@ -50,8 +52,8 @@ Steps refer to [New systems](#new-systems).
   (a slot click moves the pick; release still swaps). The Saves menu's Bike Challenges tab lists every
   type (`SaveManager.bike_types`, `BikeTypeDefinition.name_key`) under a finished / listed
   header, as a row of cards: the challenge's reward thumbnail over its row (built 2026-11-14,
-  untested). Every challenge row shows its payout (money green, XP gold). Save Slots is the
-  Saves menu's last tab. Daily tab (built 2026-11-14) untested.
+  playtested). Every challenge row shows its payout (money green, XP gold). Save Slots is the
+  Saves menu's last tab. Daily tab built and playtested 2026-11-14.
 - **Console:** `dbg_set_money`, `dbg_set_level`, `dbg_unlock_all` (also finishes every bike challenge and owns every mod).
 - **Stats tracker** (step 3, verified 2026-11-14): `StatsManager` +
   `SaveManager.add_stat` / `max_stat`, saved under `progression.stats` as `lifetime` and `by_type`.
@@ -64,17 +66,17 @@ Steps refer to [New systems](#new-systems).
   `BikeTypeDefinition.challenges`. `ChallengeManager` runs on each rider's client off
   `StatsManager.stat_recorded`, counts only on the active bike's type, from zero; progress saved
   under `progression.challenges` by resource path. Completion pays via `SaveManager.earn` with a
-  callout + `CONFETTI_HORN`. Starter lists are placeholders (2–3 per type), rewards unsized.
-- **Dailies** (step 4, built 2026-11-14, untested): `SaveManager.daily_pool` (templates in
+  callout + `CONFETTI_HORN`. Starter lists are placeholders (3–4 per type), rewards unsized.
+- **Dailies** (step 4, built + playtested 2026-11-14): `SaveManager.daily_pool` (templates in
   `resources/challenges/daily/`); `refresh_dailies()` draws `DAILY_COUNT` on load and on the first
   stat sample of a new local day, saved under `progression.daily` (`date`, `picks`, `progress`).
   `ChallengeManager` advances them on any bike, paid and juiced like bike challenges.
-- **Mastery skin gate** (step 2, built 2026-11-14, untested): `BikeSkinDefinition.unlock_mastery`
+- **Mastery skin gate** (step 2, built + playtested 2026-11-14): `BikeSkinDefinition.unlock_mastery`
   (finished challenges of its type, `SaveManager.mastery()`) gates a type's variant skins in
   `is_locked()`; base skins keep `unlock_level`. Garage locked rows read "🔒 Type done/needed ·
   $price". The challenge that reaches a skin's gate adds a held "Skin unlocked!" callout.
   Scooter and cruiser need the full current list (cruiser no longer needs a rider level).
-- **Mod rewards** (step 2, built 2026-11-14, untested): `ChallengeDefinition.reward_mod` (a
+- **Mod rewards** (step 2, built + playtested 2026-11-14): `ChallengeDefinition.reward_mod` (a
   `TextureMod`) and `BikeTypeDefinition.mastery_mod` (an `AttachmentMod` for the whole list: mini
   wheelie bar, naked training wheels), listed by `SaveManager.mod_rewards()`. A type has one reward
   per challenge: the last challenge has no `reward_mod`, and its card shows the mastery mod. Reward
@@ -85,17 +87,18 @@ Steps refer to [New systems](#new-systems).
   page splits reward mods into Textures and Attachments pages (the Textures row shows the fitted one); each lists its mods: locked until a source challenge is done, then bought like a skin,
   then pressed to fit / remove on the loadout bike (`mods`, saved per loadout). One TextureMod at a
   time; changing the bike drops its mods, like its colors.
-- **Mod unlock + unread** (built 2026-11-14, untested): earning a reward mod pops a "{mod} unlocked!"
+- **Mod unlock + unread** (built + playtested 2026-11-14): earning a reward mod pops a "{mod} unlocked!"
   callout with a `Thumbnail3D` of the rider's bike wearing it, held as long as the callout
   (`RidingHUDState.pop_unlocked`). The mod goes into `progression.unread_mods` until its Bike
   Mods row is focused; while unread, a gold `UnreadDot` marks that row, the Bike Mods row, loadout
   tabs whose bike type earned it, and the main menu's Customize button.
-- **Career tab** (part of step 6, built 2026-11-14, untested): the Saves menu's Career tab reads
+- **Career tab** (part of step 6, built + playtested 2026-11-14): the Saves menu's Career tab reads
   `progression.stats` into Riding / Tricks / Events sections, a line per stat with columns Total
   then each bike type (`SaveManager.stat_type_key`); run stats (tricks, airtime) show count, total
   time and best. Only stats the save has show. Distance shows in miles to match the HUD's mph. The
-  profile card has no Career tab. No achievement progress yet (step 5).
-- **Level-up callout** (built 2026-11-14, untested): `SaveManager.earn` emits `leveled_up` once per
+  profile card has no Career tab. These stats double as achievement progress; only the Steam
+  side (step 5) is missing.
+- **Level-up callout** (built + playtested 2026-11-14): `SaveManager.earn` emits `leveled_up` once per
   level crossed; `RidingHUDState` pops a held "Level N!" with `CONFETTI_HORN`, then "{bike}
   unlocked!" with its thumbnail for each bike whose `unlock_level` that is.
 
@@ -104,15 +107,16 @@ Steps refer to [New systems](#new-systems).
 
 In build order:
 
-1. **Payouts:** size challenge and daily rewards (see [Economy](./Economy.md)).
-2. **Challenge content:** full lists per type (about 10), a bigger daily pool, confetti VFX, the
+1. **Payouts:** size challenge and daily rewards; every one still pays the same placeholder (see
+   [Economy](./Economy.md)).
+2. **Challenge content:** full lists per type (about 10; mini and naked have 4, sport 3), a bigger
+   daily pool (8 templates), confetti VFX (completion only plays `CONFETTI_HORN` today), the
    Daily tab's time to reset, and auto-opening the card on unseen dailies.
-3. **Mod ladder** (rest of step 2, see [Bike challenges](#bike-challenges-and-mastery)):
-   built 2026-11-14 (see [Built](#built)). Left: place the mod markers on every bike,
-   and a mod for sport's list.
-4. **Achievement progress** on the Career tab, with step 5.
-5. **Console commands** (step 9): `add_bike_level <type> <levels>`, `unlock_bike_max <type>`.
-6. **Steam stats + achievements** (step 5): full build only.
+3. **Mod ladder** (rest of step 2, see [Bike challenges](#bike-challenges-and-mastery)): markers
+   are placed on every skin. Left: sport's mastery mod (wings) and each mod's
+   [effect](#mod-effects).
+4. **Console commands** (step 9): `add_bike_level <type> <levels>`, `unlock_bike_max <type>`.
+5. **Steam stats + achievements** (step 5): full build only.
 
 Still open:
 
@@ -136,8 +140,9 @@ Still open:
 
 | Mod | Model | Marker |
 |---|---|---|
-| Wheelie bar | `player/bikes/assets/Mods/WheelieBar_*.glb` | `wheelie_bar_marker_*` |
-| Training wheels | `player/bikes/assets/Mods/TrainingWheels_*.glb` | `training_wheels_marker_*` |
+| Wheelie bar | `player/bikes/assets/Mods/WheelieBar_*.glb` | `wheelie_bar_marker_*`, placed on every skin |
+| Training wheels | `player/bikes/assets/Mods/TrainingWheels_*.glb` | `training_wheels_marker_*`, placed on every skin |
+| Wings (sport) | No model | none yet |
 | Exhaust | No model | none yet |
 
 An unlocked mod fits any bike, so every bike skin needs each marker placed. Authoring follows the
@@ -253,12 +258,22 @@ save (same rule as payouts). NPCs never count.
 - **Mastery:** each finished challenge levels the bike type up by one, to a max of 10. "Mastery"
   is a working name to keep it apart from rider level on screen.
 - **One mod per type, at the end of its list** (mastery = the full list): mini unlocks the
-  wheelie bar, naked the training wheels, sport a mod still to model (exhaust?).
+  wheelie bar, naked the training wheels, sport the wings (not modeled yet).
 - **A texture per challenge:** each finished challenge can unlock a body texture (a `BikeMod`
   painting the paintable body). The first is the repeating arrow from the arrow walls
   (`levels/assets/props/repeating_arrow_texture.tres`); more textures come later.
 - A **capstone** (e.g. the airtime total) is naturally the last one done but isn't locked behind
   the others. Finishing the list (max mastery) unlocks the type's other skins.
+
+### Mod effects
+
+Each attachment mod also changes how the bike rides (none built yet):
+
+- **Wheelie bar:** prevents looping out; sparks at the balance point (no ground check).
+- **Training wheels:** prevents lowsides.
+- **Wings:** slower fall, so more airtime.
+
+These bend the [no stat upgrades](#avoid) rule; mods fit any bike and anyone can earn them.
 
 ### Dailies
 
@@ -382,7 +397,7 @@ tricks for unique challenges, and the tutorial (which comes before all of this f
 
 - **Gating tricks:** shrinks the core fun.
 - **Bike stat upgrades:** break multiplayer fairness. Skins of a type share stats for the same
-  reason.
+  reason. Exception: [mod effects](#mod-effects).
 - **Crew / club systems:** a lobby of friends already is one.
 
 

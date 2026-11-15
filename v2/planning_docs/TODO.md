@@ -34,9 +34,23 @@
   - [x] update economy (XP+$ for events / scoring calculations)
     - [x] add unit tests
     - [x] SAVE TO NEW DOC
-  - [ ] stats tracker w/ ui
+  - [x] stats tracker w/ ui
   - [x] daily / bike challenges
-  - [ ] ui
+  - [x] ui
+  - [ ] size challenge / daily payouts
+  - [ ] challenge content
+    - [ ] ~10 challenges per bike type
+    - [ ] bigger daily pool
+    - [ ] confetti vfx
+    - [ ] daily reset timer + auto-open card on new dailies
+  - [ ] mods
+    - [ ] wings mod for sport bike (mesh + markers)
+    - [ ] mod effects (wheelie bar, training wheels, wings)
+  - [ ] console cmds (add_bike_level, unlock_bike_max)
+  - [ ] new bike skins (bicycle, ADV, retro sport, split vendor cart)
+  - [ ] decide sport level gate (5 or 6)
+  - [ ] steam stats + achievements (full build only)
+
 
 ### Steam Prep
 > Demo Next Fest Feb '27 | Release free to play  w/ paid dlc for more content/skins
