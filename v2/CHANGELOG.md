@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.1.4 - 2026-11-14
+
+- tutorial improvements
+- i bike should not be so unstable when hitting rear brake / steering.
+- mods have glow
+- fix anim'd materials
+- - [x] hold tab in game, show mouse cursor. allow toggling profile challenges or clicking on the loadout to change it - [x] bike challenge in game alternates w/ daily challenges without me selecting it - [x] new textures as bike mods
+- bike challenge ui + apply mods
+- set markers for mods
+- Add training wheels + wheelie bar mod markers; fix stale hand/foot sync on bike swap
+- progression + new models
+- working bike challenges
+- econ unit tests
+- new trick economy
+- make hud in game consistent with new menu controls
+
 ## v0.1.3 - 2026-11-13
 
 - profilecard controller support
