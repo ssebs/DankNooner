@@ -62,7 +62,8 @@ static var _board_is_event: bool = false
 @onready var _leaderboard_tab: Button = %LeaderboardTab
 @onready var _daily_list: VBoxContainer = %DailyList
 @onready var _challenge_list: VBoxContainer = %ChallengeList
-## Replaces the list once the bike type's challenges are all finished.
+## Replace their lists once every challenge in them is finished.
+@onready var _dailies_done: Label = %DailiesDone
 @onready var _challenges_done: Label = %ChallengesDone
 @onready var _leaderboard: RaceLeaderboard = %Leaderboard
 @onready var _prev_tab_prompt: InputPrompt = %PrevTabPrompt
@@ -85,7 +86,8 @@ var _input_state_manager: InputStateManager
 var _challenge_progress: Dictionary[String, float] = {}
 ## Ticks msec the challenge peek closes at; 0 when not peeking.
 var _challenge_peek_until: int = 0
-## Every challenge in the shown bike type's list is finished.
+## Every one of today's dailies / the shown bike type's challenges is finished.
+var _daily_done: bool = false
 var _bike_done: bool = false
 
 
@@ -212,19 +214,26 @@ func show_challenges(bike_type: BikeTypeDefinition, save_dict: Dictionary, juice
 	var dailies := challenge_rows(
 		SaveManager.daily_challenges(save_dict), SaveManager.daily_progress(save_dict)
 	)
-	_show_rows(Tab.DAILY, _daily_list, dailies, shown, juice)
+	var daily_done := _show_rows_or_done(
+		Tab.DAILY, _daily_list, _dailies_done, dailies, _daily_done, shown, juice
+	)
 	# Named for the type, so it's clear which bike's list this is (main menu: the active loadout's).
 	_challenges_tab.text = bike_type.name_key
-	var bike := challenge_rows(bike_type.challenges, SaveManager.bike_challenge_progress(save_dict))
-	var bike_done := bike.all(func(row): return row["progress"] >= row["target"])
 	_challenges_done.text = tr("BIKE_CHALLENGES_DONE").format({"type": tr(bike_type.name_key)})
-	var listed := [] if bike_done else bike.slice(0, MAX_CHALLENGES)
-	_show_rows(Tab.CHALLENGES, _challenge_list, listed, shown, juice)
-	if bike_done != _bike_done:
+	var bike := challenge_rows(bike_type.challenges, SaveManager.bike_challenge_progress(save_dict))
+	# Unfinished sort first, so the slice is all done only when the whole list is.
+	var bike_done := _show_rows_or_done(
+		Tab.CHALLENGES,
+		_challenge_list,
+		_challenges_done,
+		bike.slice(0, MAX_CHALLENGES),
+		_bike_done,
+		shown,
+		juice
+	)
+	if daily_done != _daily_done or bike_done != _bike_done:
+		_daily_done = daily_done
 		_bike_done = bike_done
-		if bike_done and juice:
-			HUDFlash.punch(_challenges_done)
-			_peek_challenges(CHALLENGE_DONE_PEEK_SECS)
 		_apply()
 	if _challenge_peek_until > 0 and Time.get_ticks_msec() >= _challenge_peek_until:
 		_challenge_peek_until = 0
@@ -285,6 +294,25 @@ static func build_rows(list: VBoxContainer, entries: Array[Dictionary]):
 		row.show_challenge(
 			entry["title"], entry["progress"], entry["target"], entry.get("money", 0), entry.get("xp", 0)
 		)
+
+
+## rows via _show_rows, or `done` in their place once every one is finished (punching it as the last
+## one finishes, with juice). was_done: the last call's result. Returns whether all are finished.
+func _show_rows_or_done(
+	tab: Tab,
+	list: VBoxContainer,
+	done: Label,
+	rows: Array,
+	was_done: bool,
+	shown: Dictionary,
+	juice: bool
+) -> bool:
+	var all_done := !rows.is_empty() and rows.all(func(row): return row["progress"] >= row["target"])
+	_show_rows(tab, list, [] if all_done else rows, shown, juice)
+	if all_done and !was_done and juice:
+		HUDFlash.punch(done)
+		_peek_challenges(CHALLENGE_DONE_PEEK_SECS)
+	return all_done
 
 
 ## shown: _challenge_progress as it was before this refresh.
@@ -386,7 +414,8 @@ func _apply(snap: bool = false):
 	_daily_tab.set_pressed_no_signal(tab == Tab.DAILY)
 	_challenges_tab.set_pressed_no_signal(tab == Tab.CHALLENGES)
 	_leaderboard_tab.set_pressed_no_signal(tab == Tab.LEADERBOARD)
-	_daily_list.visible = tab == Tab.DAILY
+	_daily_list.visible = tab == Tab.DAILY and !_daily_done
+	_dailies_done.visible = tab == Tab.DAILY and _daily_done
 	_challenge_list.visible = tab == Tab.CHALLENGES and !_bike_done
 	_challenges_done.visible = tab == Tab.CHALLENGES and _bike_done
 	_leaderboard.visible = tab == Tab.LEADERBOARD

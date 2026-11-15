@@ -7,6 +7,7 @@
 [ext_resource type="Resource" uid="uid://bm3oq3ht4rrmf" path="res://resources/challenges/mini/bunny_hops.tres" id="c0_chal"]
 [ext_resource type="Resource" uid="uid://co7ed7d78yhwh" path="res://resources/challenges/mini/wheelie_5s.tres" id="c1_chal"]
 [ext_resource type="Resource" uid="uid://csxg233kls47" path="res://resources/challenges/mini/airtime_60s.tres" id="c2_chal"]
+[ext_resource type="Resource" path="res://resources/challenges/mini/backflips.tres" id="c3_chal"]
 [ext_resource type="Script" uid="uid://dg10iwnfkiwf3" path="res://resources/challenges/challenge_definition.gd" id="cs_chal"]
 [ext_resource type="Resource" path="res://resources/bikes/mods/wheelie_bar_mod.tres" id="m_mastery"]
 
@@ -26,5 +27,5 @@ acceleration = 8.0
 brake_strength = 20.0
 lean_speed = 4.0
 name_key = "BIKE_TYPE_MINI"
-challenges = Array[ExtResource("cs_chal")]([ExtResource("c0_chal"), ExtResource("c1_chal"), ExtResource("c2_chal")])
+challenges = Array[ExtResource("cs_chal")]([ExtResource("c0_chal"), ExtResource("c1_chal"), ExtResource("c3_chal"), ExtResource("c2_chal")])
 mastery_mod = ExtResource("m_mastery")

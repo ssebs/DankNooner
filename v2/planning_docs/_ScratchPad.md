@@ -25,13 +25,10 @@ Make a hoodie
 ## NOW
 
 - [ ] are we showing all the career stats/per bike stats somewhere?
-- [x] hold tab in game, show mouse cursor. allow toggling profile challenges or clicking on the loadout to change it
-- [x] bike challenge in game alternates w/ daily challenges without me selecting it
-- [ ] stoppie should have timer too like wheelie
-- [ ] trick battle needs npcs
-- [ ] new textures as bike mods
-- [ ] more shader texture materials like aurora/lava
 
+- [ ] trick battle needs npcs
+- [ ] more shader texture materials like aurora/lava
+- [ ] fix UVs on bikes so I can place actual textures
 
 - [ ] Mods
   - [ ] Wings as mod for sport bike 
@@ -51,8 +48,7 @@ Make a hoodie
   - [ ] also gold text?
 - [ ] "you loop out" => 'you crash'
 - [ ] add world border to tutorial
-- [x] add killbox
-- [x] make tutorial road longer
+
 - [ ] needs to be a way to re-read the tutorial step
 - [ ] number in tutorial doesnt make sense (multiple tut stages shouldnt exist, at least w/ count)
 - [ ] make red warn label more obvious

@@ -107,9 +107,9 @@ var _has_leaderboard: bool = false
 ## the gauge. Purely cosmetic — kept out of the synced boost_prev_held, which the rollback
 ## tick owns and must not be perturbed by the HUD.
 var _prev_boost_held: bool = false
-## Local, display-only stopwatch for the current wheelie hold — shown next to the combo while a
+## Local, display-only stopwatch for the current wheelie / stoppie hold — shown next to the combo while a
 ## challenge is up so you can read your live attempt. Never touches simulation state.
-var _wheelie_attempt_t: float = 0.0
+var _pitch_attempt_t: float = 0.0
 ## Debug-build-only netfox perf readout. Null on remote instances, in release builds,
 ## and whenever netfox's perf monitors aren't registered — see show_hud.
 var _netfox_debug_label: Label = null
@@ -235,13 +235,14 @@ func Physics_Update(delta: float):
 	_prev_boost_held = boost_held
 	_trick_popups.track(player_entity, trick_manager.points_per_second, _challenge_tricks, delta)
 
-	# Live wheelie-attempt stopwatch, only while a race leaderboard (and its challenges) is up.
+	# Live wheelie / stoppie stopwatch, only while a race leaderboard (and its challenges) is up.
 	# Display-only local accumulation — the challenge's authoritative best is server-side.
-	var wheelie_held: bool = (
+	var trick := trick_controller.current_trick
+	var pitch_held: bool = (
 		not player_entity.is_crashed
-		and trick_controller.current_trick in TrickController.WHEELIE_TRICKS
+		and (trick in TrickController.WHEELIE_TRICKS or trick == TrickController.Trick.STOPPIE)
 	)
-	_wheelie_attempt_t = _wheelie_attempt_t + delta if _has_leaderboard and wheelie_held else 0.0
+	_pitch_attempt_t = _pitch_attempt_t + delta if _has_leaderboard and pitch_held else 0.0
 	_update_pitch_icon()
 
 	if (input_controller.is_gamepad or DebugUtils.gamepad_prompts) != _shown_gamepad:
@@ -339,7 +340,7 @@ func _update_pitch_icon():
 		_trick_popups.hide_pitch_icon()
 		return
 	var pitch := wrapf(rad_to_deg(movement_controller.pitch_angle), -180.0, 180.0)
-	_trick_popups.show_pitch_icon(pitch, window, pivot, _wheelie_attempt_t)
+	_trick_popups.show_pitch_icon(pitch, window, pivot, _pitch_attempt_t)
 
 
 #region signal handlers
@@ -855,7 +856,7 @@ func do_reset():
 	_game_msg.visible = false
 	_crash_respawn_hint.visible = false
 	_prev_boost_held = false
-	_wheelie_attempt_t = 0.0
+	_pitch_attempt_t = 0.0
 	_trick_popups.hide_pitch_icon()
 
 

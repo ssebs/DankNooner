@@ -11,7 +11,7 @@ signal pose_requested
 ## Back was pressed on a tab's root page.
 signal exit_requested
 
-enum Page { ROOT, BIKE, BIKE_COLORS, BIKE_MODS, CHARACTER, CHARACTER_COLORS, HORN }
+enum Page { ROOT, BIKE, BIKE_COLORS, BIKE_MODS, MOD_TEXTURES, MOD_ATTACHMENTS, CHARACTER, CHARACTER_COLORS, HORN }
 
 const GARAGE_ROW := preload("res://menus/customize_menu/components/garage_row.tscn")
 const UNREAD_DOT := preload("res://utils/components/unread_dot.tscn")
@@ -298,6 +298,10 @@ func _rebuild(focus_index: int = -1):
 			_build_colors_page(tr("GARAGE_BIKE_COLORS"), _loadout().bike.mesh_res, _loadout().bike.colors)
 		Page.BIKE_MODS:
 			_build_mods_page()
+		Page.MOD_TEXTURES:
+			_build_mod_list_page("GARAGE_MOD_TEXTURES", TextureMod)
+		Page.MOD_ATTACHMENTS:
+			_build_mod_list_page("GARAGE_MOD_ATTACHMENTS", AttachmentMod)
 		Page.CHARACTER:
 			_build_character_page()
 		Page.CHARACTER_COLORS:
@@ -455,14 +459,31 @@ func _build_horn_page():
 		)
 
 
-## Every mod challenges unlock (SaveManager.mod_rewards), once each. Locked until one of its
-## challenges is done, then bought like a skin; pressing an owned one fits or removes it.
+## Textures fit one at a time, attachments stack, so each gets its own page.
 func _build_mods_page():
 	_title.text = tr("GARAGE_BIKE_MODS")
+	var unread := _save_manager.unread_mods()
+	var unread_mods := _save_manager.mod_rewards().map(func(r): return r["mod"]).filter(
+		func(mod): return mod.resource_path in unread
+	)
+	var texture: Array = _loadout().bike.mods.filter(func(mod): return mod is TextureMod)
+	var texture_label := ">" if texture.is_empty() else skin_label(GarageUI.mod_file_name(texture[0])) + " >"
+	_add_row(tr("GARAGE_MOD_TEXTURES"), texture_label, _push.bind(Page.MOD_TEXTURES)).set_unread(
+		unread_mods.any(func(mod): return mod is TextureMod)
+	)
+	_add_row(tr("GARAGE_MOD_ATTACHMENTS"), ">", _push.bind(Page.MOD_ATTACHMENTS)).set_unread(
+		unread_mods.any(func(mod): return mod is AttachmentMod)
+	)
+
+
+## Every mod of `type` challenges unlock (SaveManager.mod_rewards), once each. Locked until one of
+## its challenges is done, then bought like a skin; pressing an owned one fits or removes it.
+func _build_mod_list_page(title_key: String, type: Script):
+	_title.text = tr(title_key)
 	var rewards := _save_manager.mod_rewards()
 	var mods: Array[BikeMod] = []
 	for reward in rewards:
-		if reward["mod"] not in mods:
+		if is_instance_of(reward["mod"], type) and reward["mod"] not in mods:
 			mods.append(reward["mod"])
 	var fitted := _loadout().bike.mods
 	for mod in mods:

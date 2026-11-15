@@ -191,7 +191,7 @@ func pop_oof() -> void:
 ## it counter-clockwise). window is (min, low, high, max): the pitch range and its balance point.
 ## The icon grows toward the balance point, throbs inside it, and shrinks past it (away from
 ## level), shaking there only on a wheelie / stoppie; see ICON_COLOR for its colors. pivot:
-## rotation point as a fraction of the icon's size. timer: the race wheelie stopwatch's seconds, 0
+## rotation point as a fraction of the icon's size. timer: the race wheelie / stoppie stopwatch's seconds, 0
 ## to hide it.
 func show_pitch_icon(pitch: float, window: Vector4, pivot: Vector2, timer: float) -> void:
 	var low := window.y

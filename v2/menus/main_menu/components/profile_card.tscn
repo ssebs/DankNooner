@@ -221,6 +221,15 @@ layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 12
 
+[node name="DailiesDone" type="Label" parent="Drop/Panel/Content"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_font_sizes/font_size = 17
+text = "DAILY_CHALLENGES_DONE"
+horizontal_alignment = 1
+autowrap_mode = 3
+
 [node name="ChallengesDone" type="Label" parent="Drop/Panel/Content"]
 unique_name_in_owner = true
 visible = false

@@ -52,7 +52,7 @@ Steps refer to [New systems](#new-systems).
   header, as a row of cards: the challenge's reward thumbnail over its row (built 2026-11-14,
   untested). Every challenge row shows its payout (money green, XP gold). Save Slots is the
   Saves menu's last tab. Daily tab (built 2026-11-14) untested.
-- **Console:** `dbg_set_money`, `dbg_set_level`, `dbg_unlock_all`.
+- **Console:** `dbg_set_money`, `dbg_set_level`, `dbg_unlock_all` (also finishes every bike challenge and owns every mod).
 - **Stats tracker** (step 3, verified 2026-11-14): `StatsManager` +
   `SaveManager.add_stat` / `max_stat`, saved under `progression.stats` as `lifetime` and `by_type`.
   Trick counts, hold seconds and best holds come from `TrickManager.combo_banked`'s `holds` (server,
@@ -78,11 +78,11 @@ Steps refer to [New systems](#new-systems).
   `TextureMod`) and `BikeTypeDefinition.mastery_mod` (an `AttachmentMod` for the whole list: mini
   wheelie bar, naked training wheels), listed by `SaveManager.mod_rewards()`. A type has one reward
   per challenge: the last challenge has no `reward_mod`, and its card shows the mastery mod. Reward
-  textures: neons on the easier challenges, animated lava / aurora on the hardest. The
+  textures: arrows and neons on the easier challenges, animated lava / aurora on the hardest. The
   Saves menu cards show each reward as a `Thumbnail3D` of the type's base bike wearing it (the
   mod's name as a title), dimmed until earned; the garage preview rebuilds on a mod
   change. The garage's Bike Mods
-  page lists every reward mod: locked until a source challenge is done, then bought like a skin,
+  page splits reward mods into Textures and Attachments pages (the Textures row shows the fitted one); each lists its mods: locked until a source challenge is done, then bought like a skin,
   then pressed to fit / remove on the loadout bike (`mods`, saved per loadout). One TextureMod at a
   time; changing the bike drops its mods, like its colors.
 - **Mod unlock + unread** (built 2026-11-14, untested): earning a reward mod pops a "{mod} unlocked!"

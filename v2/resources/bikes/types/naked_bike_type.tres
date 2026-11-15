@@ -8,6 +8,7 @@
 [ext_resource type="Resource" uid="uid://cprt1oydc4o0u" path="res://resources/challenges/naked/stoppies_3s.tres" id="c0_chal"]
 [ext_resource type="Resource" uid="uid://v4a188pwk2yi" path="res://resources/challenges/naked/backflips_stunt_race.tres" id="c1_chal"]
 [ext_resource type="Resource" uid="uid://bwlijk6fxrota" path="res://resources/challenges/naked/trick_battle_wins.tres" id="c2_chal"]
+[ext_resource type="Resource" path="res://resources/challenges/naked/airtime_90s.tres" id="c3_chal"]
 [ext_resource type="Script" uid="uid://dg10iwnfkiwf3" path="res://resources/challenges/challenge_definition.gd" id="cs_chal"]
 [ext_resource type="Resource" uid="uid://c3jxw4a0vjh33" path="res://resources/bikes/mods/training_wheels_mod.tres" id="m_mastery"]
 
@@ -16,5 +17,5 @@ script = ExtResource("1_type")
 power_curve = ExtResource("2_power")
 max_speed = 100.0
 name_key = "BIKE_TYPE_NAKED"
-challenges = Array[ExtResource("cs_chal")]([ExtResource("c0_chal"), ExtResource("c1_chal"), ExtResource("c2_chal")])
+challenges = Array[ExtResource("cs_chal")]([ExtResource("c0_chal"), ExtResource("c1_chal"), ExtResource("c3_chal"), ExtResource("c2_chal")])
 mastery_mod = ExtResource("m_mastery")

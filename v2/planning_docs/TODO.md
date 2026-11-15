@@ -217,6 +217,11 @@
 
 ## Done ✅
 
+- [x] add killbox
+- [x] make tutorial road longer
+- [x] hold tab in game, show mouse cursor. allow toggling profile challenges or clicking on the loadout to change it
+- [x] bike challenge in game alternates w/ daily challenges without me selecting it
+- [x] new textures as bike mods
 - [x] new profile component
   - [x] show in-game instead of current stacked counters
   - [x] should always be clickable

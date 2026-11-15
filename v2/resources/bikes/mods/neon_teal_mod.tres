@@ -1,8 +1,8 @@
-[gd_resource type="Resource" script_class="TextureMod" format=3]
+[gd_resource type="Resource" script_class="TextureMod" format=3 uid="uid://dtapno0cxmivg"]
 
-[ext_resource type="Script" path="res://resources/bikes/mods/texture_mod.gd" id="1_mod"]
-[ext_resource type="Material" path="res://resources/bikes/mods/textures/neon_teal_material.tres" id="2_mat"]
+[ext_resource type="Material" uid="uid://cueh7p18wietx" path="res://levels/assets/props/neon_teal.tres" id="1_w1ytd"]
+[ext_resource type="Script" uid="uid://cjeqtuj8i15db" path="res://resources/bikes/mods/texture_mod.gd" id="2_c886o"]
 
 [resource]
-script = ExtResource("1_mod")
-material = ExtResource("2_mat")
+script = ExtResource("2_c886o")
+material = ExtResource("1_w1ytd")

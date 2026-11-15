@@ -70,7 +70,11 @@ func deferred_init():
 	Console.add_command("dbg_skip_tutorial", mark_tutorial_complete, [], 0, "Mark the tutorial complete")
 	Console.add_command("dbg_reset_tutorials", _reset_tutorials, [], 0, "Clear tour and tutorial progress")
 	Console.add_command(
-		"dbg_unlock_all", _unlock_all, [], 0, "Max money/XP, own all skins, skip tutorial, loadout per bike"
+		"dbg_unlock_all",
+		_unlock_all,
+		[],
+		0,
+		"Max money/XP, own everything, finish challenges, skip tutorial, loadout per bike"
 	)
 	# JSON loads numbers as floats, hence the int().
 	save_slot = int(settings_manager.current_settings[_slot_setting])
@@ -406,6 +410,13 @@ func _unlock_all() -> void:
 		for path in SkinScanner.scan_skin_dir(dir).values():
 			if path not in owned:
 				owned.append(path)
+	var progress := bike_challenge_progress(current_save)
+	for bike_type in bike_types:
+		for challenge in bike_type.challenges:
+			progress[challenge.resource_path] = challenge.target
+	for reward in mod_rewards():
+		if reward["mod"].resource_path not in owned:
+			owned.append(reward["mod"].resource_path)
 	var player_def := get_player_definition()
 	var loadout_bikes := player_def.loadouts.map(func(l: Loadout): return l.bike.base_res_path)
 	for path in SkinScanner.scan_skin_dir(GarageUI.BIKE_SKINS_DIR).values():

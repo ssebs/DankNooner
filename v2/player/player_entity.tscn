@@ -6,11 +6,10 @@
 [ext_resource type="Script" uid="uid://d350u8evihs1u" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="3_faflk"]
 [ext_resource type="Script" uid="uid://dour8fehaaugp" path="res://addons/netfox/tick-interpolator.gd" id="4_ri2qi"]
 [ext_resource type="PackedScene" uid="uid://cuqtwh0saekmw" path="res://player/characters/character_skin.tscn" id="6_1vqn6"]
+[ext_resource type="Resource" uid="uid://f4ti06m0opev" path="res://resources/bikes/mods/lava_mod.tres" id="7_8e6id"]
 [ext_resource type="PackedScene" uid="uid://bmyba87m3xuaa" path="res://player/bikes/bike_skin.tscn" id="7_lfjd4"]
 [ext_resource type="Script" uid="uid://d37r06yj5krm" path="res://player/controllers/input_controller.gd" id="7_mrv5j"]
-[ext_resource type="Material" uid="uid://stojq84mkv5y" path="res://levels/assets/props/Bark_NormalTree.tres" id="7_wpb6x"]
 [ext_resource type="AnimationLibrary" uid="uid://dl7nnm6hi2wxk" path="res://resources/player/ik_anim_lib.res" id="8_8tb5v"]
-[ext_resource type="Script" uid="uid://cjeqtuj8i15db" path="res://resources/bikes/mods/texture_mod.gd" id="8_cf0xq"]
 [ext_resource type="Script" uid="uid://b37it1dg63lir" path="res://player/controllers/animation_controller.gd" id="9_anim"]
 [ext_resource type="Script" uid="uid://c2c38w5opks8m" path="res://player/controllers/gearing_controller.gd" id="10_gear"]
 [ext_resource type="Script" uid="uid://bi0gffmw6lupt" path="res://player/controllers/movement_controller.gd" id="11_tivla"]
@@ -37,17 +36,13 @@
 [ext_resource type="Resource" uid="uid://c3jxw4a0vjh33" path="res://resources/bikes/mods/training_wheels_mod.tres" id="91_twmod"]
 [ext_resource type="Resource" path="res://resources/bikes/mods/wheelie_bar_mod.tres" id="92_wbmod"]
 
-[sub_resource type="Resource" id="Resource_cf0xq"]
-script = ExtResource("8_cf0xq")
-material = ExtResource("7_wpb6x")
-
 [sub_resource type="BoxShape3D" id="BoxShape3D_wig4y"]
 size = Vector3(8, 20, 2)
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_wreck"]
 friction = 0.5
 
-[sub_resource type="ImmediateMesh" id="ImmediateMesh_cf0xq"]
+[sub_resource type="ImmediateMesh" id="ImmediateMesh_8e6id"]
 
 [node name="PlayerEntity" type="CharacterBody3D" unique_id=1507519799 node_paths=PackedStringArray("collision_shape_3d", "input_controller", "animation_controller", "gearing_controller", "trick_controller", "crash_controller", "movement_controller", "wobble_controller", "camera_controller", "boost_controller", "butt_target", "left_hand_target", "right_hand_target", "left_foot_target", "right_foot_target", "chest_target", "head_target", "left_arm_magnet", "right_arm_magnet", "left_leg_magnet", "right_leg_magnet", "front_wheel_ground_marker", "rear_wheel_ground_marker", "front_wheel_front_marker", "rear_wheel_back_marker", "exhaust_tip_marker", "headlight_marker", "gas_cap_marker", "grind_spot_rear_marker", "grind_spot_front_marker", "training_wheels_marker", "wheelie_bar_marker")]
 collision_layer = 3
@@ -90,7 +85,7 @@ grind_spot_rear_marker = NodePath("VisualRoot/IKTargets/GrindSpotRearMarker")
 grind_spot_front_marker = NodePath("VisualRoot/IKTargets/GrindSpotFrontMarker")
 training_wheels_marker = NodePath("VisualRoot/IKTargets/TrainingWheelsMarker")
 wheelie_bar_marker = NodePath("VisualRoot/IKTargets/WheelieBarMarker")
-mod_previews = Array[ExtResource("90_attmod")]([ExtResource("91_twmod"), ExtResource("92_wbmod"), SubResource("Resource_cf0xq")])
+mod_previews = Array[ExtResource("90_attmod")]([ExtResource("91_twmod"), ExtResource("92_wbmod"), ExtResource("7_8e6id")])
 
 [node name="RollbackSynchronizer" type="Node" parent="." unique_id=609748778 node_paths=PackedStringArray("root")]
 unique_name_in_owner = true
@@ -499,6 +494,6 @@ unique_name_in_owner = true
 top_level = true
 material_override = ExtResource("36_neon")
 cast_shadow = 0
-mesh = SubResource("ImmediateMesh_cf0xq")
+mesh = SubResource("ImmediateMesh_8e6id")
 script = ExtResource("35_trail")
 bike_skin = NodePath("../VisualRoot/IKTargets/BikeSkin")
