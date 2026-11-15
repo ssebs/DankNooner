@@ -24,8 +24,6 @@ Make a hoodie
 
 ## NOW
 
-- [ ] are we showing all the career stats/per bike stats somewhere?
-
 - [ ] trick battle needs npcs
 - [ ] more shader texture materials like aurora/lava
 - [ ] fix UVs on bikes so I can place actual textures

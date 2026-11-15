@@ -248,7 +248,9 @@ Instance `npc_animal_entity.tscn`, set `animal_skin_definition` on **that instan
 `MeshNode` at one of the definition's mod markers (`marker`: training wheels or wheelie bar), so a
 re-applied definition drops it with the old mesh. `mirror_x` adds a copy mirrored across the bike's
 centerline (X = 0): model the left side (`*_Left*.glb`), place its marker on the left, and the
-right side follows. Instances: `training_wheels_mod.tres`,
+right side follows. The model's emissive surfaces wear the bike's first glow slot material
+(`SkinColor.first_glow_material()`, so recolors carry over), or `neon_blue.tres` on a bike without
+one. Instances: `training_wheels_mod.tres`,
 `wheelie_bar_mod.tres`. A fitted mod lives in the loadout bike's `mods` and saves per loadout
 through `to_dict()`'s `mod_paths`.
 

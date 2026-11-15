@@ -80,6 +80,14 @@ func update_all_colors(colors: Array[Color]) -> void:
 		_apply_color_to_all_materials_for(unique_slots[i], colors[i])
 
 
+## Runtime material of the first glow slot (SkinSlot.is_glow), or null if there's none.
+func first_glow_material() -> StandardMaterial3D:
+	for i in range(slots.size()):
+		if slots[i] != null and slots[i].is_glow():
+			return _runtime_materials[i]
+	return null
+
+
 ## Color of each unique slot in `scene` (a SkinColor scene), in update_all_colors order:
 ## `overrides[i]` where set and not TRANSPARENT, else the slot's default.
 static func get_unique_slot_colors(scene: PackedScene, overrides: Array[Color] = []) -> Array[Color]:

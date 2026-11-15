@@ -1035,9 +1035,9 @@ func _show_mod_previews() -> void:
 		var marker: Marker3D = player_entity.training_wheels_marker
 		if attachment.marker == AttachmentMod.Marker.WHEELIE_BAR:
 			marker = player_entity.wheelie_bar_marker
-		marker.add_child(attachment.scene.instantiate())
+		marker.add_child(attachment.instantiate_for(bike_skin))
 		if attachment.mirror_x:
-			var mirrored: Node3D = attachment.scene.instantiate()
+			var mirrored := attachment.instantiate_for(bike_skin)
 			marker.add_child(mirrored)
 			_mod_mirrors.append(mirrored)
 	_follow_mod_mirrors()

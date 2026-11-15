@@ -12,6 +12,8 @@ enum Marker { TRAINING_WHEELS, WHEELIE_BAR }
 
 ## Mirror across the bike's centerline (X = 0) through this.
 const MIRROR_X := Transform3D(Basis.FLIP_X, Vector3.ZERO)
+## Glow for bikes without a glow slot.
+const DEFAULT_GLOW := preload("res://levels/assets/props/neon_blue.tres")
 
 
 ##override
@@ -30,12 +32,27 @@ func apply(vehicle_skin: Node3D) -> void:
 				def.wheelie_bar_marker_position
 			)
 	# mesh_node is cleared on every apply_definition, so attachments go with the old mesh.
-	_add(vehicle_skin.mesh_node, at)
+	_add(vehicle_skin, at)
 	if mirror_x:
-		_add(vehicle_skin.mesh_node, MIRROR_X * at)
+		_add(vehicle_skin, MIRROR_X * at)
 
 
-func _add(parent: Node3D, at: Transform3D) -> void:
+## `scene` with its emissive surfaces wearing the bike's first glow slot (so it follows recolors),
+## or DEFAULT_GLOW.
+func instantiate_for(vehicle_skin: Node3D) -> Node3D:
+	var glow: Material = vehicle_skin.mesh_skin.first_glow_material()
+	if glow == null:
+		glow = DEFAULT_GLOW
 	var node: Node3D = scene.instantiate()
+	for mesh: MeshInstance3D in node.find_children("*", "MeshInstance3D"):
+		for i in mesh.mesh.get_surface_count():
+			var mat := mesh.mesh.surface_get_material(i) as StandardMaterial3D
+			if mat != null and mat.emission_enabled:
+				mesh.set_surface_override_material(i, glow)
+	return node
+
+
+func _add(vehicle_skin: Node3D, at: Transform3D) -> void:
+	var node := instantiate_for(vehicle_skin)
 	node.transform = at
-	parent.add_child(node)
+	vehicle_skin.mesh_node.add_child(node)
