@@ -1,6 +1,6 @@
 # Progression
 
-> **Status 2026-11-14:** see [Built](#built), [Next](#next) and [3D models to make](#3d-models-to-make).
+> **Status 2026-11-15:** see [Built](#built), [Next](#next) and [3D models to make](#3d-models-to-make).
 > Gamba wheel is out for now.
 >
 > **Demo scope.** The full release adds a story on top ([Story](./Story.md)); the big map's plans
@@ -103,27 +103,28 @@ TODO.
 - **Level-up callout** (built + playtested 2026-11-14): `SaveManager.earn` emits `leveled_up` once per
   level crossed; `RidingHUDState` pops a held "Level N!" with `CONFETTI_HORN`, then "{bike}
   unlocked!" with its thumbnail for each bike whose `unlock_level` that is.
+- **Challenge content** (2026-11-15): 8 challenges per type, every pattern family a reward;
+  targets are first-pass. The daily pool has 8 templates.
+- **Mod markers** (2026-11-15): wheelie bar, training wheels and wings markers placed on every
+  skin.
+- **Sport's level gate:** stays at its current `unlock_level` (decided 2026-11-15).
 
 
 ## Next
 
 In build order:
 
-1. **Payouts:** size challenge and daily rewards; every one still pays the same placeholder (see
+1. **Payouts:** size challenge and daily rewards. Bike challenges all pay the
+   `ChallengeDefinition` default and dailies all pay the same; none are sized (see
    [Economy](./Economy.md)).
-2. **Challenge content:** 8 per type, every pattern family a reward; targets are first-pass. Still
-   to do: a bigger
-   daily pool (8 templates), confetti VFX (completion only plays `CONFETTI_HORN` today), the
-   Daily tab's time to reset, and auto-opening the card on unseen dailies.
-3. **Mod ladder** (rest of step 2, see [Bike challenges](#bike-challenges-and-mastery)): markers
-   are placed on every skin. Left: placing the wings marker on every skin and
-   each mod's [effect](#mod-effects).
+2. **Challenge polish:** confetti VFX (completion only plays `CONFETTI_HORN` today), the Daily
+   tab's time to reset, and auto-opening the card on unseen dailies (TODO in `ProfileCard`).
+3. **Mod effects** (rest of step 2): each attachment mod's [effect](#mod-effects).
 4. **Console commands** (step 9): `add_bike_level <type> <levels>`, `unlock_bike_max <type>`.
 5. **Steam stats + achievements** (step 5): full build only.
 
 Still open:
 
-- **Sport's level gate:** 5 or 6 (see [Economy](./Economy.md#pacing)).
 - **Variant audio:** engine sound is per skin already (`engine_sound_id` + pitch/curves); new
   sounds come later.
 
@@ -145,7 +146,7 @@ Still open:
 |---|---|---|
 | Wheelie bar | `player/bikes/assets/Mods/WheelieBar_*.glb` | `wheelie_bar_marker_*`, placed on every skin |
 | Training wheels | `player/bikes/assets/Mods/TrainingWheels_*.glb` | `training_wheels_marker_*`, placed on every skin |
-| Wings (sport) | `player/bikes/assets/Mods/Wings_*.glb` | `wings_marker_*`, not yet placed |
+| Wings (sport) | `player/bikes/assets/Mods/Wings_*.glb` | `wings_marker_*`, placed on every skin |
 | Exhaust | No model | none yet |
 
 An unlocked mod fits any bike, so every bike skin needs each marker placed. Authoring follows the

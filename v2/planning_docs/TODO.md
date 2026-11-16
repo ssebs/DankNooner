@@ -39,7 +39,7 @@
   - [x] ui
   - [ ] size challenge / daily payouts
   - [ ] challenge content
-    - [ ] ~10 challenges per bike type
+    - [x] ~10 challenges per bike type
     - [ ] bigger daily pool
     - [ ] confetti vfx
     - [ ] daily reset timer + auto-open card on new dailies
@@ -48,7 +48,6 @@
     - [ ] mod effects (wheelie bar, training wheels, wings)
   - [ ] console cmds (add_bike_level, unlock_bike_max)
   - [ ] new bike skins (bicycle, ADV, retro sport, split vendor cart)
-  - [ ] decide sport level gate (5 or 6)
   - [ ] steam stats + achievements (full build only)
 
 ### Steam Prep

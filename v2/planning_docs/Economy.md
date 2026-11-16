@@ -128,7 +128,7 @@ it for current numbers):
 
 - Naked at ~8 min; level 6 after 30 min.
 - Sport: ~32 min if naked was bought first (on target); ~20 min if the rider saves straight for
-  it (faster than target; raising sport's `unlock_level` from 5 to 6 is the likely fix).
+  it (faster than target; kept at `unlock_level` 5, decided 2026-11-15).
 - The 100%er hour can't be sized until challenges, variants and mods pay and cost something.
 
 
