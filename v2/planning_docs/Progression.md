@@ -51,7 +51,7 @@ TODO.
   Holding `loadouts` shows the cursor: the card's tabs and the loadout bar's slots take clicks
   (a slot click moves the pick; release still swaps). The Saves menu's Bike Challenges tab lists every
   type (`SaveManager.bike_types`, `BikeTypeDefinition.name_key`) under a finished / listed
-  header, as a row of cards: the challenge's reward thumbnail over its row (built 2026-11-14,
+  header, as a sideways-scrolling row of cards: the challenge's reward thumbnail over its row (built 2026-11-14,
   playtested). Every challenge row shows its payout (money green, XP gold). Save Slots is the
   Saves menu's last tab. Daily tab built and playtested 2026-11-14.
 - **Console:** `dbg_set_money`, `dbg_set_level`, `dbg_unlock_all` (also finishes every bike challenge and owns every mod).
@@ -66,7 +66,7 @@ TODO.
   `BikeTypeDefinition.challenges`. `ChallengeManager` runs on each rider's client off
   `StatsManager.stat_recorded`, counts only on the active bike's type, from zero; progress saved
   under `progression.challenges` by resource path. Completion pays via `SaveManager.earn` with a
-  callout + `CONFETTI_HORN`. Starter lists are placeholders (3–4 per type), rewards unsized.
+  callout + `CONFETTI_HORN`. Rewards unsized.
 - **Dailies** (step 4, built + playtested 2026-11-14): `SaveManager.daily_pool` (templates in
   `resources/challenges/daily/`); `refresh_dailies()` draws `DAILY_COUNT` on load and on the first
   stat sample of a new local day, saved under `progression.daily` (`date`, `picks`, `progress`).
@@ -80,7 +80,8 @@ TODO.
   `TextureMod`) and `BikeTypeDefinition.mastery_mod` (an `AttachmentMod` for the whole list: mini
   wheelie bar, naked training wheels, sport wings), listed by `SaveManager.mod_rewards()`. A type has one reward
   per challenge: the last challenge has no `reward_mod`, and its card shows the mastery mod. Reward
-  textures: arrows and neons on the easier challenges, animated lava / aurora on the hardest. The
+  textures: mini's are the static ones (arrows, neons); naked and sport split the animated
+  shaders. The
   Saves menu cards show each reward as a `Thumbnail3D` of the type's base bike wearing it (the
   mod's name as a title), dimmed until earned; the garage preview rebuilds on a mod
   change. The garage's Bike Mods
@@ -109,7 +110,8 @@ In build order:
 
 1. **Payouts:** size challenge and daily rewards; every one still pays the same placeholder (see
    [Economy](./Economy.md)).
-2. **Challenge content:** full lists per type (about 10; mini and naked have 4, sport 3), a bigger
+2. **Challenge content:** lists are sized to the reward textures (mini 8, naked 6, sport 5); more
+   tricks or textures can grow them toward about 10. Still to do: a bigger
    daily pool (8 templates), confetti VFX (completion only plays `CONFETTI_HORN` today), the
    Daily tab's time to reset, and auto-opening the card on unseen dailies.
 3. **Mod ladder** (rest of step 2, see [Bike challenges](#bike-challenges-and-mastery)): markers
@@ -261,7 +263,8 @@ save (same rule as payouts). NPCs never count.
   wheelie bar, naked the training wheels, sport the wings.
 - **A texture per challenge:** each finished challenge can unlock a body texture (a `BikeMod`
   painting the paintable body). The first is the repeating arrow from the arrow walls
-  (`levels/assets/props/repeating_arrow_texture.tres`); more textures come later.
+  (`levels/assets/props/repeating_arrow_texture.tres`). Mini's textures are static (arrows, neons);
+  naked and sport get the animated shaders.
 - A **capstone** (e.g. the airtime total) is naturally the last one done but isn't locked behind
   the others. Finishing the list (max mastery) unlocks the type's other skins.
 

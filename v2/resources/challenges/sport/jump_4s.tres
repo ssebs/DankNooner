@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="ChallengeDefinition" format=3]
+
+[ext_resource type="Script" uid="uid://dg10iwnfkiwf3" path="res://resources/challenges/challenge_definition.gd" id="1_chal"]
+
+[resource]
+script = ExtResource("1_chal")
+title_key = "CHAL_BEST_AIRTIME"
+stat = "airtime"
+goal = 2
+target = 4.0

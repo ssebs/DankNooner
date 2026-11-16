@@ -218,6 +218,7 @@ func is_locked(path: String) -> bool:
 
 ## Every mod a challenge unlocks, in list order: {"mod", "bike_type", "challenge" (null = the
 ## type's mastery_mod, for finishing the list), "earned"}. A mod may appear under several sources.
+## Each mod's variants follow it, sharing its source.
 func mod_rewards() -> Array[Dictionary]:
 	var progress := bike_challenge_progress(current_save)
 	var rewards: Array[Dictionary] = []
@@ -236,7 +237,12 @@ func mod_rewards() -> Array[Dictionary]:
 			rewards.append(
 				{"mod": bike_type.mastery_mod, "bike_type": bike_type, "challenge": null, "earned": mastered}
 			)
-	return rewards
+	var with_variants: Array[Dictionary] = []
+	for reward in rewards:
+		with_variants.append(reward)
+		for variant in reward["mod"].variants:
+			with_variants.append(reward.merged({"mod": variant}, true))
+	return with_variants
 
 
 ## Earned mods (resource paths) the garage hasn't shown yet. Edit in place; the next write saves it.

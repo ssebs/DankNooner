@@ -264,7 +264,10 @@ the markers, then Save Default Pose.
 
 `TextureMod` (`resources/bikes/mods/texture_mod.gd`) sets `material` as the `material_overlay` of
 the skin's paintable meshes (`SkinColor.meshes`), so it draws over the colors. A bike wears one at a
-time (the garage swaps them).
+time (the garage swaps them). Mods reach the garage as challenge rewards, or via `GarageUI.free_mods`
+(listed unlocked, still bought). A mod's `variants` (other colors, `<name>_<color>_mod.tres`) unlock
+with it: `SaveManager.mod_rewards()` repeats its source for each. Animated overlay shaders live in `resources/bikes/mods/textures/`;
+`tile_pattern.gdshader` serves several mods through its `pattern` enum.
 
 ### ColorMod
 

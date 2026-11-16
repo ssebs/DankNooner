@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="TextureMod" format=3]
+
+[ext_resource type="Shader" uid="uid://ec3pkc3qmf2y" path="res://levels/assets/skybox_aurora.gdshader" id="1_tv63g"]
+[ext_resource type="Script" uid="uid://cjeqtuj8i15db" path="res://resources/bikes/mods/texture_mod.gd" id="2_3fpg2"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_aurora_green"]
+render_priority = 0
+shader = ExtResource("1_tv63g")
+shader_parameter/aurora_a = Color(0, 1, 0.016, 1)
+shader_parameter/aurora_b = Color(0, 0.4, 0.006, 1)
+shader_parameter/sky_color = Color(0.2268126, 0.16567993, 0.34765625, 1)
+shader_parameter/speed = 1.650000078375
+shader_parameter/band_scale = 20.0
+shader_parameter/intensity = 5.0
+shader_parameter/vertical_falloff = 0.42000001669012
+
+[resource]
+script = ExtResource("2_3fpg2")
+material = SubResource("ShaderMaterial_aurora_green")

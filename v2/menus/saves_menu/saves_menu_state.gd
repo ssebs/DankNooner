@@ -229,9 +229,13 @@ func _build_challenge_lists():
 		var done := save_manager.mastery(bike_type)
 		header.text = "%s  %d/%d" % [tr(bike_type.name_key), done, bike_type.challenges.size()]
 		_bike_list.add_child(header)
+		# Scrolls sideways so a long list doesn't widen the tab
+		var scroll := ScrollContainer.new()
+		scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		_bike_list.add_child(scroll)
 		var cards := HBoxContainer.new()
 		cards.add_theme_constant_override("separation", 24)
-		_bike_list.add_child(cards)
+		scroll.add_child(cards)
 		var base := _base_skin(bike_type)
 		var rewards := save_manager.mod_rewards().filter(func(r): return r["bike_type"] == bike_type)
 		for i in bike_type.challenges.size():

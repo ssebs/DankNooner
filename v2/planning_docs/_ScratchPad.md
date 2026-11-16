@@ -25,8 +25,6 @@ Make a hoodie
 ## NOW
 - [ ] profile card not always clickable
 - [ ] trick battle needs npcs
-- [ ] more shader texture materials like aurora/lava
-- [ ] fix UVs on bikes so I can place actual textures
 
 - [ ] Mods
   - [ ] Wings as mod for sport bike 

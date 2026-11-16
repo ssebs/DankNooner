@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="TextureMod" format=3]
+
+[ext_resource type="Script" uid="uid://cjeqtuj8i15db" path="res://resources/bikes/mods/texture_mod.gd" id="1_mod"]
+[ext_resource type="Shader" uid="uid://dy7ep4e0bun3i" path="res://resources/bikes/mods/textures/truchet.gdshader" id="2_shader"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_truchet_teal"]
+render_priority = 0
+shader = ExtResource("2_shader")
+shader_parameter/color_a = Color(0.255, 1, 0.738, 1)
+shader_parameter/color_b = Color(0.1, 0.4, 0.295, 1)
+shader_parameter/scale = 10.0
+shader_parameter/speed = 1.0
+shader_parameter/width = 0.12
+shader_parameter/dash_count = 2.0
+shader_parameter/energy = 3.0
+
+[resource]
+script = ExtResource("1_mod")
+material = SubResource("ShaderMaterial_truchet_teal")

@@ -2,6 +2,11 @@
 
 [ext_resource type="Shader" uid="uid://ec3pkc3qmf2y" path="res://levels/assets/skybox_aurora.gdshader" id="1_tv63g"]
 [ext_resource type="Script" uid="uid://cjeqtuj8i15db" path="res://resources/bikes/mods/texture_mod.gd" id="2_3fpg2"]
+[ext_resource type="Script" path="res://resources/bikes/mods/bike_mod.gd" id="v_bikemod"]
+[ext_resource type="Resource" path="res://resources/bikes/mods/aurora_blue_mod.tres" id="v_0"]
+[ext_resource type="Resource" path="res://resources/bikes/mods/aurora_green_mod.tres" id="v_1"]
+[ext_resource type="Resource" path="res://resources/bikes/mods/aurora_teal_mod.tres" id="v_2"]
+[ext_resource type="Resource" path="res://resources/bikes/mods/aurora_red_mod.tres" id="v_3"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_wpb6x"]
 render_priority = 0
@@ -17,3 +22,4 @@ shader_parameter/vertical_falloff = 0.42000001669012
 [resource]
 script = ExtResource("2_3fpg2")
 material = SubResource("ShaderMaterial_wpb6x")
+variants = Array[ExtResource("v_bikemod")]([ExtResource("v_0"), ExtResource("v_1"), ExtResource("v_2"), ExtResource("v_3")])

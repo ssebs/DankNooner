@@ -8,6 +8,10 @@
 [ext_resource type="Resource" uid="uid://co7ed7d78yhwh" path="res://resources/challenges/mini/wheelie_5s.tres" id="c1_chal"]
 [ext_resource type="Resource" uid="uid://csxg233kls47" path="res://resources/challenges/mini/airtime_60s.tres" id="c2_chal"]
 [ext_resource type="Resource" path="res://resources/challenges/mini/backflips.tres" id="c3_chal"]
+[ext_resource type="Resource" path="res://resources/challenges/mini/kickflips.tres" id="c4_chal"]
+[ext_resource type="Resource" path="res://resources/challenges/mini/fifty_fiftys.tres" id="c5_chal"]
+[ext_resource type="Resource" path="res://resources/challenges/mini/bs_shuvits.tres" id="c6_chal"]
+[ext_resource type="Resource" path="res://resources/challenges/mini/drift_60s.tres" id="c7_chal"]
 [ext_resource type="Script" uid="uid://dg10iwnfkiwf3" path="res://resources/challenges/challenge_definition.gd" id="cs_chal"]
 [ext_resource type="Resource" path="res://resources/bikes/mods/wheelie_bar_mod.tres" id="m_mastery"]
 
@@ -30,5 +34,5 @@ lean_curve = ExtResource("1_e6d3a")
 steer_curve = ExtResource("4_vs4ap")
 brake_slide_wobble_speed_frac = 1.0
 name_key = "BIKE_TYPE_MINI"
-challenges = Array[ExtResource("cs_chal")]([ExtResource("c0_chal"), ExtResource("c1_chal"), ExtResource("c3_chal"), ExtResource("c2_chal")])
+challenges = Array[ExtResource("cs_chal")]([ExtResource("c0_chal"), ExtResource("c1_chal"), ExtResource("c4_chal"), ExtResource("c3_chal"), ExtResource("c5_chal"), ExtResource("c6_chal"), ExtResource("c7_chal"), ExtResource("c2_chal")])
 mastery_mod = ExtResource("m_mastery")

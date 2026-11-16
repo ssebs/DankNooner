@@ -138,6 +138,9 @@ func _on_item_body_entered(body: Node3D, slot: int) -> void:
 	# still overlaps until it's freed — skip is intentional
 	if body.is_queued_for_deletion():
 		return
+	# Two riders entered in the same physics frame; the first collect already cleared the slot
+	if _current[slot] == null:
+		return
 	# Rider's slot is full, or a bot passing on this item — the bubble stays for someone else.
 	if !_item_manager.collect(int(body.name), _current[slot].pickup_item_definition):
 		return

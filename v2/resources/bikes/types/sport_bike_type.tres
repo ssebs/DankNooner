@@ -7,9 +7,11 @@
 [ext_resource type="Curve" uid="uid://ct2j0k3sl7m3u" path="res://player/bikes/resources/steer_speed_curve.tres" id="8_ar0c6"]
 [ext_resource type="Resource" uid="uid://bgdacd36t4xs0" path="res://resources/challenges/sport/wheelie_10s.tres" id="c0_chal"]
 [ext_resource type="Resource" uid="uid://c775wqem7g22b" path="res://resources/challenges/sport/stunt_race_wins.tres" id="c1_chal"]
-[ext_resource type="Resource" path="res://resources/challenges/sport/stunt_races_played.tres" id="c3_chal"]
+[ext_resource type="Resource" uid="uid://brkwt7b08lfr1" path="res://resources/challenges/sport/stunt_races_played.tres" id="c3_chal"]
+[ext_resource type="Resource" path="res://resources/challenges/sport/supermans.tres" id="c4_chal"]
+[ext_resource type="Resource" path="res://resources/challenges/sport/jump_4s.tres" id="c5_chal"]
 [ext_resource type="Script" uid="uid://dg10iwnfkiwf3" path="res://resources/challenges/challenge_definition.gd" id="cs_chal"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/wings_mod.tres" id="m_mastery"]
+[ext_resource type="Resource" uid="uid://oi1hqqhxvtma" path="res://resources/bikes/mods/wings_mod.tres" id="m_mastery"]
 
 [resource]
 script = ExtResource("1_type")
@@ -19,5 +21,5 @@ max_speed = 110.0
 acceleration = 12.0
 brake_strength = 40.0
 name_key = "BIKE_TYPE_SPORT"
-challenges = Array[ExtResource("cs_chal")]([ExtResource("c0_chal"), ExtResource("c1_chal"), ExtResource("c3_chal")])
+challenges = Array[ExtResource("cs_chal")]([ExtResource("c0_chal"), ExtResource("c3_chal"), ExtResource("c4_chal"), ExtResource("c1_chal"), ExtResource("c5_chal")])
 mastery_mod = ExtResource("m_mastery")

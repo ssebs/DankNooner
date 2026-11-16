@@ -27,7 +27,6 @@
 > Don't forget, have fun :D
 - [ ] [WIP MISC](_ScratchPad.md)
 
-
 - [ ] [Progression/Challenges](./Progression.md)
   - [x] bike variants (scooter=>mini, cruiser=>naked)
   - [x] wipe old saves
@@ -230,6 +229,10 @@
 ---
 
 ## Done ✅
+
+- [x] more shader texture materials like aurora/lava
+
+- [x] fix UVs on bikes so I can place actual textures
 
 - [x] make press A to open eventstartcircle more obvious
 

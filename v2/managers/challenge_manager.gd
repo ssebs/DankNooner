@@ -29,11 +29,12 @@ func _complete(challenge: ChallengeDefinition):
 		_unlock_mod(challenge.reward_mod)
 
 
-## Callout + thumbnail on the rider's bike; unread in the garage until its row is focused.
+## Callout + thumbnail on the rider's bike; it and its variants stay unread in the garage until focused.
 func _unlock_mod(mod: BikeMod):
 	var unread := save_manager.unread_mods()
-	if mod.resource_path not in unread:
-		unread.append(mod.resource_path)
+	for unlocked in [mod] + mod.variants:
+		if unlocked.resource_path not in unread:
+			unread.append(unlocked.resource_path)
 	save_manager.save_save()
 	var bike: BikeSkinDefinition = save_manager.get_player_definition().bike_skin.duplicate()
 	var mods: Array[BikeMod] = [mod]
