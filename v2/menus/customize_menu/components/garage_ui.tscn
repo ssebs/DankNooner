@@ -7,40 +7,6 @@
 [ext_resource type="Script" path="res://utils/tour/tour.gd" id="6_tour"]
 [ext_resource type="Script" path="res://utils/tour/tour_step.gd" id="7_tourstep"]
 [ext_resource type="Material" path="res://resources/shaders/vignette.tres" id="4_vignette"]
-[ext_resource type="Script" path="res://resources/bikes/mods/bike_mod.gd" id="8_bikemod"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/sierpinski_mod.tres" id="mod_sierpinski"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/sierpinski_blue_mod.tres" id="mod_sierpinski_blue"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/sierpinski_green_mod.tres" id="mod_sierpinski_green"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/sierpinski_teal_mod.tres" id="mod_sierpinski_teal"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/sierpinski_red_mod.tres" id="mod_sierpinski_red"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/chevron_blue_mod.tres" id="mod_chevron_blue"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/chevron_green_mod.tres" id="mod_chevron_green"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/chevron_teal_mod.tres" id="mod_chevron_teal"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/chevron_red_mod.tres" id="mod_chevron_red"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/waves_blue_mod.tres" id="mod_waves_blue"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/waves_green_mod.tres" id="mod_waves_green"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/waves_teal_mod.tres" id="mod_waves_teal"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/waves_red_mod.tres" id="mod_waves_red"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/polka_blue_mod.tres" id="mod_polka_blue"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/polka_green_mod.tres" id="mod_polka_green"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/polka_teal_mod.tres" id="mod_polka_teal"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/polka_red_mod.tres" id="mod_polka_red"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/scales_blue_mod.tres" id="mod_scales_blue"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/scales_green_mod.tres" id="mod_scales_green"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/scales_teal_mod.tres" id="mod_scales_teal"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/scales_red_mod.tres" id="mod_scales_red"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/checker_blue_mod.tres" id="mod_checker_blue"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/checker_green_mod.tres" id="mod_checker_green"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/checker_teal_mod.tres" id="mod_checker_teal"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/checker_red_mod.tres" id="mod_checker_red"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/diamonds_blue_mod.tres" id="mod_diamonds_blue"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/diamonds_green_mod.tres" id="mod_diamonds_green"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/diamonds_teal_mod.tres" id="mod_diamonds_teal"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/diamonds_red_mod.tres" id="mod_diamonds_red"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/spiral_blue_mod.tres" id="mod_spiral_blue"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/spiral_green_mod.tres" id="mod_spiral_green"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/spiral_teal_mod.tres" id="mod_spiral_teal"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/spiral_red_mod.tres" id="mod_spiral_red"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bare"]
 
@@ -115,7 +81,6 @@ grow_vertical = 2
 mouse_filter = 2
 theme = ExtResource("2_theme")
 script = ExtResource("1_ui")
-free_mods = Array[ExtResource("8_bikemod")]([ExtResource("mod_sierpinski"), ExtResource("mod_sierpinski_blue"), ExtResource("mod_sierpinski_green"), ExtResource("mod_sierpinski_teal"), ExtResource("mod_sierpinski_red"), ExtResource("mod_chevron_blue"), ExtResource("mod_chevron_green"), ExtResource("mod_chevron_teal"), ExtResource("mod_chevron_red"), ExtResource("mod_waves_blue"), ExtResource("mod_waves_green"), ExtResource("mod_waves_teal"), ExtResource("mod_waves_red"), ExtResource("mod_polka_blue"), ExtResource("mod_polka_green"), ExtResource("mod_polka_teal"), ExtResource("mod_polka_red"), ExtResource("mod_scales_blue"), ExtResource("mod_scales_green"), ExtResource("mod_scales_teal"), ExtResource("mod_scales_red"), ExtResource("mod_checker_blue"), ExtResource("mod_checker_green"), ExtResource("mod_checker_teal"), ExtResource("mod_checker_red"), ExtResource("mod_diamonds_blue"), ExtResource("mod_diamonds_green"), ExtResource("mod_diamonds_teal"), ExtResource("mod_diamonds_red"), ExtResource("mod_spiral_blue"), ExtResource("mod_spiral_green"), ExtResource("mod_spiral_teal"), ExtResource("mod_spiral_red")])
 
 [node name="Vignette" type="ColorRect" parent="."]
 material = ExtResource("4_vignette")

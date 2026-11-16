@@ -14,6 +14,8 @@ const SAVE_CARD_SCENE := preload("res://menus/saves_menu/components/save_card.ts
 const THUMB_SCENE := preload("res://utils/components/thumbnail_3d.tscn")
 const CARD_WIDTH := 220.0
 const REWARD_THUMB_SIZE := Vector2(172, 112)
+## Space between a scrollbar and the cards it scrolls.
+const SCROLLBAR_GAP := 12
 ## A reward not yet earned, matching LoadoutBar's locked slots.
 const REWARD_LOCKED_ALPHA := LoadoutBar.LOCKED_ALPHA
 ## Career column widths, so every grid lines up.
@@ -232,6 +234,7 @@ func _build_challenge_lists():
 		# Scrolls sideways so a long list doesn't widen the tab
 		var scroll := ScrollContainer.new()
 		scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		scroll.add_theme_constant_override("scrollbar_v_separation", SCROLLBAR_GAP)
 		_bike_list.add_child(scroll)
 		var cards := HBoxContainer.new()
 		cards.add_theme_constant_override("separation", 24)
@@ -270,6 +273,15 @@ func _add_challenge_card(cards: Container, base: BikeSkinDefinition, row: Dictio
 		thumb.custom_minimum_size = REWARD_THUMB_SIZE
 		thumb.modulate.a = 1.0 if reward["earned"] else REWARD_LOCKED_ALPHA
 		body.add_child(thumb)
+		var colors: int = reward["mod"].variants.size()
+		if colors > 0:
+			var more := Label.new()
+			more.add_theme_font_size_override("font_size", CAREER_SMALL_FONT_SIZE)
+			more.add_theme_color_override("font_color", CAREER_SECONDARY)
+			more.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			more.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
+			more.text = tr("REWARD_PLUS_COLORS").format({"n": colors})
+			body.add_child(more)
 		var fitted: BikeSkinDefinition = base.duplicate()
 		var mods: Array[BikeMod] = [reward["mod"]]
 		fitted.mods = mods

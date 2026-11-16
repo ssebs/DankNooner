@@ -88,6 +88,7 @@ theme_override_constants/separation = 12
 visible = false
 layout_mode = 2
 theme_type_variation = &"InsetScroll"
+theme_override_constants/scrollbar_h_separation = 12
 horizontal_scroll_mode = 0
 metadata/_tab_index = 1
 

@@ -14,8 +14,9 @@ One command, run locally before a Steam upload, that answers "did anything regre
 **2–3 minute budget**. No manual input: a bot plays the game through its real code paths while
 the peer windows tile side by side so a human can watch. Not run on CI.
 
-Out of scope: CI, perf budgets, and unit tests beyond the economy (features churn too much to pay
-for them). The economy's GUT tests are in [Economy](./Economy.md#tests).
+Out of scope: CI and perf budgets. Unit tests (GUT, `tests/unit/`) cover data rules that churn
+slowly: the economy ([Economy](./Economy.md#tests)) and progression data
+([Progression](./Progression.md#tests)).
 
 ## Constraints
 

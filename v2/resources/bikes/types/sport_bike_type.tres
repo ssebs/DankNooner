@@ -12,6 +12,9 @@
 [ext_resource type="Resource" path="res://resources/challenges/sport/jump_4s.tres" id="c5_chal"]
 [ext_resource type="Script" uid="uid://dg10iwnfkiwf3" path="res://resources/challenges/challenge_definition.gd" id="cs_chal"]
 [ext_resource type="Resource" uid="uid://oi1hqqhxvtma" path="res://resources/bikes/mods/wings_mod.tres" id="m_mastery"]
+[ext_resource type="Resource" path="res://resources/challenges/sport/tre_flips.tres" id="c_tre_flips"]
+[ext_resource type="Resource" path="res://resources/challenges/sport/stoppie_5s.tres" id="c_stoppie_5s"]
+[ext_resource type="Resource" path="res://resources/challenges/sport/top_speed.tres" id="c_top_speed"]
 
 [resource]
 script = ExtResource("1_type")
@@ -21,5 +24,5 @@ max_speed = 110.0
 acceleration = 12.0
 brake_strength = 40.0
 name_key = "BIKE_TYPE_SPORT"
-challenges = Array[ExtResource("cs_chal")]([ExtResource("c0_chal"), ExtResource("c3_chal"), ExtResource("c4_chal"), ExtResource("c1_chal"), ExtResource("c5_chal")])
+challenges = Array[ExtResource("cs_chal")]([ExtResource("c0_chal"), ExtResource("c3_chal"), ExtResource("c4_chal"), ExtResource("c_tre_flips"), ExtResource("c_stoppie_5s"), ExtResource("c_top_speed"), ExtResource("c1_chal"), ExtResource("c5_chal")])
 mastery_mod = ExtResource("m_mastery")

@@ -2,7 +2,12 @@
 
 [ext_resource type="Material" uid="uid://cueh7p18wietx" path="res://levels/assets/props/neon_teal.tres" id="1_w1ytd"]
 [ext_resource type="Script" uid="uid://cjeqtuj8i15db" path="res://resources/bikes/mods/texture_mod.gd" id="2_c886o"]
+[ext_resource type="Script" path="res://resources/bikes/mods/bike_mod.gd" id="v_bikemod"]
+[ext_resource type="Resource" path="res://resources/bikes/mods/neon_blue_mod.tres" id="v_0"]
+[ext_resource type="Resource" path="res://resources/bikes/mods/neon_red_mod.tres" id="v_1"]
+[ext_resource type="Resource" path="res://resources/bikes/mods/neon_gold_mod.tres" id="v_2"]
 
 [resource]
 script = ExtResource("2_c886o")
 material = ExtResource("1_w1ytd")
+variants = Array[ExtResource("v_bikemod")]([ExtResource("v_0"), ExtResource("v_1"), ExtResource("v_2")])

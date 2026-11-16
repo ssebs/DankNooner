@@ -13,9 +13,6 @@ signal exit_requested
 
 enum Page { ROOT, BIKE, BIKE_COLORS, BIKE_MODS, MOD_TEXTURES, MOD_ATTACHMENTS, CHARACTER, CHARACTER_COLORS, HORN }
 
-## Listed on the mod pages as unlocked, with no challenge gating them; still bought at their price.
-@export var free_mods: Array[BikeMod] = []
-
 const GARAGE_ROW := preload("res://menus/customize_menu/components/garage_row.tscn")
 const UNREAD_DOT := preload("res://utils/components/unread_dot.tscn")
 const BIKE_SKINS_DIR := "res://resources/bikes/skins/"
@@ -481,12 +478,11 @@ func _build_mods_page():
 
 ## Every mod of `type` challenges unlock (SaveManager.mod_rewards), once each. Locked until one of
 ## its challenges is done, then bought like a skin; pressing an owned one fits or removes it.
-## free_mods follow, never locked.
 func _build_mod_list_page(title_key: String, type: Script):
 	_title.text = tr(title_key)
 	var rewards := _save_manager.mod_rewards()
 	var mods: Array[BikeMod] = []
-	for mod in rewards.map(func(reward): return reward["mod"]) + free_mods:
+	for mod in rewards.map(func(reward): return reward["mod"]):
 		if is_instance_of(mod, type) and mod not in mods:
 			mods.append(mod)
 	var fitted := _loadout().bike.mods
@@ -497,7 +493,7 @@ func _build_mod_list_page(title_key: String, type: Script):
 		var preview := _preview.bind(
 			_loadout().bike if mod in fitted else _with_mod_toggled(mod), _shown_character()
 		)
-		if mod not in free_mods and !sources.any(func(reward): return reward["earned"]):
+		if !sources.any(func(reward): return reward["earned"]):
 			var source: Dictionary = sources[0]
 			var type_name := tr(source["bike_type"].name_key)
 			var goal := tr("REWARD_ALL_CHALLENGES")

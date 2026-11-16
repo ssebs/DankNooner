@@ -3,7 +3,6 @@
 [ext_resource type="Script" uid="uid://cjeqtuj8i15db" path="res://resources/bikes/mods/texture_mod.gd" id="1_mod"]
 [ext_resource type="Shader" uid="uid://dfgvj5qo7qrg2" path="res://resources/bikes/mods/textures/lightning.gdshader" id="2_shader"]
 [ext_resource type="Script" path="res://resources/bikes/mods/bike_mod.gd" id="v_bikemod"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/lightning_blue_mod.tres" id="v_0"]
 [ext_resource type="Resource" path="res://resources/bikes/mods/lightning_green_mod.tres" id="v_1"]
 [ext_resource type="Resource" path="res://resources/bikes/mods/lightning_teal_mod.tres" id="v_2"]
 [ext_resource type="Resource" path="res://resources/bikes/mods/lightning_red_mod.tres" id="v_3"]
@@ -17,4 +16,4 @@ shader_parameter/scale = 4.0
 [resource]
 script = ExtResource("1_mod")
 material = SubResource("ShaderMaterial_lightning")
-variants = Array[ExtResource("v_bikemod")]([ExtResource("v_0"), ExtResource("v_1"), ExtResource("v_2"), ExtResource("v_3")])
+variants = Array[ExtResource("v_bikemod")]([ExtResource("v_1"), ExtResource("v_2"), ExtResource("v_3")])

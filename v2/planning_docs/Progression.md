@@ -24,6 +24,7 @@
 - [Challenges menu](#challenges-menu)
 - [Save slots](#save-slots)
 - [New systems](#new-systems)
+- [Tests](#tests)
 - [Avoid](#avoid)
 - [Open questions](#open-questions)
 
@@ -80,8 +81,8 @@ TODO.
   `TextureMod`) and `BikeTypeDefinition.mastery_mod` (an `AttachmentMod` for the whole list: mini
   wheelie bar, naked training wheels, sport wings), listed by `SaveManager.mod_rewards()`. A type has one reward
   per challenge: the last challenge has no `reward_mod`, and its card shows the mastery mod. Reward
-  textures: mini's are the static ones (arrows, neons); naked and sport split the animated
-  shaders. The
+  textures are pattern families, each unlocking with its color `variants`: mini gets the basic
+  ones, naked cooler ones, sport the trippiest. The
   Saves menu cards show each reward as a `Thumbnail3D` of the type's base bike wearing it (the
   mod's name as a title), dimmed until earned; the garage preview rebuilds on a mod
   change. The garage's Bike Mods
@@ -110,8 +111,8 @@ In build order:
 
 1. **Payouts:** size challenge and daily rewards; every one still pays the same placeholder (see
    [Economy](./Economy.md)).
-2. **Challenge content:** lists are sized to the reward textures (mini 8, naked 6, sport 5); more
-   tricks or textures can grow them toward about 10. Still to do: a bigger
+2. **Challenge content:** 8 per type, every pattern family a reward; targets are first-pass. Still
+   to do: a bigger
    daily pool (8 templates), confetti VFX (completion only plays `CONFETTI_HORN` today), the
    Daily tab's time to reset, and auto-opening the card on unseen dailies.
 3. **Mod ladder** (rest of step 2, see [Bike challenges](#bike-challenges-and-mastery)): markers
@@ -216,7 +217,7 @@ Earning, payouts, rider level and pacing targets are in [Economy](./Economy.md).
 | Naked, sport bikes | rider level (sport's is higher) | bought with $ |
 | Other skins of a type | that type's mastery (`unlock_mastery`) | bought with $ |
 | Bike mods | finishing that type's whole challenge list | bought with $ (default $200) |
-| Bike textures | one per finished challenge (planned) | bought with $ |
+| Bike textures | one family per finished challenge, with its color `variants` | bought with $ |
 | Characters | nothing | bought with $ |
 | Horns | nothing | bought with $ |
 | Colors | nothing | free |
@@ -255,16 +256,17 @@ save (same rule as payouts). NPCs never count.
 
 ### Bike challenges and mastery
 
-- **One list per bike type,** about 10 challenges, about half unique to the type. All skins of a
+- **One list per bike type,** 8 challenges, about half unique to the type. All skins of a
   type count toward its list. More tricks are planned, so lists will grow.
-- **Mastery:** each finished challenge levels the bike type up by one, to a max of 10. "Mastery"
+- **Mastery:** each finished challenge levels the bike type up by one, to a max of 8 (the list). "Mastery"
   is a working name to keep it apart from rider level on screen.
 - **One mod per type, at the end of its list** (mastery = the full list): mini unlocks the
   wheelie bar, naked the training wheels, sport the wings.
 - **A texture per challenge:** each finished challenge can unlock a body texture (a `BikeMod`
   painting the paintable body). The first is the repeating arrow from the arrow walls
-  (`levels/assets/props/repeating_arrow_texture.tres`). Mini's textures are static (arrows, neons);
-  naked and sport get the animated shaders.
+  (`levels/assets/props/repeating_arrow_texture.tres`). Each texture is a pattern family whose
+  color `variants` unlock with it. Mini gets the basic patterns, naked cooler ones, sport the
+  trippiest; nothing is free.
 - A **capstone** (e.g. the airtime total) is naturally the last one done but isn't locked behind
   the others. Finishing the list (max mastery) unlocks the type's other skins.
 
@@ -395,6 +397,15 @@ better idea; the rest were decided.
 Depends on, but isn't part of this: NPC racer AI difficulty ramping with event difficulty, more
 tricks for unique challenges, and the tutorial (which comes before all of this for a new player).
 
+
+## Tests
+
+`tests/unit/test_progression.gd` (GUT, run as in [Economy](./Economy.md#tests)) checks the list
+rules, not their content: every type has the same number of challenges; all but the last reward a
+`TextureMod` and the type has an `AttachmentMod` mastery mod; no reward or variant is given twice;
+every `TextureMod` on disk is some challenge's reward (nothing free); variants have no variants;
+every challenge title is localized; no skin's `unlock_mastery` exceeds its list; the three goal
+shapes. Update it when a rule changes, not when content does.
 
 ## Avoid
 

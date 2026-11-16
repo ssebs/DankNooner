@@ -2,6 +2,10 @@
 
 [ext_resource type="Script" path="res://resources/bikes/mods/texture_mod.gd" id="1_mod"]
 [ext_resource type="Shader" path="res://resources/bikes/mods/textures/tile_pattern.gdshader" id="2_shader"]
+[ext_resource type="Script" path="res://resources/bikes/mods/bike_mod.gd" id="v_bikemod"]
+[ext_resource type="Resource" path="res://resources/bikes/mods/polka_green_mod.tres" id="v_0"]
+[ext_resource type="Resource" path="res://resources/bikes/mods/polka_teal_mod.tres" id="v_1"]
+[ext_resource type="Resource" path="res://resources/bikes/mods/polka_red_mod.tres" id="v_2"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_polka_blue"]
 shader = ExtResource("2_shader")
@@ -12,3 +16,4 @@ shader_parameter/scroll = Vector2(0.5, 0.5)
 [resource]
 script = ExtResource("1_mod")
 material = SubResource("ShaderMaterial_polka_blue")
+variants = Array[ExtResource("v_bikemod")]([ExtResource("v_0"), ExtResource("v_1"), ExtResource("v_2")])

@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="ChallengeDefinition" format=3]
 
 [ext_resource type="Script" uid="uid://dg10iwnfkiwf3" path="res://resources/challenges/challenge_definition.gd" id="1_chal"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/arrow_blue_mod.tres" id="2_reward"]
+[ext_resource type="Resource" path="res://resources/bikes/mods/diamonds_blue_mod.tres" id="2_reward"]
 
 [resource]
 script = ExtResource("1_chal")

@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="TextureMod" format=3]
+
+[ext_resource type="Script" uid="uid://cjeqtuj8i15db" path="res://resources/bikes/mods/texture_mod.gd" id="1_mod"]
+[ext_resource type="Shader" path="res://resources/bikes/mods/textures/apollonian.gdshader" id="2_shader"]
+[ext_resource type="Script" path="res://resources/bikes/mods/bike_mod.gd" id="v_bikemod"]
+[ext_resource type="Resource" path="res://resources/bikes/mods/apollonian_blue_mod.tres" id="v_0"]
+[ext_resource type="Resource" path="res://resources/bikes/mods/apollonian_green_mod.tres" id="v_1"]
+[ext_resource type="Resource" path="res://resources/bikes/mods/apollonian_teal_mod.tres" id="v_2"]
+[ext_resource type="Resource" path="res://resources/bikes/mods/apollonian_red_mod.tres" id="v_3"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_apollonian"]
+render_priority = 0
+shader = ExtResource("2_shader")
+shader_parameter/color_a = Color(1, 0.2, 0.8, 1)
+shader_parameter/color_b = Color(0.2, 0.9, 1, 1)
+
+[resource]
+script = ExtResource("1_mod")
+material = SubResource("ShaderMaterial_apollonian")
+variants = Array[ExtResource("v_bikemod")]([ExtResource("v_0"), ExtResource("v_1"), ExtResource("v_2"), ExtResource("v_3")])
