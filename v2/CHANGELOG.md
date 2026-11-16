@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.1.5 - 2026-11-15
+
+- fix racing line baking
+-  profile card should be clickable in more places + trick battle NPCs
+- tweak shader texture materials
+- fix UVs on bikes so I can place actual textures + more shader texture materials like aurora/lava
+- improved tutorial prompts
+- ui tweaks
+- add wing models
+- tweak export script
+
 ## v0.1.4 - 2026-11-14
 
 - tutorial improvements
