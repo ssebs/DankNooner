@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="ChallengeDefinition" format=3]
+[gd_resource type="Resource" script_class="ChallengeDefinition" format=3 uid="uid://bgr8p3simnh0l"]
 
 [ext_resource type="Script" uid="uid://dg10iwnfkiwf3" path="res://resources/challenges/challenge_definition.gd" id="1_chal"]
 [ext_resource type="Resource" path="res://resources/bikes/mods/diamonds_blue_mod.tres" id="2_reward"]

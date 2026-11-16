@@ -1,12 +1,9 @@
-[gd_resource type="Resource" script_class="TextureMod" format=3]
+[gd_resource type="Resource" script_class="TextureMod" format=3 uid="uid://dvyc1s6wsvnuj"]
 
-[ext_resource type="Script" path="res://resources/bikes/mods/texture_mod.gd" id="1_mod"]
+[ext_resource type="Script" uid="uid://cjeqtuj8i15db" path="res://resources/bikes/mods/texture_mod.gd" id="1_mod"]
 [ext_resource type="Material" path="res://resources/bikes/mods/textures/arrow_green_material.tres" id="2_mat"]
-[ext_resource type="Script" path="res://resources/bikes/mods/bike_mod.gd" id="v_bikemod"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/arrow_blue_mod.tres" id="v_0"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/arrow_pink_mod.tres" id="v_1"]
 
 [resource]
 script = ExtResource("1_mod")
 material = ExtResource("2_mat")
-variants = Array[ExtResource("v_bikemod")]([ExtResource("v_0"), ExtResource("v_1")])
+variants = null

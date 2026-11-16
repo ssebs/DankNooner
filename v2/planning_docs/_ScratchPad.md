@@ -23,7 +23,7 @@ Make a hoodie
 ---
 
 ## NOW
-- [ ] profile card not always clickable
+
 - [ ] trick battle needs npcs
 
 - [ ] Mods

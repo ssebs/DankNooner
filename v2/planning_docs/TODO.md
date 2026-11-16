@@ -26,6 +26,7 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 - [ ] [WIP MISC](_ScratchPad.md)
+- [ ] profile card not always clickable
 
 - [ ] [Progression/Challenges](./Progression.md)
   - [x] bike variants (scooter=>mini, cruiser=>naked)

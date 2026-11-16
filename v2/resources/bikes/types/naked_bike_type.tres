@@ -9,12 +9,12 @@
 [ext_resource type="Resource" uid="uid://v4a188pwk2yi" path="res://resources/challenges/naked/backflips_stunt_race.tres" id="c1_chal"]
 [ext_resource type="Resource" uid="uid://bwlijk6fxrota" path="res://resources/challenges/naked/trick_battle_wins.tres" id="c2_chal"]
 [ext_resource type="Resource" uid="uid://ow1loe0rpts6" path="res://resources/challenges/naked/airtime_90s.tres" id="c3_chal"]
-[ext_resource type="Resource" path="res://resources/challenges/naked/threesixties.tres" id="c4_chal"]
-[ext_resource type="Resource" path="res://resources/challenges/naked/burnout_30s.tres" id="c5_chal"]
+[ext_resource type="Resource" uid="uid://dcxaa2r3xs50q" path="res://resources/challenges/naked/threesixties.tres" id="c4_chal"]
+[ext_resource type="Resource" uid="uid://v1iteowt1yqp" path="res://resources/challenges/naked/burnout_30s.tres" id="c5_chal"]
 [ext_resource type="Script" uid="uid://dg10iwnfkiwf3" path="res://resources/challenges/challenge_definition.gd" id="cs_chal"]
-[ext_resource type="Resource" uid="uid://c3jxw4a0vjh33" path="res://resources/bikes/mods/training_wheels_mod.tres" id="m_mastery"]
 [ext_resource type="Resource" path="res://resources/challenges/naked/frontflips.tres" id="c_frontflips"]
 [ext_resource type="Resource" path="res://resources/challenges/naked/smiths.tres" id="c_smiths"]
+[ext_resource type="Resource" uid="uid://c3jxw4a0vjh33" path="res://resources/bikes/mods/training_wheels_mod.tres" id="m_mastery"]
 
 [resource]
 script = ExtResource("1_type")

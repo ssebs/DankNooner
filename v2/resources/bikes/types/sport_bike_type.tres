@@ -8,13 +8,13 @@
 [ext_resource type="Resource" uid="uid://bgdacd36t4xs0" path="res://resources/challenges/sport/wheelie_10s.tres" id="c0_chal"]
 [ext_resource type="Resource" uid="uid://c775wqem7g22b" path="res://resources/challenges/sport/stunt_race_wins.tres" id="c1_chal"]
 [ext_resource type="Resource" uid="uid://brkwt7b08lfr1" path="res://resources/challenges/sport/stunt_races_played.tres" id="c3_chal"]
-[ext_resource type="Resource" path="res://resources/challenges/sport/supermans.tres" id="c4_chal"]
+[ext_resource type="Resource" uid="uid://dp6cx51q5s6uv" path="res://resources/challenges/sport/supermans.tres" id="c4_chal"]
 [ext_resource type="Resource" path="res://resources/challenges/sport/jump_4s.tres" id="c5_chal"]
 [ext_resource type="Script" uid="uid://dg10iwnfkiwf3" path="res://resources/challenges/challenge_definition.gd" id="cs_chal"]
-[ext_resource type="Resource" uid="uid://oi1hqqhxvtma" path="res://resources/bikes/mods/wings_mod.tres" id="m_mastery"]
-[ext_resource type="Resource" path="res://resources/challenges/sport/tre_flips.tres" id="c_tre_flips"]
 [ext_resource type="Resource" path="res://resources/challenges/sport/stoppie_5s.tres" id="c_stoppie_5s"]
 [ext_resource type="Resource" path="res://resources/challenges/sport/top_speed.tres" id="c_top_speed"]
+[ext_resource type="Resource" path="res://resources/challenges/sport/tre_flips.tres" id="c_tre_flips"]
+[ext_resource type="Resource" uid="uid://oi1hqqhxvtma" path="res://resources/bikes/mods/wings_mod.tres" id="m_mastery"]
 
 [resource]
 script = ExtResource("1_type")
