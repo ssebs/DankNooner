@@ -137,7 +137,7 @@ Resource at `resources/bikes/bike_skin_definition.gd`. Grouped in the inspector:
 
 **Mods** — `mods: Array[BikeMod]` — applied after base colors at spawn (see [Mods](#mods) below)
 
-**Markers** — `seat_marker_position`, `front_wheel_ground_position`, `rear_wheel_ground_position`, `front_wheel_front_position`, `rear_wheel_back_position`, `training_wheels_marker_*`. Wheel positions feed raycasts (`PlayerEntity._init_raycasts`) and the wheelie/stoppie pivot arc.
+**Markers** — `seat_marker_position`, `front_wheel_ground_position`, `rear_wheel_ground_position`, `front_wheel_front_position`, `rear_wheel_back_position`, `training_wheels_marker_*`, `wheelie_bar_marker_*`, `wings_marker_*`. Wheel positions feed raycasts (`PlayerEntity._init_raycasts`) and the wheelie/stoppie pivot arc.
 
 **Rider Pose** — chest/head/magnet/hand/foot positions+rotations and arm/leg magnets. Hand and foot transforms are stored in **handlebar-parent / `bike_skin` local space**, so they survive steering rotation when reapplied each tick by `AnimationController._sync_targets_from_bike()`. Authored via the editor tools on `AnimationController` (Save Default Pose / Play Default Pose). See [AnimationController](./AnimationController.md).
 
@@ -245,17 +245,17 @@ Instance `npc_animal_entity.tscn`, set `animal_skin_definition` on **that instan
 ### AttachmentMod
 
 `AttachmentMod` (`resources/bikes/mods/attachment_mod.gd`) instances `scene` under the bike's
-`MeshNode` at one of the definition's mod markers (`marker`: training wheels or wheelie bar), so a
+`MeshNode` at one of the definition's mod markers (`marker`: training wheels, wheelie bar or wings), so a
 re-applied definition drops it with the old mesh. `mirror_x` adds a copy mirrored across the bike's
 centerline (X = 0): model the left side (`*_Left*.glb`), place its marker on the left, and the
 right side follows. The model's emissive surfaces wear the bike's first glow slot material
 (`SkinColor.first_glow_material()`, so recolors carry over), or `neon_blue.tres` on a bike without
 one. Instances: `training_wheels_mod.tres`,
-`wheelie_bar_mod.tres`. A fitted mod lives in the loadout bike's `mods` and saves per loadout
+`wheelie_bar_mod.tres`, `wings_mod.tres`. A fitted mod lives in the loadout bike's `mods` and saves per loadout
 through `to_dict()`'s `mod_paths`.
 
 Placing the markers: `PlayerEntity.mod_previews` lists the AttachmentMods whose meshes hang under
-`TrainingWheelsMarker` / `WheelieBarMarker` in the editor (unowned, never saved); a `mirror_x`
+`TrainingWheelsMarker` / `WheelieBarMarker` / `WingsMarker` in the editor (unowned, never saved); a `mirror_x`
 mod's mirrored copy follows the marker live. Pick the bike on
 `BikeSkin`, press Init IK from Bike (or Play Default Pose) to load its markers and previews, move
 the markers, then Save Default Pose.

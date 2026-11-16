@@ -78,7 +78,7 @@ TODO.
   Scooter and cruiser need the full current list (cruiser no longer needs a rider level).
 - **Mod rewards** (step 2, built + playtested 2026-11-14): `ChallengeDefinition.reward_mod` (a
   `TextureMod`) and `BikeTypeDefinition.mastery_mod` (an `AttachmentMod` for the whole list: mini
-  wheelie bar, naked training wheels), listed by `SaveManager.mod_rewards()`. A type has one reward
+  wheelie bar, naked training wheels, sport wings), listed by `SaveManager.mod_rewards()`. A type has one reward
   per challenge: the last challenge has no `reward_mod`, and its card shows the mastery mod. Reward
   textures: arrows and neons on the easier challenges, animated lava / aurora on the hardest. The
   Saves menu cards show each reward as a `Thumbnail3D` of the type's base bike wearing it (the
@@ -113,8 +113,8 @@ In build order:
    daily pool (8 templates), confetti VFX (completion only plays `CONFETTI_HORN` today), the
    Daily tab's time to reset, and auto-opening the card on unseen dailies.
 3. **Mod ladder** (rest of step 2, see [Bike challenges](#bike-challenges-and-mastery)): markers
-   are placed on every skin. Left: sport's mastery mod (wings) and each mod's
-   [effect](#mod-effects).
+   are placed on every skin. Left: placing the wings marker on every skin and
+   each mod's [effect](#mod-effects).
 4. **Console commands** (step 9): `add_bike_level <type> <levels>`, `unlock_bike_max <type>`.
 5. **Steam stats + achievements** (step 5): full build only.
 
@@ -142,7 +142,7 @@ Still open:
 |---|---|---|
 | Wheelie bar | `player/bikes/assets/Mods/WheelieBar_*.glb` | `wheelie_bar_marker_*`, placed on every skin |
 | Training wheels | `player/bikes/assets/Mods/TrainingWheels_*.glb` | `training_wheels_marker_*`, placed on every skin |
-| Wings (sport) | No model | none yet |
+| Wings (sport) | `player/bikes/assets/Mods/Wings_*.glb` | `wings_marker_*`, not yet placed |
 | Exhaust | No model | none yet |
 
 An unlocked mod fits any bike, so every bike skin needs each marker placed. Authoring follows the
@@ -258,7 +258,7 @@ save (same rule as payouts). NPCs never count.
 - **Mastery:** each finished challenge levels the bike type up by one, to a max of 10. "Mastery"
   is a working name to keep it apart from rider level on screen.
 - **One mod per type, at the end of its list** (mastery = the full list): mini unlocks the
-  wheelie bar, naked the training wheels, sport the wings (not modeled yet).
+  wheelie bar, naked the training wheels, sport the wings.
 - **A texture per challenge:** each finished challenge can unlock a body texture (a `BikeMod`
   painting the paintable body). The first is the repeating arrow from the arrow walls
   (`levels/assets/props/repeating_arrow_texture.tres`); more textures come later.

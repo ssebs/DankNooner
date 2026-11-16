@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="AttachmentMod" format=3 uid="uid://oi1hqqhxvtma"]
+
+[ext_resource type="Script" uid="uid://4x06v11v4n7a" path="res://resources/bikes/mods/attachment_mod.gd" id="1_mod"]
+[ext_resource type="PackedScene" uid="uid://d7i68mj4h74y" path="res://player/bikes/assets/Mods/Wings_Left.glb" id="2_scene"]
+
+[resource]
+script = ExtResource("1_mod")
+scene = ExtResource("2_scene")
+marker = 2
+mirror_x = true

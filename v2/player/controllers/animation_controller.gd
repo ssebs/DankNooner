@@ -1029,6 +1029,9 @@ func _load_wheel_markers_from_definition(def: BikeSkinDefinition) -> void:
 	if player_entity.wheelie_bar_marker:
 		player_entity.wheelie_bar_marker.position = def.wheelie_bar_marker_position
 		player_entity.wheelie_bar_marker.rotation_degrees = def.wheelie_bar_marker_rotation_degrees
+	if player_entity.wings_marker:
+		player_entity.wings_marker.position = def.wings_marker_position
+		player_entity.wings_marker.rotation_degrees = def.wings_marker_rotation_degrees
 	if Engine.is_editor_hint():
 		_show_mod_previews()
 
@@ -1038,7 +1041,11 @@ func _load_wheel_markers_from_definition(def: BikeSkinDefinition) -> void:
 ## Unowned, so never saved.
 func _show_mod_previews() -> void:
 	_mod_mirrors.clear()
-	for marker: Marker3D in [player_entity.training_wheels_marker, player_entity.wheelie_bar_marker]:
+	for marker: Marker3D in [
+		player_entity.training_wheels_marker,
+		player_entity.wheelie_bar_marker,
+		player_entity.wings_marker,
+	]:
 		for child in marker.get_children():
 			child.queue_free()
 	for mod in player_entity.mod_previews:
@@ -1049,6 +1056,8 @@ func _show_mod_previews() -> void:
 		var marker: Marker3D = player_entity.training_wheels_marker
 		if attachment.marker == AttachmentMod.Marker.WHEELIE_BAR:
 			marker = player_entity.wheelie_bar_marker
+		elif attachment.marker == AttachmentMod.Marker.WINGS:
+			marker = player_entity.wings_marker
 		marker.add_child(attachment.instantiate_for(bike_skin))
 		if attachment.mirror_x:
 			var mirrored := attachment.instantiate_for(bike_skin)
@@ -1157,6 +1166,9 @@ func _editor_save_default_pose() -> void:
 	if player_entity.wheelie_bar_marker:
 		def.wheelie_bar_marker_position = player_entity.wheelie_bar_marker.position
 		def.wheelie_bar_marker_rotation_degrees = player_entity.wheelie_bar_marker.rotation_degrees
+	if player_entity.wings_marker:
+		def.wings_marker_position = player_entity.wings_marker.position
+		def.wings_marker_rotation_degrees = player_entity.wings_marker.rotation_degrees
 
 	var err = ResourceSaver.save(def)
 	if err == OK:

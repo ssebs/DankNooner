@@ -30,7 +30,7 @@ Make a hoodie
 
 - [ ] Mods
   - [ ] Wings as mod for sport bike 
-    - [ ] mesh
+    - [x] mesh
     - [ ] (more air time) effect
   - [ ] Scraper/12 bar mod
     - [x] mesh

@@ -3,7 +3,7 @@
 ## PlayerEntity's mod markers, which preview every AttachmentMod in the editor).
 class_name AttachmentMod extends BikeMod
 
-enum Marker { TRAINING_WHEELS, WHEELIE_BAR }
+enum Marker { TRAINING_WHEELS, WHEELIE_BAR, WINGS }
 
 @export var scene: PackedScene
 @export var marker: Marker = Marker.TRAINING_WHEELS
@@ -30,6 +30,11 @@ func apply(vehicle_skin: Node3D) -> void:
 			at = Transform3D(
 				Basis.from_euler(def.wheelie_bar_marker_rotation_degrees * PI / 180.0),
 				def.wheelie_bar_marker_position
+			)
+		Marker.WINGS:
+			at = Transform3D(
+				Basis.from_euler(def.wings_marker_rotation_degrees * PI / 180.0),
+				def.wings_marker_position
 			)
 	# mesh_node is cleared on every apply_definition, so attachments go with the old mesh.
 	_add(vehicle_skin, at)

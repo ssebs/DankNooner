@@ -3,7 +3,7 @@
 [ext_resource type="Curve" path="res://player/bikes/resources/mini_lean_speed_curve.tres" id="1_e6d3a"]
 [ext_resource type="Script" uid="uid://cd642c2igur4x" path="res://resources/bikes/bike_type_definition.gd" id="1_type"]
 [ext_resource type="Curve" uid="uid://dlqmqgtip7b61" path="res://resources/bikes/power_curve.tres" id="2_miuqu"]
-[ext_resource type="Curve" path="res://player/bikes/resources/mini_steer_speed_curve.tres" id="4_vs4ap"]
+[ext_resource type="Curve" uid="uid://d1a4e783xxyy5" path="res://player/bikes/resources/mini_steer_speed_curve.tres" id="4_vs4ap"]
 [ext_resource type="Resource" uid="uid://bm3oq3ht4rrmf" path="res://resources/challenges/mini/bunny_hops.tres" id="c0_chal"]
 [ext_resource type="Resource" uid="uid://co7ed7d78yhwh" path="res://resources/challenges/mini/wheelie_5s.tres" id="c1_chal"]
 [ext_resource type="Resource" uid="uid://csxg233kls47" path="res://resources/challenges/mini/airtime_60s.tres" id="c2_chal"]

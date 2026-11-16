@@ -80,9 +80,10 @@ signal launch_measured(peer_id: int, meters: float)
 @export var grind_spot_rear_marker: Marker3D
 @export var grind_spot_front_marker: Marker3D
 ## Bike mod authoring handles (position + rotation), same flow
-## (training_wheels_marker_* / wheelie_bar_marker_*).
+## (training_wheels_marker_* / wheelie_bar_marker_* / wings_marker_*).
 @export var training_wheels_marker: Marker3D
 @export var wheelie_bar_marker: Marker3D
+@export var wings_marker: Marker3D
 ## Editor only: attachments ride their marker (place it by eye); texture mods overlay the bike.
 @export var mod_previews: Array[BikeMod] = []
 
