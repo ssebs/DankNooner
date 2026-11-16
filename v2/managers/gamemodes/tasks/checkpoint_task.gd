@@ -4,7 +4,6 @@
 class_name CheckpointTask extends GameModeTask
 
 @export var objective_key: String = "TUT_CHECKPOINT"
-@export var hint_key: String = "TUT_HINT_CHECKPOINT"
 ## Hide `trigger` from each rider once they pass it; restarting the step shows it again.
 @export var hide_trigger_on_pass: bool = false
 
@@ -29,10 +28,6 @@ func on_exit(player: PlayerEntity, _state: Dictionary) -> void:
 
 func get_objective_text() -> String:
 	return tr(objective_key)
-
-
-func get_hint_text() -> String:
-	return tr(hint_key)
 
 
 func _get_configuration_warnings() -> PackedStringArray:

@@ -66,10 +66,6 @@ func get_objective_text() -> String:
 	return ""
 
 
-func get_hint_text() -> String:
-	return ""
-
-
 #endregion
 
 #region Composite/runner API (override in TaskRunner subclasses)

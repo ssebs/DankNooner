@@ -77,29 +77,13 @@ theme_type_variation = &"DimLabel"
 theme_override_font_sizes/font_size = 16
 text = "HUD_FPS"
 
-[node name="TopCenterVBox" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer"]
+[node name="HUD_EventWarning" type="Label" parent="UI/AspectContainer/MarginContainer" unique_id=1935886846]
+unique_name_in_owner = true
+visible = false
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
 mouse_filter = 2
-theme_override_constants/separation = 8
-
-[node name="HUD_EventProgress" type="Label" parent="UI/AspectContainer/MarginContainer/TopCenterVBox" unique_id=1723272740]
-unique_name_in_owner = true
-visible = false
-custom_minimum_size = Vector2(900, 0)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 0
-mouse_filter = 2
-theme_override_font_sizes/font_size = 36
-horizontal_alignment = 1
-autowrap_mode = 3
-
-[node name="HUD_EventWarning" type="Label" parent="UI/AspectContainer/MarginContainer/TopCenterVBox" unique_id=1935886846]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
 theme_type_variation = &"WarningLabel"
 theme_override_font_sizes/font_size = 48
 horizontal_alignment = 1
@@ -594,7 +578,7 @@ theme_type_variation = &"RespawnBar"
 step = 1.0
 show_percentage = false
 
-[node name="HUD_EventPickerHint" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer/RespawnCenter/RespawnCluster"]
+[node name="HUD_EventPickerHint" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/RespawnCenter/RespawnCluster"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -602,15 +586,17 @@ size_flags_horizontal = 4
 mouse_filter = 2
 theme_override_constants/separation = 8
 
-[node name="HUD_EventPickerPrompt" parent="UI/AspectContainer/MarginContainer/RespawnCenter/RespawnCluster/HUD_EventPickerHint" instance=ExtResource("8_inpmt")]
-unique_name_in_owner = true
-layout_mode = 2
-action = "ui_accept"
-
 [node name="Label" type="Label" parent="UI/AspectContainer/MarginContainer/RespawnCenter/RespawnCluster/HUD_EventPickerHint"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 36
 text = "HUD_OPEN_EVENT_PICKER"
+horizontal_alignment = 1
+
+[node name="HUD_EventPickerPrompt" parent="UI/AspectContainer/MarginContainer/RespawnCenter/RespawnCluster/HUD_EventPickerHint" instance=ExtResource("8_inpmt")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+action = "ui_accept"
 
 [node name="HUD_UnlockThumbnail" parent="UI/AspectContainer/MarginContainer/TrickPopups" instance=ExtResource("99_thumb")]
 unique_name_in_owner = true

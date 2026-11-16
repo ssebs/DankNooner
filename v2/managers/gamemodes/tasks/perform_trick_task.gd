@@ -24,9 +24,8 @@ class_name PerformTrickTask extends GameModeTask
 @export var help_pin: String = ""
 @export var warn_wrong_trick: bool = false
 @export var retry_on_miss: bool = false
-## Localization keys (optional — fall back to a generic label if empty).
+## Localization key (optional — falls back to the trick's name if empty).
 @export var objective_key: String = ""
-@export var hint_key: String = ""
 
 
 func on_enter(player: PlayerEntity, _state: Dictionary) -> void:
@@ -101,7 +100,7 @@ func get_progress(state: Dictionary) -> String:
 	if state.get("trick_done", false):
 		return tr("TUT_LAND_TRICK")
 	if min_duration <= 0.0:
-		return get_hint_text()
+		return ""
 	return "%.1f / %.1fs" % [state.get("t", 0.0), min_duration]
 
 
@@ -109,12 +108,6 @@ func get_objective_text() -> String:
 	if objective_key != "":
 		return tr(objective_key).format({"duration": min_duration})
 	return tr("TRICK_NAME_" + TrickController.trick_to_str(required_trick))
-
-
-func get_hint_text() -> String:
-	if hint_key != "":
-		return tr(hint_key)
-	return ""
 
 
 func _get_configuration_warnings() -> PackedStringArray:

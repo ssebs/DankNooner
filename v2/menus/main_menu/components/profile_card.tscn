@@ -272,6 +272,17 @@ bbcode_enabled = true
 fit_content = true
 auto_translate_mode = 2
 
+[node name="EventProgress" type="Label" parent="Drop/Panel/Content/EventPane"]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(256, 0)
+layout_mode = 2
+theme_type_variation = &"LiveLabel"
+theme_override_font_sizes/font_size = 26
+horizontal_alignment = 1
+autowrap_mode = 3
+auto_translate_mode = 2
+
 [node name="Leaderboard" type="Control" parent="Drop/Panel/Content"]
 unique_name_in_owner = true
 layout_mode = 2

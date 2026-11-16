@@ -11,14 +11,12 @@
 ## must use eval_when = ALWAYS. Nest a SequentialTaskRunner inside if you need
 ## trigger-gated steps.
 ##
-## The runner pushes a single objective/hint line to the HUD on start. Set
-## `objective_text` / `hint_text` on the node; individual children's
-## `get_objective_text()` is ignored.
+## The runner pushes a single objective line to the HUD on start: `objective_text`, or else the
+## first child's `get_objective_text()`.
 class_name ConcurrentTaskRunner extends TaskRunner
 
 ## Optional HUD text pushed once when the runner starts.
 @export var objective_text: String
-@export var hint_text: String
 
 ## Per-peer scratchpad layout (stored on PlayerTaskState.lesson_state):
 ##   "_done"   : Array[bool]        — completion flag per child
@@ -82,18 +80,16 @@ func _on_enter_all(peer_id: int, state: PlayerTaskState) -> void:
 
 
 func _push_step_hud() -> void:
-	var obj := objective_text if objective_text != "" else _first_child_text(true)
-	var hint := hint_text if hint_text != "" else _first_child_text(false)
+	var obj := objective_text if objective_text != "" else _first_child_objective()
 	for peer_id in player_states:
-		riding_hud.push_event_step(peer_id, 0, 1, obj, hint, show_step_count)
+		riding_hud.push_event_step(peer_id, 0, 1, obj, show_step_count)
 
 
-## Falls back to the first child task with a non-empty get_objective_text() /
-## get_hint_text() so a ConcurrentTaskRunner that wraps a single gating task
-## (e.g. PerformTrickTask) doesn't require duplicating its labels on the runner.
-func _first_child_text(want_objective: bool) -> String:
+## So a ConcurrentTaskRunner wrapping a single gating task (e.g. PerformTrickTask) doesn't need
+## its label duplicated on the runner.
+func _first_child_objective() -> String:
 	for task in tasks:
-		var s := task.get_objective_text() if want_objective else task.get_hint_text()
+		var s := task.get_objective_text()
 		if s != "":
 			return s
 	return ""

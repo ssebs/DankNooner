@@ -103,8 +103,6 @@ const SKIN_COLOR_PRESETS: Array[Color] = [
 ## UI palette, shared by code and the neon themes (DankNoonerNeon.tres, hud_neon.tres).
 ## UI chrome, menus and HUD — the world's neon edge blue (neon_edges.gdshader edge_color).
 const UI_BLUE: Color = Color(0.255, 0.686, 1.0)
-## Combo tier 1, bonus tricks.
-const UI_ICE: Color = Color(0.65, 0.9, 1.0)
 ## Banked but not yet spendable (a boost gauge under one segment).
 const UI_BLUE_DIM: Color = Color(0.16, 0.34, 0.48)
 ## Empty bar segments.
@@ -115,9 +113,10 @@ const UI_GOLD: Color = Color(1.0, 0.82, 0.25)
 const UI_GREEN: Color = Color(0.2, 1.0, 0.55)
 ## Danger: bail, redline, combo tier 3.
 const UI_RED: Color = Color(1.0, 0.24, 0.24)
+## Live info (event timers) and checkpoints — the checkpoint gates' neon.
+const UI_MAGENTA: Color = Color(1.0, 0.32, 0.97)
 ## Panel fills, darkest first; UI_GLASS also outlines HUD text.
 const UI_GLASS: Color = Color(0.02, 0.027, 0.06)
-const UI_SKY: Color = Color(0.02, 0.04, 0.12)
 
 ## Set from MainGame.debug_demo_mode
 static var debug_demo_mode := false

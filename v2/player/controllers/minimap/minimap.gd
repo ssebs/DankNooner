@@ -30,12 +30,15 @@ class_name Minimap extends PanelContainer
 @export var full_icon_size: float = 40.0
 
 const COLOR_SELF := Color.WHITE
-const COLOR_PLAYER := Color(0.2, 0.5, 1.0)
-const COLOR_NPC := Color(0.7, 0.3, 1.0)
-const COLOR_CHECKPOINT := Color(0.15, 0.85, 0.2)
-const COLOR_EVENT := Color(1.0, 0.1, 0.8)
+## Each blip matches its thing's colour in the world or the HUD.
+const COLOR_PLAYER := UtilsConstants.UI_BLUE
+## Race bots: rivals.
+const COLOR_NPC := UtilsConstants.UI_RED
+const COLOR_CHECKPOINT := UtilsConstants.UI_MAGENTA
+const COLOR_EVENT := UtilsConstants.UI_GREEN
+## No palette match; the only orange on the map.
 const COLOR_GARAGE := Color(1.0, 0.55, 0.1)
-const COLOR_GAS_STATION := Color(0.95, 0.2, 0.2)
+const COLOR_GAS_STATION := UtilsConstants.UI_GOLD
 const ICON_SELF := preload("res://resources/img/Icons/arrowUp.png")
 const ICON_CHECKPOINT := preload("res://resources/img/Icons/target.png")
 const ICON_EVENT := preload("res://resources/img/Icons/star.png")
@@ -229,7 +232,7 @@ func _draw_dots() -> void:
 		if _expanded and racer is PlayerEntity:
 			_draw_name_tag((racer as PlayerEntity).name_label, pos)
 
-	# Event start circles (local level nodes) — bright pink for testing — garages and gas stations.
+	# Event start circles (local level nodes), garages and gas stations.
 	# Only in free roam; a race hides them so its checkpoint marker stands alone.
 	if _local_player.gamemode_manager.current_game_mode == GameModeType.Kind.FREE_ROAM:
 		for circle in get_tree().get_nodes_in_group(UtilsConstants.GROUPS["EventCircles"]):

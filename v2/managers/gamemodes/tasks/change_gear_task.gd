@@ -17,7 +17,3 @@ func check(player: PlayerEntity, _delta: float, state: Dictionary) -> bool:
 
 func get_objective_text() -> String:
 	return tr("TUT_CHANGE_GEAR")
-
-
-func get_hint_text() -> String:
-	return tr("TUT_HINT_CHANGE_GEAR")

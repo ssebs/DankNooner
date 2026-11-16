@@ -51,6 +51,8 @@ static var _event_title: String = ""
 static var _event_step: String = ""
 static var _event_objective: String = ""
 static var _event_tour_key: String = ""
+## Live line under the tour text (lap clock, timers), pre-localized; "" = none.
+static var _event_progress: String = ""
 static var _event_gamepad: bool = false
 
 ## A MoneyLabel, so a host can flash / pop it (the garage's purchases).
@@ -77,6 +79,7 @@ static var _event_gamepad: bool = false
 @onready var _event_step_label: Label = %EventStep
 @onready var _event_objective_label: Label = %EventObjective
 @onready var _event_tour: RichTextLabel = %EventTour
+@onready var _event_progress_label: Label = %EventProgress
 @onready var _prev_tab_prompt: InputPrompt = %PrevTabPrompt
 @onready var _next_tab_prompt: InputPrompt = %NextTabPrompt
 
@@ -276,6 +279,15 @@ func show_event(
 	_apply()
 
 
+## Sent every frame, so it sets the one label rather than redrawing the panel.
+func show_event_progress(text: String) -> void:
+	if text == _event_progress:
+		return
+	_event_progress = text
+	_event_progress_label.text = text
+	_event_progress_label.visible = text != ""
+
+
 ## Opens the panel while `on`, without touching the shared state (HUD: the loadouts hold).
 func set_peek(on: bool) -> void:
 	_peek = on
@@ -457,6 +469,8 @@ func _apply(snap: bool = false):
 		_event_tour.clear()
 		ControlBindings.append_tokens(_event_tour, tr(_event_tour_key), _event_gamepad)
 		_event_tour.visible = _event_tour_key != ""
+		_event_progress_label.text = _event_progress
+		_event_progress_label.visible = _event_progress != ""
 
 	var delayed := expanded and !_opened_once and auto_open_delay_secs > 0.0 and !_slid_open
 	if snap:

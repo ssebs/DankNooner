@@ -393,7 +393,7 @@ simulation state. `LevelManager` flips back to `NullHUDState` when leaving gamep
   machine but are shown/hidden by their owning gamemode via `@rpc` calls (grep the gamemode for the
   `rpc_*` entry points). They never become the machine's `current_state`.
 - **Riding HUD layout is one job per corner, no panels** — FPS top-left, money/XP +
-  progress line top-centre, profile card (event pane + leaderboard) + trick feed top-right, held item + minimap bottom-left, speed/gear/RPM + vertical boost gauge
+  event warning top-centre, profile card (event pane + leaderboard) + trick feed top-right, held item + minimap bottom-left, speed/gear/RPM + vertical boost gauge
   bottom-right, trick prompt mid-left. Labels read over the world via the outline/shadow in
   `resources/themes/hud_neon.tres`, set on the HUD's `MarginContainer`.
 - **Button prompts are `InputPrompt`s** (`player/hud_elements/`) — the glyph an action is bound to

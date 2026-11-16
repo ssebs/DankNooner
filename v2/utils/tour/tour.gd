@@ -8,6 +8,8 @@ class_name Tour extends Node
 
 ## Save key; must be unique across the game.
 @export var tour_id: StringName
+## Short version for the HUD's event pane; "" = the last page's body.
+@export var summary_key: String = ""
 
 
 func get_steps() -> Array[TourStep]:
@@ -16,6 +18,10 @@ func get_steps() -> Array[TourStep]:
 		if child is TourStep:
 			steps.append(child)
 	return steps
+
+
+func get_pane_key() -> String:
+	return summary_key if summary_key != "" else get_steps()[-1].body_key
 
 
 func _get_configuration_warnings() -> PackedStringArray:

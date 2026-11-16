@@ -77,7 +77,7 @@ plumbing, and Road/Street race differed only in traffic start/stop.
 ### Tasks and runners (`managers/gamemodes/tasks/`, `runners/`)
 
 - **`GameModeTask`** — base for leaf tasks **and** runners (composite). Leaf hooks:
-  `on_enter / check / on_exit / get_progress / get_objective_text / get_hint_text`. `eval_when`
+  `on_enter / check / on_exit / get_progress / get_objective_text`. `eval_when`
   (`ALWAYS | ON_ENTER | WHILE_INSIDE`) + optional `trigger: GameModeObject`. See the file header for
   the full contract.
 - **Constraint tasks** (`is_constraint = true`) — run alongside the objective for a whole step but
@@ -92,7 +92,7 @@ plumbing, and Road/Street race differed only in traffic start/stop.
   race through.
 - **`ConcurrentTaskRunner`** — runs every child in parallel per peer; done when every
   non-constraint child is. No trigger gating (children use `ALWAYS`); its own
-  `objective_text` / `hint_text` replace the children's.
+  `objective_text` replaces the children's.
 - **`PlayerTaskState`** (`resources/`) — per-peer runner state: `current_index`, `completed`,
   `start_time`, `completion_time_ms`, the `lesson_state` scratchpad, trigger gates.
 
@@ -169,10 +169,11 @@ crash, untyped so each task picks its own keys (`PerformTrickTask` accumulates `
 Every runner event's text lives in `RidingHUDState`'s event pane, which takes over the profile
 card's leaderboard tab (`ProfileCard.show_event`, forced open like an event board): tab titled for
 the event, step count (`shows_step_count()`; races and the tutorial hide it), the objective in gold,
-the last `ShowTourTask` page (live button icons) and, under them, the board when there is one. The
-warning line flashes bottom-centre; the large progress line (hint / lap clock / countdown / status)
-sits top-centre; the challenges' suggested tricks and the trick feed sit top-right, under the card. Races don't put the rider's place in
-the progress line; the leaderboard's Pos column has it. Runners and tasks
+the `ShowTourTask`'s tour (its `summary_key`, else its last page; live button icons), the progress
+line (lap clock / countdown / timers / status) and, under them, the board when there is one. The
+warning line flashes top-centre; the challenges' suggested tricks and the trick feed sit top-right,
+under the card. Races don't put the rider's place in the progress line; the leaderboard's Pos
+column has it. Runners and tasks
 call `riding_hud.push_event_*` server-side; the text is pre-localized there, so the client doesn't
 `tr()` again.
 

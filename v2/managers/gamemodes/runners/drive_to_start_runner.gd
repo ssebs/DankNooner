@@ -13,7 +13,6 @@ func _ready():
 	_task = CheckpointTask.new()
 	_task.name = "DriveToStartTask"
 	_task.objective_key = "RACE_DRIVE_TO_START"
-	_task.hint_key = "RACE_HINT_DRIVE_TO_START"
 	_task.hide_trigger_on_pass = true
 	_task.respawn_in_place = true
 	add_child(_task)

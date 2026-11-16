@@ -44,12 +44,11 @@ const _TRICK_ROWS_PER_COLUMN := 3
 @onready var _fps_label: Label = %HUD_FPS
 @onready var _game_msg: Label = %HUD_GAME_MSG
 @onready var _crash_respawn_hint: HBoxContainer = %HUD_CrashRespawnHint
-@onready var _event_picker_hint: HBoxContainer = %HUD_EventPickerHint
+@onready var _event_picker_hint: VBoxContainer = %HUD_EventPickerHint
 @onready var _profile_card: ProfileCard = %ProfileCard
 @onready var _trick_popups: TrickPopups = %TrickPopups
 @onready var _trick_feed: TrickFeed = %HUD_TrickFeed
 @onready var _target_compass: TargetCompass = %TargetCompass
-@onready var _event_progress: Label = %HUD_EventProgress
 @onready var _event_warning: Label = %HUD_EventWarning
 @onready var _event_tricks: Label = %HUD_EventTricks
 @onready var _boost_gauge: BoostGauge = %BoostGauge
@@ -654,16 +653,16 @@ func _rpc_respawn_point_set(point: Transform3D):
 #region Event pane — every runner event's step text, on the profile card's leaderboard tab
 
 
-## Server-side, to one peer. objective/hint are pre-localized by the task (it interpolates its
-## own @export values) — don't tr() again. The hint shares the progress line, which
-## push_event_progress then overwrites.
+## Server-side, to one peer. objective is pre-localized by the task (it interpolates its own
+## @export values) — don't tr() again.
 func push_event_step(
-	peer_id: int, index: int, total: int, objective: String, hint: String, show_count: bool
+	peer_id: int, index: int, total: int, objective: String, show_count: bool
 ) -> void:
-	_rpc_set_event_step.rpc_id(peer_id, index, total, objective, hint, show_count)
+	_rpc_set_event_step.rpc_id(peer_id, index, total, objective, show_count)
 
 
-## Server-side, every frame: the peer's live progress line (lap clock, wheelie timer...).
+## Server-side, every frame: the peer's live progress line (lap clock, wheelie timer...), at the
+## bottom of the event pane.
 func push_event_progress(peer_id: int, text: String) -> void:
 	_rpc_set_event_progress.rpc_id(peer_id, text)
 
@@ -710,9 +709,9 @@ func set_event_title(text: String) -> void:
 	_show_event_on_card()
 
 
-## Local, from ShowTourTask: keeps the tour's last page readable under the objective.
+## Local, from ShowTourTask: keeps the tour readable under the objective.
 func set_event_tour(tour: Tour) -> void:
-	_event_tour_key = tour.get_steps()[-1].body_key
+	_event_tour_key = tour.get_pane_key()
 	_show_event_on_card()
 
 
@@ -722,7 +721,7 @@ func clear_event_text() -> void:
 	_event_step = ""
 	_event_objective = ""
 	_event_tour_key = ""
-	_event_progress.hide()
+	_profile_card.show_event_progress("")
 	_rpc_clear_event_warning()
 	_rpc_set_event_pin("")
 	_show_event_on_card()
@@ -734,20 +733,17 @@ func _rpc_clear_event_text():
 
 
 @rpc("call_local", "reliable")
-func _rpc_set_event_step(
-	index: int, total: int, objective: String, hint: String, show_count: bool
-):
+func _rpc_set_event_step(index: int, total: int, objective: String, show_count: bool):
 	_event_step = "%d / %d" % [index + 1, total] if show_count and total > 1 else ""
 	_event_objective = objective
-	_event_progress.text = hint
-	_event_progress.visible = hint != ""
+	# The last step's live line is stale.
+	_profile_card.show_event_progress("")
 	_show_event_on_card()
 
 
 @rpc("call_local", "unreliable")
 func _rpc_set_event_progress(text: String):
-	_event_progress.text = text
-	_event_progress.show()
+	_profile_card.show_event_progress(text)
 
 
 @rpc("call_local", "reliable")

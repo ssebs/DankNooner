@@ -45,7 +45,7 @@
     - [ ] confetti vfx
     - [ ] daily reset timer + auto-open card on new dailies
   - [ ] mods
-    - [ ] wings mod for sport bike (mesh + markers)
+    - [x] meshes
     - [ ] mod effects (wheelie bar, training wheels, wings)
   - [ ] console cmds (add_bike_level, unlock_bike_max)
   - [ ] new bike skins (bicycle, ADV, retro sport, split vendor cart)

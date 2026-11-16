@@ -188,7 +188,6 @@ func _start_step_for_peer(peer_id: int, state: PlayerTaskState) -> void:
 		state.current_index,
 		tasks.size(),
 		task.get_objective_text(),
-		task.get_hint_text(),
 		show_step_count
 	)
 

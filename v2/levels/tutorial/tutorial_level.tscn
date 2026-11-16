@@ -392,6 +392,7 @@ script = ExtResource("showtour")
 [node name="Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission1_MSF/Brake_Tour" unique_id=1008001751]
 script = ExtResource("tour")
 tour_id = &"tut_brake"
+summary_key = "TOUR_TUT_BRAKE_SUMMARY"
 
 [node name="Step" type="Node" parent="TutorialCircle/TutorialEvent/Mission1_MSF/Brake_Tour/Tour" unique_id=1966764708]
 script = ExtResource("step")
@@ -416,6 +417,7 @@ script = ExtResource("showtour")
 [node name="Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission1_MSF/Steer_Tour" unique_id=2108799697]
 script = ExtResource("tour")
 tour_id = &"tut_steer"
+summary_key = "TOUR_TUT_STEER_SUMMARY"
 
 [node name="Step" type="Node" parent="TutorialCircle/TutorialEvent/Mission1_MSF/Steer_Tour/Tour" unique_id=1157492808]
 script = ExtResource("step")
@@ -496,6 +498,7 @@ script = ExtResource("showtour")
 [node name="Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101/Balance_Tour" unique_id=1461141148]
 script = ExtResource("tour")
 tour_id = &"tut_balance"
+summary_key = "TOUR_TUT_BALANCE_SUMMARY"
 
 [node name="Step" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101/Balance_Tour/Tour" unique_id=1829155502]
 script = ExtResource("step")
@@ -541,6 +544,7 @@ script = ExtResource("showtour")
 [node name="Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101/Lock_Tour" unique_id=531123444]
 script = ExtResource("tour")
 tour_id = &"tut_lock"
+summary_key = "TOUR_TUT_LOCK_SUMMARY"
 
 [node name="Step" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101/Lock_Tour/Tour" unique_id=997401814]
 script = ExtResource("step")
@@ -563,6 +567,7 @@ script = ExtResource("showtour")
 [node name="Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101/Mods_Tour" unique_id=445671106]
 script = ExtResource("tour")
 tour_id = &"tut_mods"
+summary_key = "TOUR_TUT_MODS_SUMMARY"
 
 [node name="Step" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101/Mods_Tour/Tour" unique_id=696531758]
 script = ExtResource("step")
@@ -587,6 +592,7 @@ script = ExtResource("showtour")
 [node name="Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101/Stoppie_Tour" unique_id=806832510]
 script = ExtResource("tour")
 tour_id = &"tut_stoppie"
+summary_key = "TOUR_TUT_STOPPIE_SUMMARY"
 
 [node name="Step" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101/Stoppie_Tour/Tour" unique_id=1830210978]
 script = ExtResource("step")
@@ -611,6 +617,7 @@ script = ExtResource("showtour")
 [node name="Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101/Drift_Tour" unique_id=339863643]
 script = ExtResource("tour")
 tour_id = &"tut_drift"
+summary_key = "TOUR_TUT_DRIFT_SUMMARY"
 
 [node name="Step" type="Node" parent="TutorialCircle/TutorialEvent/Mission2_Stunting101/Drift_Tour/Tour" unique_id=1525046677]
 script = ExtResource("step")
@@ -662,6 +669,7 @@ script = ExtResource("showtour")
 [node name="Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102/AirTrick_Tour" unique_id=957951028]
 script = ExtResource("tour")
 tour_id = &"tut_air"
+summary_key = "TOUR_TUT_AIR_SUMMARY"
 
 [node name="Step" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102/AirTrick_Tour/Tour" unique_id=675686270]
 script = ExtResource("step")
@@ -688,6 +696,7 @@ script = ExtResource("showtour")
 [node name="Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102/Boost_Tour" unique_id=223358187]
 script = ExtResource("tour")
 tour_id = &"tut_boost"
+summary_key = "TOUR_TUT_BOOST_SUMMARY"
 
 [node name="Step" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102/Boost_Tour/Tour" unique_id=252320157]
 script = ExtResource("step")
@@ -731,6 +740,7 @@ script = ExtResource("showtour")
 [node name="Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102/RampItem_Tour" unique_id=687227394]
 script = ExtResource("tour")
 tour_id = &"tut_ramp_item"
+summary_key = "TOUR_TUT_RAMP_ITEM_SUMMARY"
 
 [node name="Step" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102/RampItem_Tour/Tour" unique_id=1395952025]
 script = ExtResource("step")
@@ -757,6 +767,7 @@ script = ExtResource("showtour")
 [node name="Tour" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102/Drop_Tour" unique_id=586389657]
 script = ExtResource("tour")
 tour_id = &"tut_drop_item"
+summary_key = "TOUR_TUT_DROP_ITEM_SUMMARY"
 
 [node name="Step" type="Node" parent="TutorialCircle/TutorialEvent/Mission3_Stunting102/Drop_Tour/Tour" unique_id=1915969330]
 script = ExtResource("step")
@@ -806,6 +817,7 @@ script = ExtResource("showtour")
 [node name="Tour" type="Node" parent="TutorialCircle/AdvancedEvent/Mission1_Braking/GrabCrash_Tour" unique_id=1224992600]
 script = ExtResource("tour")
 tour_id = &"tut_adv_grab_crash"
+summary_key = "TOUR_TUT_ADV_GRAB_CRASH_SUMMARY"
 
 [node name="Step" type="Node" parent="TutorialCircle/AdvancedEvent/Mission1_Braking/GrabCrash_Tour/Tour" unique_id=1793548813]
 script = ExtResource("step")
@@ -827,6 +839,7 @@ script = ExtResource("showtour")
 [node name="Tour" type="Node" parent="TutorialCircle/AdvancedEvent/Mission1_Braking/PowerCrash_Tour" unique_id=635417926]
 script = ExtResource("tour")
 tour_id = &"tut_adv_power_washout"
+summary_key = "TOUR_TUT_ADV_POWER_WASHOUT_SUMMARY"
 
 [node name="Step" type="Node" parent="TutorialCircle/AdvancedEvent/Mission1_Braking/PowerCrash_Tour/Tour" unique_id=1230292216]
 script = ExtResource("step")
@@ -849,6 +862,7 @@ script = ExtResource("showtour")
 [node name="Tour" type="Node" parent="TutorialCircle/AdvancedEvent/Mission1_Braking/Progressive_Tour" unique_id=1967740691]
 script = ExtResource("tour")
 tour_id = &"tut_adv_progressive"
+summary_key = "TOUR_TUT_ADV_PROGRESSIVE_SUMMARY"
 
 [node name="Step" type="Node" parent="TutorialCircle/AdvancedEvent/Mission1_Braking/Progressive_Tour/Tour" unique_id=1964829512]
 script = ExtResource("step")
@@ -870,6 +884,7 @@ script = ExtResource("showtour")
 [node name="Tour" type="Node" parent="TutorialCircle/AdvancedEvent/Mission1_Braking/Trail_Tour" unique_id=1405862747]
 script = ExtResource("tour")
 tour_id = &"tut_adv_trail"
+summary_key = "TOUR_TUT_ADV_TRAIL_SUMMARY"
 
 [node name="Step" type="Node" parent="TutorialCircle/AdvancedEvent/Mission1_Braking/Trail_Tour/Tour" unique_id=280112343]
 script = ExtResource("step")
@@ -942,6 +957,7 @@ script = ExtResource("showtour")
 [node name="Tour" type="Node" parent="TutorialCircle/AdvancedEvent/Mission2_GroundAndAir/Kickflip_Tour" unique_id=808977246]
 script = ExtResource("tour")
 tour_id = &"tut_adv_kickflip"
+summary_key = "TOUR_TUT_ADV_KICKFLIP_SUMMARY"
 
 [node name="Step" type="Node" parent="TutorialCircle/AdvancedEvent/Mission2_GroundAndAir/Kickflip_Tour/Tour" unique_id=511989137]
 script = ExtResource("step")
@@ -967,6 +983,7 @@ script = ExtResource("showtour")
 [node name="Tour" type="Node" parent="TutorialCircle/AdvancedEvent/Mission2_GroundAndAir/Superman_Tour" unique_id=457696871]
 script = ExtResource("tour")
 tour_id = &"tut_adv_superman"
+summary_key = "TOUR_TUT_ADV_SUPERMAN_SUMMARY"
 
 [node name="Step" type="Node" parent="TutorialCircle/AdvancedEvent/Mission2_GroundAndAir/Superman_Tour/Tour" unique_id=1243704291]
 script = ExtResource("step")
@@ -996,6 +1013,7 @@ script = ExtResource("showtour")
 [node name="Tour" type="Node" parent="TutorialCircle/AdvancedEvent/Mission3_Grinds/FiftyFifty_Tour" unique_id=1569678160]
 script = ExtResource("tour")
 tour_id = &"tut_adv_fifty_fifty"
+summary_key = "TOUR_TUT_ADV_FIFTY_FIFTY_SUMMARY"
 
 [node name="Step" type="Node" parent="TutorialCircle/AdvancedEvent/Mission3_Grinds/FiftyFifty_Tour/Tour" unique_id=593781419]
 script = ExtResource("step")
@@ -1021,6 +1039,7 @@ script = ExtResource("showtour")
 [node name="Tour" type="Node" parent="TutorialCircle/AdvancedEvent/Mission3_Grinds/Salad_Tour" unique_id=1518425779]
 script = ExtResource("tour")
 tour_id = &"tut_adv_salad"
+summary_key = "TOUR_TUT_ADV_SALAD_SUMMARY"
 
 [node name="Step" type="Node" parent="TutorialCircle/AdvancedEvent/Mission3_Grinds/Salad_Tour/Tour" unique_id=192521391]
 script = ExtResource("step")

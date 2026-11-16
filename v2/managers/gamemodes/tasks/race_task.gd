@@ -129,11 +129,6 @@ func get_objective_text() -> String:
 	return tr(objective_key)
 
 
-func get_hint_text() -> String:
-	# Empty — dynamic lap/timer text is pushed each frame via riding_hud.push_event_progress.
-	return ""
-
-
 ## Recorded finish time for any racer (humans and NPCs), -1.0 while unfinished.
 ## Public so the race gamemodes stop reaching into peer_progress.
 func get_completion_time_ms(racer_id: int) -> float:
