@@ -46,7 +46,11 @@ func toggle_racing_line_preview() -> void:
 	var region: NPCNavRegion = get_tree().edited_scene_root.npc_nav_region
 	var shared := region.navigation_mesh
 	await region.swap_navmesh(get_road_navmesh(shared))
-	var line := NPCRacingLine.bake(region.get_rid(), get_racing_route(), is_lap_route())
+	var line: NPCRacingLine
+	if bot_route != null:
+		line = NPCRacingLine.bake_through(region.get_rid(), get_racing_route())
+	else:
+		line = NPCRacingLine.bake(region.get_rid(), get_racing_route(), is_lap_route())
 	region.navigation_mesh = shared
 	# Loaded on click, not preloaded: this script is in the player scene's load chain
 	_line_preview = load("res://levels/assets/props/racing_line.tscn").instantiate()

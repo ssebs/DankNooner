@@ -28,7 +28,7 @@ Make a hoodie
 - [ ] Mods
   - [ ] Wings as mod for sport bike 
     - [x] mesh
-    - [ ] (more air time) effect
+    - [ ] (more air time(slow down gravity so you get more air time)) effect
   - [ ] Scraper/12 bar mod
     - [x] mesh
     - [ ] add sparks during wheelie / loopout prevention effect
@@ -40,15 +40,11 @@ Make a hoodie
   - [ ] exhaust
 
 
-- [ ] gas station minimap icon looks like gun store
-
-- [ ] new mod for sport bike => wings
-  - [ ] slow down gravity so you get more air time
-  - [ ] needs trick slot/mesh
-
 ---
 ##
 ## NEXT
+
+- [ ] gas station minimap icon looks like gun store
 
 - [ ] find a way to record my gameplay but play it back from another camera angle/slowmo
   - [ ] Replay studio for trailer footage: review the "Calls I made" section, then plan. Spec: [____REPLAY_WIP.md](./____REPLAY_WIP.md)

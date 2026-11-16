@@ -880,6 +880,7 @@ metadata/_custom_type_script = "uid://dv0brm8irhlth"
 
 [node name="TrafficNetwork" type="Node3D" parent="." unique_id=1789773144]
 script = ExtResource("3_4h6qj")
+show_in_editor = false
 baked = ExtResource("4_emu8c")
 metadata/_custom_type_script = "uid://dunhh6klysrxg"
 
@@ -2161,6 +2162,7 @@ objective_key = "TIME_ATTACK_RUN_OBJECTIVE"
 respawn_in_place = true
 
 [node name="TrickBattle" type="Node3D" parent="EventStartCircle1" unique_id=1952719947 node_paths=PackedStringArray("props", "spawn", "bot_route", "pickups")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
 script = ExtResource("mig_event")
 definition = SubResource("Resource_trkbtl")
 props = [NodePath("../Props/TrickBattleProps")]

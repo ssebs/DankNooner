@@ -144,11 +144,16 @@ func bake_racing_line(event: GameModeEvent) -> void:
 	# Read here: scene nodes aren't safe to touch from the worker thread
 	var positions := event.get_racing_route()
 	var is_lap := event.is_lap_route()
+	var is_bot_route := event.bot_route != null
 	var region_rid := region.get_rid()
 	var baked: Array[NPCRacingLine] = []
 	# About a second of navmesh queries — off the main thread so the race start doesn't hitch
 	var task := WorkerThreadPool.add_task(
-		func(): baked.append(NPCRacingLine.bake(region_rid, positions, is_lap))
+		func():
+			if is_bot_route:
+				baked.append(NPCRacingLine.bake_through(region_rid, positions))
+			else:
+				baked.append(NPCRacingLine.bake(region_rid, positions, is_lap))
 	)
 	while !WorkerThreadPool.is_task_completed(task):
 		await get_tree().process_frame

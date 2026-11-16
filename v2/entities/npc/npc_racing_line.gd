@@ -51,6 +51,15 @@ static func bake(road_region: RID, route: PackedVector3Array, is_closed: bool) -
 	return line
 
 
+## A hand-placed loop (GameModeEvent.bot_route): a curve straight through route, never pathed or
+## widened, so it can cross the ramp gaps the navmesh leaves out. Road room still bounds offsets.
+static func bake_through(road_region: RID, route: PackedVector3Array) -> NPCRacingLine:
+	var line := NPCRacingLine.new(true)
+	line._fit_curve(route)
+	line._bake_samples(road_region, CORNER_GRIP, MAX_HALF_WIDTH)
+	return line
+
+
 ## A baked line's curve rebuilt from its get_points, so peers can draw it.
 static func curve_through(points: PackedVector3Array, is_closed: bool) -> Curve3D:
 	var line := NPCRacingLine.new(is_closed)
@@ -256,10 +265,18 @@ func _widen(points: PackedVector3Array, road_region: RID, max_half_width: float)
 				var len_prev := here.distance_to(prev)
 				var len_next := here.distance_to(next)
 				var target := (len_next * k_prev + len_prev * k_next) / maxf(len_prev + len_next, 0.001)
-				var k := _curvature_through(prev, here, next)
-				var dk_dt := (_curvature_through(prev, here + right[i] * WIDEN_PROBE, next) - k) / WIDEN_PROBE
+				# Newton from the point set back on the prev-next chord, as Coulom does: there curvature
+				# is 0 and near linear in the shift. From an offset point the slope is off and it
+				# overshoots into a zigzag wherever the road is wide.
+				var chord := next - prev
+				var across := right[i].cross(chord)
+				if absf(across) < 0.000001:
+					continue
+				var on_chord := (prev - base[i]).cross(chord) / across
+				var chord_point := base[i] + right[i] * on_chord
+				var dk_dt := _curvature_through(prev, chord_point + right[i] * WIDEN_PROBE, next) / WIDEN_PROBE
 				if absf(dk_dt) > 0.000001:
-					lateral[i] = clampf(lateral[i] + (target - k) / dk_dt, -room_left[i], room_right[i])
+					lateral[i] = clampf(on_chord + target / dk_dt, -room_left[i], room_right[i])
 		# Fill the points this spacing skipped, so the next one starts from the whole shape
 		for i in n:
 			var from := i - i % step
