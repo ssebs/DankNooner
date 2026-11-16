@@ -19,3 +19,8 @@ mouse_filter = 2
 [node name="GarageUI" parent="UI" instance=ExtResource("2_garage")]
 unique_name_in_owner = true
 layout_mode = 1
+
+[node name="SaveCard" parent="UI/GarageUI"]
+clickable = true
+
+[editable path="UI/GarageUI"]

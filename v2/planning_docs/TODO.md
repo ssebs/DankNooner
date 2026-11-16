@@ -26,7 +26,6 @@
 ## In-Progress 🚨
 > Don't forget, have fun :D
 - [ ] [WIP MISC](_ScratchPad.md)
-- [ ] profile card not always clickable
 
 - [ ] [Progression/Challenges](./Progression.md)
   - [x] bike variants (scooter=>mini, cruiser=>naked)
@@ -230,6 +229,10 @@
 ---
 
 ## Done ✅
+
+- [x] trick battle needs npcs
+
+- [x] profile card should be clickable in more places
 
 - [x] more shader texture materials like aurora/lava
 

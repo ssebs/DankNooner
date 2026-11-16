@@ -104,9 +104,18 @@ func _push_leaderboard():
 	pass
 
 
-## The last runner's riders only — late joiners never played it.
+## Override: everyone ranked, unsorted. The last runner's riders only — late joiners never played it.
+func _rider_ids() -> Array:
+	return _active_runner.player_states.keys()
+
+
+## Override: a ranked rider's name.
+func _username(peer_id: int) -> String:
+	return lobby_manager.lobby_players[peer_id].username
+
+
 func _ranked_peer_ids() -> Array:
-	var peer_ids: Array = _active_runner.player_states.keys()
+	var peer_ids := _rider_ids()
 	peer_ids.sort_custom(func(a, b): return _score(a) > _score(b))
 	return peer_ids
 
@@ -127,7 +136,7 @@ func _build_results() -> ResultsData:
 			. append(
 				{
 					"_peer_id": peer_id,
-					"Username": lobby_manager.lobby_players[peer_id].username,
+					"Username": _username(peer_id),
 					"Score": "%d" % _score(peer_id),
 				}
 			)

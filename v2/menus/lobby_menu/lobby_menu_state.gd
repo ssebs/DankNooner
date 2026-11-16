@@ -13,6 +13,8 @@ class_name LobbyMenuState extends MenuState
 
 @export var play_menu_state: MenuState
 @export var customize_menu_state: MenuState
+@export var audio_manager: AudioManager
+@export var saves_menu_state: MenuState
 
 const AUTO_HOST_LOBBY_SIZE := 2
 
@@ -39,14 +41,16 @@ func _ready():
 
 #region state lifecycle
 func Enter(state_context: StateContext):
-	if state_context is not LobbyStateContext:
+	# Saves hands back a plain context; ours is still in return_ctx.
+	var ctx := return_ctx if state_context.return_state == saves_menu_state else state_context
+	if ctx is not LobbyStateContext:
 		DebugUtils.DebugErrMsg(
 			"Must pass LobbyStateContext type when transitioning to LobbyMenuState"
 		)
 		return
 
-	return_ctx = state_context
-	return_state = state_context.return_state
+	return_ctx = ctx
+	return_state = ctx.return_state
 	if return_state == self:
 		# Returning from customize — _on_customize_pressed pointed our own context's
 		# return_state back here so customize's Back lands in the lobby (leaving via the
@@ -64,6 +68,7 @@ func Enter(state_context: StateContext):
 	level_select_panel.start_pressed.connect(_on_start_pressed)
 	level_select_panel.level_selected.connect(_on_level_selected)
 	customize_btn.pressed.connect(_on_customize_pressed)
+	profile_card.pressed.connect(_on_profile_card_pressed)
 	lobby_manager.lobby_players_updated.connect(_on_lobby_players_updated)
 
 	# Connection signals
@@ -92,6 +97,7 @@ func Exit(_state_context: StateContext):
 	level_select_panel.start_pressed.disconnect(_on_start_pressed)
 	level_select_panel.level_selected.disconnect(_on_level_selected)
 	customize_btn.pressed.disconnect(_on_customize_pressed)
+	profile_card.pressed.disconnect(_on_profile_card_pressed)
 	lobby_manager.lobby_players_updated.disconnect(_on_lobby_players_updated)
 
 	connection_manager.game_id_set.disconnect(_on_game_id_set)
@@ -135,6 +141,12 @@ func _on_customize_pressed():
 	transitioned.emit(
 		customize_menu_state, StateContext.NewWithReturnAndContext(self, return_ctx)
 	)
+
+
+## In session, so Saves shows the challenges but locks switching saves.
+func _on_profile_card_pressed():
+	audio_manager.play_menu_click()
+	transitioned.emit(saves_menu_state, PauseStateContext.NewFromPause(self))
 
 
 #endregion
@@ -291,6 +303,10 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("steam_manager must not be empty")
 	if customize_menu_state == null:
 		issues.append("customize_menu_state must not be empty")
+	if audio_manager == null:
+		issues.append("audio_manager must not be empty")
+	if saves_menu_state == null:
+		issues.append("saves_menu_state must not be empty")
 	if play_menu_state == null:
 		issues.append("play_menu_state must not be empty")
 

@@ -7,6 +7,7 @@ class_name CustomizeMenuState extends MenuState
 @export var audio_manager: AudioManager
 @export var input_state_manager: InputStateManager
 @export var tour_manager: TourManager
+@export var saves_menu_state: MenuState
 
 @onready var garage_ui: GarageUI = %GarageUI
 
@@ -14,14 +15,17 @@ var _garage_set: GarageSet
 
 
 func Enter(state_context: StateContext):
-	return_ctx = state_context
-	return_state = state_context.return_state
+	# Back from Saves keeps the original back target.
+	if state_context.return_state != saves_menu_state:
+		return_ctx = state_context
+		return_state = state_context.return_state
 
 	_garage_set = level_manager.spawn_garage_level().garage_set
 
 	garage_ui.preview_changed.connect(_garage_set.show_preview)
 	garage_ui.pose_requested.connect(_garage_set.cycle_pose)
 	garage_ui.exit_requested.connect(_on_exit_requested)
+	garage_ui.save_card.pressed.connect(_on_save_card_pressed)
 	ui.show()
 	garage_ui.open(save_manager, audio_manager, input_state_manager, tour_manager)
 
@@ -34,12 +38,25 @@ func Exit(_state_context: StateContext):
 	garage_ui.preview_changed.disconnect(_garage_set.show_preview)
 	garage_ui.pose_requested.disconnect(_garage_set.cycle_pose)
 	garage_ui.exit_requested.disconnect(_on_exit_requested)
+	garage_ui.save_card.pressed.disconnect(_on_save_card_pressed)
 	_garage_set = null
 
 
 func _on_exit_requested():
 	level_manager.spawn_menu_level()
 	transitioned.emit(return_state, return_ctx)
+
+
+## From the lobby it's in session, so Saves locks switching saves.
+func _on_save_card_pressed():
+	audio_manager.play_menu_click()
+	level_manager.spawn_menu_level()
+	var ctx: StateContext = (
+		PauseStateContext.NewFromPause(self)
+		if return_ctx is LobbyStateContext
+		else StateContext.NewWithReturn(self)
+	)
+	transitioned.emit(saves_menu_state, ctx)
 
 
 #override
@@ -64,4 +81,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("input_state_manager must not be empty")
 	if tour_manager == null:
 		issues.append("tour_manager must not be empty")
+	if saves_menu_state == null:
+		issues.append("saves_menu_state must not be empty")
 	return issues

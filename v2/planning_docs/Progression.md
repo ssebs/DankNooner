@@ -344,7 +344,9 @@ the cloud pattern, never colliding with a full save. Each build lists only its o
 - **Preview:** `SavePreview`, a `SubViewport` posing a `RiderVisual`, drawn once each time the
   menu opens. Never written to disk.
 - **Main menu** shows the active save top right (`ProfileCard`, replacing the old greeting):
-  the rider in a circle, level and money, the save name small. Clicking it opens the Saves menu.
+  the rider in a circle, level and money, the save name small. Clicking it opens the Saves menu,
+  from the main, play, lobby, customize (not the free-roam garage bay) and pause menus. In a
+  session (lobby, customize from the lobby, pause) the Save Slots tab is disabled.
 - **Old versions** (any `version` but `save_version`) are grayed out, show their version, and can
   only be deleted. A migrate button comes later.
 - **Boot on an old version:** the old file is kept, and a new save starts in the first free slot

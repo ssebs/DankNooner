@@ -294,6 +294,12 @@ board leaves them off to stay on standings). `hint_tricks()` reach the riding HU
   free-roam points don't carry in.
 - **Session:** same as Long jump (clock on the progress line, Cancel Event → results). Leaderboard
   and results show the score.
+- **Bots:** with `enable_npcs`, `NPCRaceManager` bots fill the grid slots behind the humans and lap
+  the event's `bot_route` (`Marker3D`s, a closed loop, never shown to players) once runner 2 starts
+  (`NPCRaceManager.free_ride`). They do wheelies and ramp tricks, are ranked and shown like riders,
+  and earn no payout. A bot finishing first costs the human the win. They skip grind rails and
+  corkscrews, and a crashed bot respawns on its grid slot. Bake the level's `NPCNavRegion` after
+  placing the route.
 
 ## Crash launch
 

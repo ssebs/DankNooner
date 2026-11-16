@@ -4,7 +4,8 @@
 ## points each NPC at its next checkpoint from RaceTask.
 ##
 ## RaceGameMode's NPCRacersComponent sets `race_task` while a race runs and calls
-## spawn_npc / register — see that component for the lifecycle.
+## spawn_npc / register — see that component for the lifecycle. TrickBattleGameMode sets
+## `free_ride` instead: no race, bots just lap the line.
 class_name NPCRaceManager extends BaseManager
 
 ## Server: a bot joined / left the roster (TrickManager keeps a scoring row per bot).
@@ -37,6 +38,8 @@ const DRAW_SECONDS := 1.0e9
 
 ## Set by NPCRacersComponent while a race runs; null otherwise.
 var race_task: RaceTask
+## Set by TrickBattleGameMode while its battle runs: bots ride with no RaceTask behind them.
+var free_ride: bool = false
 
 ## Server only. The line every bot rides, baked by bake_racing_line; null until then.
 var racing_line: NPCRacingLine
@@ -75,22 +78,24 @@ func _physics_process(delta: float):
 		return
 	if !multiplayer.is_server():
 		return
-	if race_task == null:
+	if race_task == null and !free_ride:
 		return
 	var t := Time.get_ticks_usec()  # PROF: temp
 	for npc_id in _npcs:
 		var npc := _npcs[npc_id]
 		if npc.npc_state == NPCRiderEntity.NPCState.CRASHED:
 			continue
-		if race_task.peer_progress[npc_id].has("completion_time_ms"):
+		if free_ride:
+			npc.driving = true
+		elif race_task.peer_progress[npc_id].has("completion_time_ms"):
 			if npc.npc_state != NPCRiderEntity.NPCState.FINISHED:
 				npc.finish()
 			continue
-
-		# get_target_checkpoint is null during grid/countdown — the bot only
-		# rides its lane while the race body is active. The lane curve, not the
-		# checkpoint, decides where it steers.
-		npc.driving = race_task.get_target_checkpoint(npc_id) != null
+		else:
+			# get_target_checkpoint is null during grid/countdown — the bot only
+			# rides its lane while the race body is active. The lane curve, not the
+			# checkpoint, decides where it steers.
+			npc.driving = race_task.get_target_checkpoint(npc_id) != null
 		if npc.driving:
 			_maybe_use_item(npc_id, npc, delta)
 			_maybe_boost(npc_id, npc)
@@ -138,7 +143,7 @@ func bake_racing_line(event: GameModeEvent) -> void:
 		return
 	# Read here: scene nodes aren't safe to touch from the worker thread
 	var positions := event.get_racing_route()
-	var is_lap := RaceTask.is_lap_route(event.get_checkpoints())
+	var is_lap := event.is_lap_route()
 	var region_rid := region.get_rid()
 	var baked: Array[NPCRacingLine] = []
 	# About a second of navmesh queries — off the main thread so the race start doesn't hitch
@@ -157,9 +162,11 @@ func bake_racing_line(event: GameModeEvent) -> void:
 	)
 	for npc_id in _npcs:
 		_race_state(npc_id).racing_line = racing_line
-	rpc_show_racing_line.rpc(
-		racing_line.get_points(), racing_line.closed
-	)
+	# Only races show players the line; a bot route stays hidden
+	if race_task != null:
+		rpc_show_racing_line.rpc(
+			racing_line.get_points(), racing_line.closed
+		)
 	if _draw_racing_line:
 		_draw_line()
 
@@ -171,8 +178,9 @@ func sync_npcs_to_peer(peer_id: int) -> void:
 	for npc_id in _npcs:
 		var npc := _npcs[npc_id]
 		rpc_spawn_npc.rpc_id(peer_id, npc_id, npc.global_position, npc.global_basis)
-	# Still baking — the broadcast when it lands reaches them — skip is intentional
-	if racing_line == null:
+	# Still baking (the broadcast when it lands reaches them), or a hidden bot route — skip is
+	# intentional
+	if racing_line == null or race_task == null:
 		return
 	rpc_show_racing_line.rpc_id(
 		peer_id, racing_line.get_points(), racing_line.closed
@@ -376,17 +384,19 @@ func _rider_close_behind(npc: NPCRiderEntity) -> bool:
 	return false
 
 
-## Server only. One segment when the next checkpoint is dead ahead down a straight; a burn into a
-## corner is wasted.
+## Server only. One segment down a straight, in a race only when the next checkpoint is dead ahead;
+## a burn into a corner is wasted.
 func _maybe_boost(npc_id: int, npc: NPCRiderEntity) -> void:
 	var tc := npc.trick_controller
-	if tc.is_boosting or tc.boost_amount < 1.0:
+	if tc.is_boosting or tc.boost_amount < 1.0 or !_race_state(npc_id).is_straight_ahead():
 		return
-	var to_checkpoint := race_task.get_target_checkpoint(npc_id).global_position - npc.global_position
-	var forward := -npc.global_basis.z
-	var angle := Vector2(forward.x, forward.z).angle_to(Vector2(to_checkpoint.x, to_checkpoint.z))
-	if absf(angle) <= deg_to_rad(boost_cone_deg) and _race_state(npc_id).is_straight_ahead():
-		tc.boost()
+	if race_task != null:
+		var to_checkpoint := race_task.get_target_checkpoint(npc_id).global_position - npc.global_position
+		var forward := -npc.global_basis.z
+		var angle := Vector2(forward.x, forward.z).angle_to(Vector2(to_checkpoint.x, to_checkpoint.z))
+		if absf(angle) > deg_to_rad(boost_cone_deg):
+			return
+	tc.boost()
 
 
 #endregion

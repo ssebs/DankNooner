@@ -9,6 +9,8 @@ class_name PlayMenuState extends MenuState
 @export var lobby_menu_state: MenuState
 @export var customize_menu_state: MenuState
 @export var server_browser_menu_state: MenuState
+@export var audio_manager: AudioManager
+@export var saves_menu_state: MenuState
 
 const NORAY_OID_LENGTH := 21
 const NORAY_OID_CHARSET := "useandom-26T198340PX75pxJACKVERYMINDBUSHWOLF_GQZbfghjklqvwyzrict"
@@ -51,6 +53,7 @@ func Enter(_state_context: StateContext):
 	code_entry.text_changed.connect(_on_code_text_changed)
 	server_browser_btn.pressed.connect(_on_server_browser_pressed)
 	steam_manager.invite_received.connect(_on_invite_received)
+	profile_card.pressed.connect(_on_profile_card_pressed)
 
 	profile_card.show_save(
 		save_manager.save_slot, save_manager.current_save, save_manager.get_player_definition()
@@ -109,6 +112,12 @@ func Exit(_state_context: StateContext):
 	code_entry.text_changed.disconnect(_on_code_text_changed)
 	server_browser_btn.pressed.disconnect(_on_server_browser_pressed)
 	steam_manager.invite_received.disconnect(_on_invite_received)
+	profile_card.pressed.disconnect(_on_profile_card_pressed)
+
+
+func _on_profile_card_pressed():
+	audio_manager.play_menu_click()
+	transitioned.emit(saves_menu_state, StateContext.NewWithReturn(self))
 
 
 ## Steam joins go through invites and the server browser, so the code row is for the other transports
@@ -268,5 +277,9 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("customize_menu_state must not be empty")
 	if server_browser_menu_state == null:
 		issues.append("server_browser_menu_state must not be empty")
+	if audio_manager == null:
+		issues.append("audio_manager must not be empty")
+	if saves_menu_state == null:
+		issues.append("saves_menu_state must not be empty")
 
 	return issues

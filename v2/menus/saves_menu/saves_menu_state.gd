@@ -1,8 +1,8 @@
 @tool
 ## Profile: tabs on the left 3/4, the active save's ProfileCard and challenges on the right 1/4.
 ## Save Slots tab: the active save's username, then a card per save on disk (this build's only, see
-## SaveManager.slot_path) and empty cards in the lowest free slots up to MIN_CARDS. From the pause
-## menu (a PauseStateContext) it's rename-only: no empty cards, load or delete. Cards are rebuilt,
+## SaveManager.slot_path) and empty cards in the lowest free slots up to MIN_CARDS. In a session
+## (a PauseStateContext: pause, lobby) the tab is disabled. Cards are rebuilt,
 ## previews included, on Enter; the Career table and challenge lists follow the active save.
 class_name SavesMenuState extends MenuState
 
@@ -34,6 +34,7 @@ const CAREER_DIVIDER := Color(1, 1, 1, 0.08)
 
 @onready var _bg_tint: ColorRect = %BGTint
 @onready var _tabs: PromptTabContainer = %Tabs
+@onready var _save_slots: Control = %SaveSlots
 @onready var _username_edit: LineEdit = %UsernameEdit
 @onready var _profile_card: ProfileCard = %ProfileCard
 @onready var _cards: HBoxContainer = %Cards
@@ -67,6 +68,10 @@ func Enter(state_context: StateContext):
 	return_state = state_context.return_state
 	_in_session = state_context is PauseStateContext
 	_bg_tint.visible = _in_session and state_context.show_bg_tint
+	var slots_tab := _tabs.get_tab_idx_from_control(_save_slots)
+	_tabs.set_tab_disabled(slots_tab, _in_session)
+	if _in_session and _tabs.current_tab == slots_tab:
+		_tabs.current_tab = 0
 	ui.show()
 	_confirm_box.hide()
 	_show_active()
@@ -414,4 +419,8 @@ func on_cancel_key_pressed():
 
 #override
 func on_tab_key_pressed(dir: int):
-	_tabs.current_tab = wrapi(_tabs.current_tab + dir, 0, _tabs.get_tab_count())
+	# Skips the disabled Save Slots tab in a session.
+	if dir > 0:
+		_tabs.select_next_available()
+	else:
+		_tabs.select_previous_available()

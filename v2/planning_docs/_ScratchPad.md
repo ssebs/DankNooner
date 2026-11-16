@@ -24,7 +24,6 @@ Make a hoodie
 
 ## NOW
 
-- [ ] trick battle needs npcs
 
 - [ ] Mods
   - [ ] Wings as mod for sport bike 

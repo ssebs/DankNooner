@@ -18,7 +18,7 @@ var description: String = "Sunt nisi id proident veniam ad laboris pariatur mini
 ## Restored from lobby_players on exit back to free roam. Leave null for no override.
 @export var forced_base_bike: BikeSkinDefinition = null
 
-## Race events only (RaceGameMode's NPCRacersComponent): fill empty grid slots with AI racers.
+## Race and trick battle events: fill empty grid slots with AI riders.
 @export var enable_npcs: bool = false
 ## Race events only (RaceGameMode's TrafficComponent): run ambient traffic during the race.
 @export var enable_traffic: bool = false

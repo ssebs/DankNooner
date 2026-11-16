@@ -5,7 +5,7 @@
 ##
 ## Always needs `definition`. Also `spawn` when a RaceTask / GridSpawnTask / GridRespawnTask runs,
 ## `checkpoints` when a RaceTask runs, `pickups` for a stunt race / trick battle, `start_zone` with a
-## DriveToStartRunner.
+## DriveToStartRunner, `bot_route` for a trick battle with enable_npcs.
 class_name GameModeEvent extends Node3D
 
 @export var definition: GameModeEventDefinition
@@ -17,6 +17,9 @@ class_name GameModeEvent extends Node3D
 ## A group under the circle's Checkpoints. Its CheckPointMarker children are the race route, in
 ## tree order.
 @export var checkpoints: Node3D
+## Events without checkpoints (trick battle): the node whose Marker3D children (in tree order) bots
+## lap as a closed loop, its own child or a prop's. Players never see it.
+@export var bot_route: Node3D
 ## The node whose direct children are this event's PickupSpawners (its own child, or a prop's).
 ## Leave empty for none (time attack).
 @export var pickups: Node3D
@@ -43,7 +46,7 @@ func toggle_racing_line_preview() -> void:
 	var region: NPCNavRegion = get_tree().edited_scene_root.npc_nav_region
 	var shared := region.navigation_mesh
 	await region.swap_navmesh(get_road_navmesh(shared))
-	var line := NPCRacingLine.bake(region.get_rid(), get_racing_route(), RaceTask.is_lap_route(get_checkpoints()))
+	var line := NPCRacingLine.bake(region.get_rid(), get_racing_route(), is_lap_route())
 	region.navigation_mesh = shared
 	# Loaded on click, not preloaded: this script is in the player scene's load chain
 	_line_preview = load("res://levels/assets/props/racing_line.tscn").instantiate()
@@ -85,11 +88,15 @@ func get_checkpoints() -> Array[CheckPointMarker]:
 	return out
 
 
-## The points race bots' line runs through: the checkpoints in order. A point-to-point route starts
-## on the grid's centre, since its first checkpoint can sit far up the road.
+## The points bots' line runs through: bot_route if set, else the checkpoints in order. A
+## point-to-point route starts on the grid's centre, since its first checkpoint can sit far up the road.
 func get_racing_route() -> PackedVector3Array:
 	var positions := PackedVector3Array()
-	if !RaceTask.is_lap_route(get_checkpoints()):
+	if bot_route != null:
+		for marker in bot_route.find_children("*", "Marker3D", false):
+			positions.append(marker.global_position)
+		return positions
+	if !is_lap_route():
 		var grid_markers := get_spawn_markers()
 		var grid_center := Vector3.ZERO
 		for marker in grid_markers:
@@ -98,6 +105,11 @@ func get_racing_route() -> PackedVector3Array:
 	for checkpoint in get_checkpoints():
 		positions.append(checkpoint.global_position)
 	return positions
+
+
+## Whether get_racing_route is a closed loop. A bot_route always is.
+func is_lap_route() -> bool:
+	return bot_route != null or RaceTask.is_lap_route(get_checkpoints())
 
 
 func get_pickup_spawners() -> Array[PickupSpawner]:
@@ -163,14 +175,19 @@ func _get_configuration_warnings() -> PackedStringArray:
 			issues.append("checkpoints must be set — a RaceTask reads it")
 		if pickups == null and definition != null and definition.target_gamemode == GameModeType.Kind.STUNT_RACE:
 			issues.append("pickups must be set for a stunt race")
-	var has_drive_to_start := not find_children("*", "DriveToStartRunner", true, false).is_empty()
+	var is_trick_battle := definition != null and definition.target_gamemode == GameModeType.Kind.TRICK_BATTLE
+	if is_trick_battle and definition.enable_npcs and bot_route == null:
+		issues.append("bot_route must be set — enable_npcs bots ride it")
+	if bot_route != null and bot_route.find_children("*", "Marker3D", false).size() < 3:
+		issues.append("bot_route needs at least 3 Marker3D children to make a loop")
+	var has_drive_to_start :=not find_children("*", "DriveToStartRunner", true, false).is_empty()
 	if start_zone == null and has_drive_to_start:
 		issues.append("start_zone must be set — the DriveToStartRunner drives to it")
 	if start_zone != null and not has_drive_to_start:
 		issues.append("start_zone is set but nothing drives to it — add a DriveToStartRunner")
 
 	# Tree order is the sequence, so names should count up from 1.
-	var firsts := {"spawn": spawn, "checkpoints": checkpoints, "pickups": pickups}
+	var firsts := {"spawn": spawn, "checkpoints": checkpoints, "pickups": pickups, "bot_route": bot_route}
 	for export_name in firsts:
 		var group: Node3D = firsts[export_name]
 		if group != null and group.get_child_count() > 0 and not group.get_child(0).name.ends_with("1"):

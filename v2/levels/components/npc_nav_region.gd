@@ -5,7 +5,7 @@
 ## Needs a navigation_mesh.
 ##
 ## The level's road region (LevelDefinition.npc_nav_region) also bakes one mesh per race event
-## (GameModeEvent with checkpoints): its own mesh plus that event's props, which only collide while
+## (GameModeEvent with checkpoints or a bot_route): its own mesh plus that event's props, which only collide while
 ## it runs. Each is saved beside the level and set as the event's road_navmesh.
 class_name NPCNavRegion extends NavigationRegion3D
 
@@ -53,8 +53,8 @@ func _bake_race_meshes(shared_source: NavigationMeshSourceGeometryData3D) -> voi
 	props_mesh.geometry_source_geometry_mode = NavigationMesh.SOURCE_GEOMETRY_GROUPS_WITH_CHILDREN
 	props_mesh.geometry_source_group_name = RACE_PROPS_GROUP
 	for event: GameModeEvent in owner.find_children("*", "GameModeEvent", true, false):
-		# Only races have a line to ride
-		if event.checkpoints == null:
+		# Only races and bot routes have a line to ride
+		if event.checkpoints == null and event.bot_route == null:
 			continue
 		var source := NavigationMeshSourceGeometryData3D.new()
 		source.merge(shared_source)
