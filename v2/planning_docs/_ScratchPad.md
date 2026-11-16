@@ -24,6 +24,7 @@ Make a hoodie
 
 ## NOW
 
+- [ ] cant navigate save slots / choose to del on gamepad
 
 - [ ] Mods
   - [ ] Wings as mod for sport bike 
