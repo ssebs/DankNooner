@@ -37,12 +37,21 @@ const BAT_HIT_MASK: int = 2 | 128
 ## map), which otherwise loops the steep-slope stall crash.
 var _flat_breadcrumbs: Dictionary[int, Transform3D] = {}
 var _breadcrumb_accum: float = 0.0
+## Server-only: bumped per match end so a bat swing from the last match stops.
+var _match_id: int = 0
 
 
 func _ready():
 	if Engine.is_editor_hint():
 		return
 	lobby_manager.lobby_players_updated.connect(_on_lobby_players_updated)
+	gamemode_manager.match_ended.connect(_on_match_ended)
+
+
+## Breadcrumbs are the last level's coordinates; never fall back to them in the next match.
+func _on_match_ended() -> void:
+	_match_id += 1
+	_flat_breadcrumbs.clear()
 
 
 ## Server-only: periodically remember each spawned player's last flat-ground transform, so an
@@ -310,8 +319,11 @@ func swing_bat(wielder_peer_id: int):
 ## than a rollback tick — proximity is a server call, and wobble_player already routes the kick
 ## through synced state on every peer.
 func _wobble_riders_near_bat(wielder_peer_id: int) -> void:
+	var match_id := _match_id
 	for _i in int(BAT_SWING_DURATION / BAT_SWING_PERIOD):
 		await get_tree().create_timer(BAT_SWING_PERIOD).timeout
+		if match_id != _match_id:
+			return
 		var wielder := get_rider(wielder_peer_id) as CharacterBody3D
 		# Wielder crashed / left mid-swing — nothing to swing from (the crash already flushed the anim).
 		if wielder == null or wielder.is_crashed:

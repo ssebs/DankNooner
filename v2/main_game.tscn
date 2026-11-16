@@ -295,10 +295,11 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 mouse_filter = 2
 
-[node name="RidingHUDState" parent="ManagerManager/HUDManager/StateMachine" unique_id=1177239669 node_paths=PackedStringArray("hud_manager", "save_manager", "trick_manager") instance=ExtResource("42_5fp36")]
+[node name="RidingHUDState" parent="ManagerManager/HUDManager/StateMachine" unique_id=1177239669 node_paths=PackedStringArray("hud_manager", "save_manager", "trick_manager", "gamemode_manager") instance=ExtResource("42_5fp36")]
 hud_manager = NodePath("../..")
 save_manager = NodePath("../../../SaveManager")
 trick_manager = NodePath("../../../TrickManager")
+gamemode_manager = NodePath("../../../GamemodeManager")
 
 [node name="GamemodeEventHUDState" parent="ManagerManager/HUDManager/StateMachine" unique_id=1122284461 node_paths=PackedStringArray("hud_manager", "input_state_manager", "save_manager", "spawn_manager") instance=ExtResource("27_3cqky")]
 hud_manager = NodePath("../..")

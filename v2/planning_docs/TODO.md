@@ -27,6 +27,7 @@
 > Don't forget, have fun :D
 - [ ] [WIP MISC](_ScratchPad.md)
 
+
 - [ ] [Progression/Challenges](./Progression.md)
   - [x] bike variants (scooter=>mini, cruiser=>naked)
   - [x] wipe old saves
@@ -50,7 +51,6 @@
   - [ ] new bike skins (bicycle, ADV, retro sport, split vendor cart)
   - [ ] decide sport level gate (5 or 6)
   - [ ] steam stats + achievements (full build only)
-
 
 ### Steam Prep
 > Demo Next Fest Feb '27 | Release free to play  w/ paid dlc for more content/skins
@@ -231,6 +231,9 @@
 
 ## Done ✅
 
+- [x] make press A to open eventstartcircle more obvious
+
+- [x] make red warn label more obvious
 - [x] in tutorial - "Do a wheelie for 2s" should be in the new profilecard panel instead of showing the challenges
   - [x] also gold text?
 - [x] number in tutorial doesnt make sense (multiple tut stages shouldnt exist, at least w/ count)

@@ -42,6 +42,14 @@ const PAUSE_ICON := preload("res://resources/img/Icons/pause.png")
 # See managers/pause_manager.gd
 
 
+func _ready():
+	super._ready()
+	if Engine.is_editor_hint():
+		return
+	# Always wired: Settings / Tricks opened from here are on screen when the host drops.
+	connection_manager.server_disconnected.connect(_on_server_disconnected)
+
+
 func Enter(_state_context: StateContext):
 	ui.show()
 	resume_btn.pressed.connect(_on_resume_pressed)
@@ -49,7 +57,6 @@ func Enter(_state_context: StateContext):
 	respawn_btn.pressed.connect(_on_respawn_pressed)
 	cancel_event_btn.pressed.connect(_on_cancel_event_pressed)
 
-	connection_manager.server_disconnected.connect(_on_server_disconnected)
 	settings_btn.pressed.connect(_on_settings_pressed)
 	tricks_btn.pressed.connect(_on_tricks_pressed)
 	prev_song_btn.pressed.connect(_on_prev_song_pressed)
@@ -103,7 +110,6 @@ func Exit(_state_context: StateContext):
 	respawn_btn.pressed.disconnect(_on_respawn_pressed)
 	cancel_event_btn.pressed.disconnect(_on_cancel_event_pressed)
 
-	connection_manager.server_disconnected.disconnect(_on_server_disconnected)
 	settings_btn.pressed.disconnect(_on_settings_pressed)
 	tricks_btn.pressed.disconnect(_on_tricks_pressed)
 	prev_song_btn.pressed.disconnect(_on_prev_song_pressed)
@@ -210,6 +216,9 @@ func _on_settings_pressed():
 
 
 func _on_server_disconnected(reason: String):
+	# Not in a match: the lobby menu handles its own.
+	if gamemode_manager.match_state != GamemodeManager.MatchState.IN_GAME:
+		return
 	UiToast.ShowToast(tr(reason))
 	_on_main_menu_pressed()
 

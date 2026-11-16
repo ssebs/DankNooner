@@ -154,6 +154,11 @@ func _is_body_action(event: InputEvent) -> bool:
 
 ## Pausing hides the open tour. Resuming plays what's held; quitting from the pause menu drops it.
 func _on_input_state_changed(new_state: InputStateManager.InputState):
+	# Left the match (quit, or the host dropped us) mid-tour: unsaved, so it plays again.
+	var in_menu := new_state == InputStateManager.InputState.IN_MENU
+	if in_menu and is_open() and _saved_input_state != InputStateManager.InputState.IN_MENU:
+		_drop()
+		return
 	if new_state == InputStateManager.InputState.IN_GAME_PAUSED:
 		if is_open() and _ui.visible:
 			_hide_for_pause()
@@ -241,14 +246,7 @@ func _show_step(idx: int):
 
 func _close(skipped: bool):
 	var tour := _tour
-	_tour = null
-	_ui.hide()
-	set_process(false)
-	# skip() can land while it's hidden under the pause menu.
-	_pending_play = Callable()
-	if _paused_tree:
-		get_tree().paused = false
-		_paused_tree = false
+	_drop()
 	# Action steps already handed input back, and the owner may have moved it on since (skip()).
 	if input_state_manager.current_input_state == InputStateManager.InputState.IN_TOUR:
 		# Deferred so whatever polls Input this frame doesn't also read the press that closed it.
@@ -257,6 +255,18 @@ func _close(skipped: bool):
 	save_manager.mark_tour_done(tour.tour_id)
 	tour_closed.emit(tour, skipped)
 
+
+
+## Hides the tour without saving it as done.
+func _drop():
+	_tour = null
+	_ui.hide()
+	set_process(false)
+	# skip() can land while it's hidden under the pause menu.
+	_pending_play = Callable()
+	if _paused_tree:
+		get_tree().paused = false
+		_paused_tree = false
 
 ## Freed when the menu rebuilt its rows during an action step; it focuses the new ones itself.
 func _restore_focus():

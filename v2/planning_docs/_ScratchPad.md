@@ -42,8 +42,7 @@ Make a hoodie
   - [ ] Underglow on bike
   - [ ] exhaust
 
-- [ ] make red warn label more obvious
-- [ ] make press A to open eventstartcircle more obvious
+
 - [ ] gas station minimap icon looks like gun store
 
 - [ ] new mod for sport bike => wings

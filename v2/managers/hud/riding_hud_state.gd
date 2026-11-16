@@ -6,6 +6,7 @@ class_name RidingHUDState extends HUDState
 @export var save_manager: SaveManager
 ## Read for points_per_second, so the live combo points match what the server banks.
 @export var trick_manager: TrickManager
+@export var gamemode_manager: GamemodeManager
 
 const _TRICK_ROW_SCENE := preload("res://menus/tricks_menu/components/trick_row.tscn")
 const _RPM_COLOR_LOW := UtilsConstants.UI_BLUE
@@ -134,6 +135,8 @@ func _ready() -> void:
 	_held_item_panel.hide()
 	_item_hint.hide()
 	_horn_drop_hint.hide()
+	if !Engine.is_editor_hint():
+		gamemode_manager.match_ended.connect(_on_match_ended)
 
 func Enter(_state_context: StateContext):
 	player_entity = hud_manager.local_player
@@ -366,6 +369,14 @@ func _on_crashed(_peer_id: int):
 func _on_respawned():
 	_game_msg.visible = false
 	_crash_respawn_hint.visible = false
+
+
+## Every peer: clear what the next match would otherwise open with (the server only clears these
+## for a mode it exits; a quit mid-crash never respawns).
+func _on_match_ended():
+	_rpc_set_held_item("")
+	_rpc_clear_leaderboard()
+	_on_respawned()
 
 
 ## Local, from FreeRoamGameMode: the rider is in a circle whose picker they can open.
@@ -874,4 +885,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("save_manager must not be empty")
 	if trick_manager == null:
 		issues.append("trick_manager must not be empty")
+	if gamemode_manager == null:
+		issues.append("gamemode_manager must not be empty")
 	return issues

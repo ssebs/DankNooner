@@ -64,6 +64,7 @@ func _ready():
 	if Engine.is_editor_hint():
 		return
 	gamemode_manager.player_disconnected.connect(_on_player_disconnected)
+	gamemode_manager.match_ended.connect(_on_match_ended)
 	var spawner: PickupSpawner = PICKUP_SPAWNER_SCENE.instantiate()
 	for definition in spawner.items:
 		var item_name: String = PickupItemDefinition.PickupItemType.keys()[definition.item_type]
@@ -165,6 +166,12 @@ func _rpc_play_use_sfx(sfx: AudioManager.Sfx):
 
 func _on_player_disconnected(peer_id: int) -> void:
 	_held.erase(peer_id)
+
+
+## A slot must not outlive its match: the next session's clear_items would unequip a rider that
+## isn't spawned.
+func _on_match_ended() -> void:
+	_held.clear()
 
 
 ## Server-only. Empties the slot without using it, unequipping a held shotgun.

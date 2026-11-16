@@ -29,6 +29,14 @@ const AUTO_HOST_LOBBY_SIZE := 2
 @onready var timeout_timer: Timer = %TimeoutTimer
 
 
+func _ready():
+	super._ready()
+	if Engine.is_editor_hint():
+		return
+	# Always wired: Customize opened from here is on screen when the host drops.
+	connection_manager.server_disconnected.connect(_on_server_disconnected)
+
+
 #region state lifecycle
 func Enter(state_context: StateContext):
 	if state_context is not LobbyStateContext:
@@ -59,7 +67,6 @@ func Enter(state_context: StateContext):
 	lobby_manager.lobby_players_updated.connect(_on_lobby_players_updated)
 
 	# Connection signals
-	connection_manager.server_disconnected.connect(_on_server_disconnected)
 	connection_manager.game_id_set.connect(_on_game_id_set)
 	connection_manager.client_connection_failed.connect(_on_client_connection_failed)
 	connection_manager.client_connection_succeeded.connect(_on_client_connection_succeeded)
@@ -87,7 +94,6 @@ func Exit(_state_context: StateContext):
 	customize_btn.pressed.disconnect(_on_customize_pressed)
 	lobby_manager.lobby_players_updated.disconnect(_on_lobby_players_updated)
 
-	connection_manager.server_disconnected.disconnect(_on_server_disconnected)
 	connection_manager.game_id_set.disconnect(_on_game_id_set)
 	connection_manager.client_connection_failed.disconnect(_on_client_connection_failed)
 	connection_manager.client_connection_succeeded.disconnect(_on_client_connection_succeeded)
@@ -148,6 +154,9 @@ func _on_game_id_set(_conn_addr: String):
 
 
 func _on_server_disconnected(reason: String):
+	# In a match: the pause menu handles it.
+	if gamemode_manager.match_state != GamemodeManager.MatchState.IN_LOBBY:
+		return
 	UiToast.ShowToast(tr(reason))
 	_on_back_pressed()
 
