@@ -37,7 +37,7 @@ Make a hoodie
   - [x] change order of shown items in customize menu, should always show unlocked first, then order by unlock type (mini bike challenge, naked challenge, etc.)
   - [x] in customize, hovering the item should show the challenge card
   - [x] too easy to crash when steering a stoppie, allow some steering
-  - [ ] wire up trick battle arena @ eventstartcircle4
+  - [x] wire up trick battle arena @ eventstartcircle4
   
   - [ ] when host starts an event have a smol countdown telling players whats starting / transition
   - [ ] add more incentive to doing stunts and driving around the map instead of just going from checkpoint to checkpoint
