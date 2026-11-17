@@ -32,15 +32,17 @@ Make a hoodie
     - [x] landing on front wheel, trick shout says wheelie
     - [x] wheelie to backflip doesnt count as flick
   - [x] stop lowering boost fill by 2 bars when starting an event
-  - [ ] Limit content in the game, too much for a demo tbh
-  - [ ] Add thanks for playing the demo to the demo version when you unlock everything, but players can keep playing 
+  - [x] Limit content in the game, too much for a demo tbh
+  - [x] Add thanks for playing the demo to the demo version when you unlock everything, but players can keep playing 
+  - [ ] change order of shown items in customize menu, should always show unlocked first, then order by unlock type (mini bike challenge, naked challenge, etc.)
+  
   - [ ] when host starts an event have a smol countdown telling players whats starting / transition
   - [ ] add more incentive to doing stunts and driving around the map instead of just going from checkpoint to checkpoint
     - [ ] score is a reason but not obvious enough
     - [ ] need to give $ per trick done too?
     - [ ] Maybe during stunt race you have to land a specific tricks off a ramp for 4x points like CS2 bonus weapon in death match?
-  - [ ] change order of shown items in customize menu, should always show unlocked first, then order by unlock type (mini bike challenge, naked challenge, etc.)
   - [ ] more wheelie tricks (air/ground are good for now, need wheelie variants)
+  - [ ] disable some `dbg_` commands (progression), but keep TP/helpers
 
 - [ ] tweaks
   - [ ] in customize, hovering the item should show the challenge text in the title

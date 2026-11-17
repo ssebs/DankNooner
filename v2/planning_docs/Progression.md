@@ -109,6 +109,9 @@ TODO.
 - **Mod markers** (2026-11-15): wheelie bar, training wheels and wings markers placed on every
   skin.
 - **Sport's level gate:** stays at its current `unlock_level` (decided 2026-11-15).
+- **Demo thank-you** (built 2026-11-16, untested): in the demo build, finishing every type's
+  challenge list plays `ChallengeManager`'s one-step `DemoThanksTour` (`play_once`, so once per
+  save, `dbg_unlock_all` too); closing it returns the rider to free play.
 
 
 ## Next

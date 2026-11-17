@@ -5,6 +5,8 @@ class_name BikeMod extends Resource
 @export var price: int = 200
 ## Other colors of this mod, unlocked from the same source (SaveManager.mod_rewards).
 @export var variants: Array[BikeMod] = []
+## Unavailable in the Steam demo build
+@export var demo_locked: bool = false
 
 
 ## Apply this mod's effect to a vehicle skin — any Node3D exposing `mesh_skin` (BikeSkin or

@@ -9,6 +9,9 @@ class_name ChallengeManager extends BaseManager
 @export var gamemode_manager: GamemodeManager
 @export var riding_hud_state: RidingHUDState
 @export var audio_manager: AudioManager
+@export var tour_manager: TourManager
+
+@onready var _demo_thanks_tour: Tour = %DemoThanksTour
 
 
 func _ready():
@@ -16,6 +19,8 @@ func _ready():
 		return
 
 	stats_manager.stat_recorded.connect(_on_stat_recorded)
+	save_manager.unlocked_all.connect(_thank_if_demo_done)
+	_demo_thanks_tour.get_steps()[0].link_url = UtilsConstants.STEAM_STORE_URL
 
 
 func _complete(challenge: ChallengeDefinition):
@@ -31,16 +36,23 @@ func _complete(challenge: ChallengeDefinition):
 
 ## Callout + thumbnail on the rider's bike; it and its variants stay unread in the garage until focused.
 func _unlock_mod(mod: BikeMod):
+	var shown: Array = ([mod] + mod.variants).filter(
+		func(m: BikeMod): return !(m.demo_locked and UtilsConstants.is_demo_build())
+	)
+	# Demo build with every color locked: no callout, the garage shows them as demo locked
+	if shown.is_empty():
+		return
 	var unread := save_manager.unread_mods()
-	for unlocked in [mod] + mod.variants:
+	for unlocked in shown:
 		if unlocked.resource_path not in unread:
 			unread.append(unlocked.resource_path)
 	save_manager.save_save()
 	var bike: BikeSkinDefinition = save_manager.get_player_definition().bike_skin.duplicate()
-	var mods: Array[BikeMod] = [mod]
+	var mods: Array[BikeMod] = [shown[0]]
 	bike.mods = mods
 	riding_hud_state.pop_unlocked(
-		tr("SKIN_UNLOCKED").format({"skin": GarageUI.skin_label(GarageUI.mod_file_name(mod))}), bike
+		tr("SKIN_UNLOCKED").format({"skin": GarageUI.skin_label(GarageUI.mod_file_name(shown[0]))}),
+		bike
 	)
 
 
@@ -91,6 +103,15 @@ func _announce_unlocks(bike_type: BikeTypeDefinition):
 			)
 	if mastery == bike_type.challenges.size() and bike_type.mastery_mod != null:
 		_unlock_mod(bike_type.mastery_mod)
+	_thank_if_demo_done()
+
+
+## Demo build, every type's list finished: the thank-you, once per save.
+func _thank_if_demo_done():
+	if UtilsConstants.is_demo_build() and save_manager.bike_types.all(
+		func(t: BikeTypeDefinition): return save_manager.mastery(t) == t.challenges.size()
+	):
+		tour_manager.play_once(_demo_thanks_tour)
 #endregion
 
 
@@ -107,5 +128,7 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("riding_hud_state must not be empty")
 	if audio_manager == null:
 		issues.append("audio_manager must not be empty")
+	if tour_manager == null:
+		issues.append("tour_manager must not be empty")
 
 	return issues

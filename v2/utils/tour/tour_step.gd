@@ -6,7 +6,6 @@ class_name TourStep extends Node
 @export var body_key: String
 ## Optional gold line under the body: what to do, or a caution. Takes {action} tokens too.
 @export var highlight_key: String = ""
-## Unused for now; the panel layout reserves room for it.
 @export var image: Texture2D
 ## Control, Node3D, or null to center the step. Ignored on step 0 (the intro modal).
 @export var target: Node
@@ -14,6 +13,8 @@ class_name TourStep extends Node
 ## Set at runtime by the owning scene to make this an action step: Next hides, input passes
 ## to the game, and the tour moves on once this returns true.
 var done_when: Callable
+## Set at runtime by the owning scene: the image and highlight line open this. "" = no link.
+var link_url: String = ""
 
 
 func _get_configuration_warnings() -> PackedStringArray:

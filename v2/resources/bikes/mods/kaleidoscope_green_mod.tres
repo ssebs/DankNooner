@@ -15,3 +15,4 @@ shader_parameter/speed = 0.25
 [resource]
 script = ExtResource("1_mod")
 material = SubResource("ShaderMaterial_kaleidoscope_green")
+demo_locked = true

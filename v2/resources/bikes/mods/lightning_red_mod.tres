@@ -12,3 +12,4 @@ shader_parameter/scale = 4.0
 [resource]
 script = ExtResource("1_mod")
 material = SubResource("ShaderMaterial_lightning_red")
+demo_locked = true

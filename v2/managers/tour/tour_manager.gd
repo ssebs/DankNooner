@@ -29,7 +29,7 @@ const PAUSABLE_STATES: Array[InputStateManager.InputState] = [
 @onready var _spotlight: Control = %Spotlight
 @onready var _panel: PanelContainer = %Panel
 @onready var _title: Label = %Title
-@onready var _image: TextureRect = %Image
+@onready var _image: TextureButton = %Image
 @onready var _body: RichTextLabel = %Body
 @onready var _dots: HBoxContainer = %Dots
 @onready var _back_btn: Button = %BackBtn
@@ -65,6 +65,8 @@ func _ready():
 	_back_btn.pressed.connect(_on_back_pressed)
 	_skip_btn.pressed.connect(_on_skip_pressed)
 	_next_btn.pressed.connect(_on_next_pressed)
+	_image.pressed.connect(_open_link)
+	_body.meta_clicked.connect(_open_link)
 	input_state_manager.device_changed.connect(_on_device_changed)
 	input_state_manager.input_state_changed.connect(_on_input_state_changed)
 
@@ -207,6 +209,11 @@ func _on_skip_pressed():
 	_close(true)
 
 
+## The image's press, or the highlight line's meta click.
+func _open_link(_meta: Variant = null):
+	OS.shell_open(_steps[_step_idx].link_url)
+
+
 func _on_next_pressed():
 	if _step_idx == _steps.size() - 1:
 		_close(false)
@@ -222,8 +229,14 @@ func _show_step(idx: int):
 	var step := _steps[idx]
 	var is_last := idx == _steps.size() - 1
 	_title.text = tr(step.title_key)
-	_image.texture = step.image
+	_image.texture_normal = step.image
 	_image.visible = step.image != null
+	var linked := !step.link_url.is_empty()
+	_image.disabled = !linked
+	_image.focus_mode = Control.FOCUS_ALL if linked else Control.FOCUS_NONE
+	_image.mouse_default_cursor_shape = (
+		Control.CURSOR_POINTING_HAND if linked else Control.CURSOR_ARROW
+	)
 	_panel.custom_minimum_size.x = INTRO_WIDTH if idx == 0 else CALLOUT_WIDTH
 	_next_btn.text = tr("TOUR_DONE") if is_last else tr("TOUR_NEXT")
 	_back_btn.visible = idx > 0
@@ -295,8 +308,10 @@ func _render_body():
 		return
 	_body.append_text("\n\n")
 	_body.push_color(UtilsConstants.UI_GOLD)
+	if !step.link_url.is_empty():
+		_body.push_meta(step.link_url)
 	ControlBindings.append_tokens(_body, tr(step.highlight_key), gamepad)
-	_body.pop()
+	_body.pop_all()
 
 
 #endregion

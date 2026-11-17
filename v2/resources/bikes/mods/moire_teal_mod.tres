@@ -12,3 +12,4 @@ shader_parameter/color_b = Color(0.255, 1, 0.738, 1)
 [resource]
 script = ExtResource("1_mod")
 material = SubResource("ShaderMaterial_moire_teal")
+demo_locked = true

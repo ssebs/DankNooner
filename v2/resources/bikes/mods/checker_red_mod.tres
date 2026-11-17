@@ -12,3 +12,4 @@ shader_parameter/scroll = Vector2(1, 1)
 [resource]
 script = ExtResource("1_mod")
 material = SubResource("ShaderMaterial_checker_red")
+demo_locked = true

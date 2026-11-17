@@ -14,3 +14,4 @@ shader_parameter/speed = 0.2
 [resource]
 script = ExtResource("1_mod")
 material = SubResource("ShaderMaterial_spiral_teal")
+demo_locked = true

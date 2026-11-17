@@ -319,7 +319,13 @@ func _add_challenge_card(cards: Container, base: BikeSkinDefinition, row: Dictio
 		title.add_theme_font_size_override("font_size", 20)
 		title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		title.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
-		title.text = GarageUI.skin_label(GarageUI.mod_file_name(reward["mod"]))
+		var mod_name := GarageUI.mod_file_name(reward["mod"])
+		# A family unlocks all its colors, so name the pattern, not this color ("spiral_blue" -> "spiral")
+		if !reward["mod"].variants.is_empty():
+			mod_name = mod_name.get_slice("_", 0)
+		title.text = GarageUI.skin_label(mod_name)
+		if reward["mod"].demo_locked and UtilsConstants.is_demo_build():
+			title.text = "%s · %s" % [tr("DEMO_LOCKED_LABEL"), title.text]
 		body.add_child(title)
 		var thumb: Thumbnail3D = THUMB_SCENE.instantiate()
 		thumb.custom_minimum_size = REWARD_THUMB_SIZE

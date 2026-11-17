@@ -7,6 +7,8 @@ signal save_changed(current_save: Dictionary)
 signal save_item_updated(save_key: String, save_value: Variant)
 ## earn() crossed into `level`; once per level crossed.
 signal leveled_up(level: int)
+## dbg_unlock_all finished every challenge without the stat path.
+signal unlocked_all
 
 ## Bumping this retires every older save: it stays on disk, grayed out in the Saves menu, and
 ## boot starts a new save in a free slot (settings are a separate file).
@@ -76,6 +78,7 @@ func deferred_init():
 		0,
 		"Max money/XP, own everything, finish challenges, skip tutorial, loadout per bike"
 	)
+	Console.add_command("dbg_demo_mode", _enable_demo_mode, [], 0, "Run as the demo build (one way)")
 	# JSON loads numbers as floats, hence the int().
 	save_slot = int(settings_manager.current_settings[_slot_setting])
 	_load_active()
@@ -295,6 +298,17 @@ func reset_tours() -> void:
 	save_save()
 
 
+## No way back: the full save is swapped out for the demo's active slot.
+func _enable_demo_mode() -> void:
+	if UtilsConstants.is_demo_build():
+		Console.print_line("already in demo mode")
+		return
+	UtilsConstants.debug_demo_mode = true
+	save_slot = int(settings_manager.current_settings[_slot_setting])
+	_load_active()
+	Console.print_line("demo mode on, loaded demo save %d" % save_slot)
+
+
 func _reset_tutorials() -> void:
 	current_save["progression"].erase(TUTORIAL_KEY)
 	current_save["progression"].erase(ADVANCED_TUTORIAL_KEY)
@@ -445,6 +459,7 @@ func _unlock_all() -> void:
 		player_def.loadouts.append(loadout)
 	update_save("player_definition", player_def, true, true)
 	Console.print_line("unlocked all, %d loadouts" % player_def.loadouts.size())
+	unlocked_all.emit()
 
 
 func update_save(

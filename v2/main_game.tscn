@@ -67,6 +67,9 @@
 [ext_resource type="Script" uid="uid://uj0l0u0v0f0d" path="res://managers/npc_traffic_manager.gd" id="99_npctm"]
 [ext_resource type="Script" path="res://managers/stats_manager.gd" id="100_stats"]
 [ext_resource type="Script" path="res://managers/challenge_manager.gd" id="101_chal"]
+[ext_resource type="Script" uid="uid://ljjg3bwn4yr2" path="res://utils/tour/tour.gd" id="102_tour"]
+[ext_resource type="Script" uid="uid://smimwtt21200" path="res://utils/tour/tour_step.gd" id="103_tourstep"]
+[ext_resource type="Texture2D" uid="uid://b7mda1eajtkqe" path="res://resources/img/Logos/DankNoonerLogo_TextIconOnly.png" id="104_logo"]
 [ext_resource type="Script" path="res://resources/bikes/bike_type_definition.gd" id="120_btype"]
 [ext_resource type="Resource" path="res://resources/bikes/types/mini_bike_type.tres" id="121_mini"]
 [ext_resource type="Resource" path="res://resources/bikes/types/naked_bike_type.tres" id="122_naked"]
@@ -587,13 +590,26 @@ spawn_manager = NodePath("../SpawnManager")
 trick_manager = NodePath("../TrickManager")
 gamemode_manager = NodePath("../GamemodeManager")
 
-[node name="ChallengeManager" type="Node" parent="ManagerManager" node_paths=PackedStringArray("save_manager", "stats_manager", "gamemode_manager", "riding_hud_state", "audio_manager") groups=["Managers"]]
+[node name="ChallengeManager" type="Node" parent="ManagerManager" node_paths=PackedStringArray("save_manager", "stats_manager", "gamemode_manager", "riding_hud_state", "audio_manager", "tour_manager") groups=["Managers"]]
 script = ExtResource("101_chal")
 save_manager = NodePath("../SaveManager")
 stats_manager = NodePath("../StatsManager")
 gamemode_manager = NodePath("../GamemodeManager")
 riding_hud_state = NodePath("../HUDManager/StateMachine/RidingHUDState")
 audio_manager = NodePath("../AudioManager")
+tour_manager = NodePath("../TourManager")
+
+[node name="DemoThanksTour" type="Node" parent="ManagerManager/ChallengeManager"]
+unique_name_in_owner = true
+script = ExtResource("102_tour")
+tour_id = &"demo_thanks"
+
+[node name="ThanksStep" type="Node" parent="ManagerManager/ChallengeManager/DemoThanksTour"]
+script = ExtResource("103_tourstep")
+title_key = "TOUR_DEMO_THANKS_TITLE"
+body_key = "TOUR_DEMO_THANKS_BODY"
+highlight_key = "TOUR_DEMO_THANKS_WISHLIST"
+image = ExtResource("104_logo")
 
 [node name="NPCRaceManager" type="Node" parent="ManagerManager" unique_id=1218916391 node_paths=PackedStringArray("level_manager", "settings_manager", "spawn_manager", "item_manager") groups=["Managers"]]
 script = ExtResource("31_npcrm")

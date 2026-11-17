@@ -14,3 +14,4 @@ shader_parameter/speed = 0.15
 [resource]
 script = ExtResource("1_mod")
 material = SubResource("ShaderMaterial_sierpinski_green")
+demo_locked = true

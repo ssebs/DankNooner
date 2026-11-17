@@ -494,6 +494,9 @@ func _build_mod_list_page(title_key: String, type: Script):
 		var preview := _preview.bind(
 			_loadout().bike if mod in fitted else _with_mod_toggled(mod), _shown_character()
 		)
+		if mod.demo_locked and UtilsConstants.is_demo_build():
+			_add_locked_row(mod_name, tr("DEMO_LOCKED_LABEL"), tr("DEMO_LOCKED_TOOLTIP"), preview)
+			continue
 		if !sources.any(func(reward): return reward["earned"]):
 			var source: Dictionary = sources[0]
 			var type_name := tr(source["bike_type"].name_key)

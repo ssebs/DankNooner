@@ -44,12 +44,12 @@ layout_mode = 2
 theme_type_variation = &"Heading2Label"
 autowrap_mode = 3
 
-[node name="Image" type="TextureRect" parent="CanvasLayer/UI/Panel/VBox"]
+[node name="Image" type="TextureButton" parent="CanvasLayer/UI/Panel/VBox"]
 unique_name_in_owner = true
 visible = false
-custom_minimum_size = Vector2(0, 200)
+custom_minimum_size = Vector2(0, 110)
 layout_mode = 2
-expand_mode = 1
+ignore_texture_size = true
 stretch_mode = 5
 
 [node name="Body" type="RichTextLabel" parent="CanvasLayer/UI/Panel/VBox"]

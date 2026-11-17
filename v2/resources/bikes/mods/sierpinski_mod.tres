@@ -3,6 +3,10 @@
 [ext_resource type="Script" uid="uid://cjeqtuj8i15db" path="res://resources/bikes/mods/texture_mod.gd" id="1_mod"]
 [ext_resource type="Shader" uid="uid://cs6m1b4mxqve3" path="res://resources/bikes/mods/textures/sierpinski.gdshader" id="2_shader"]
 [ext_resource type="Script" uid="uid://dviinp4otorqm" path="res://resources/bikes/mods/bike_mod.gd" id="3_bn7c5"]
+[ext_resource type="Resource" path="res://resources/bikes/mods/sierpinski_blue_mod.tres" id="var_0"]
+[ext_resource type="Resource" path="res://resources/bikes/mods/sierpinski_green_mod.tres" id="var_1"]
+[ext_resource type="Resource" path="res://resources/bikes/mods/sierpinski_red_mod.tres" id="var_2"]
+[ext_resource type="Resource" path="res://resources/bikes/mods/sierpinski_teal_mod.tres" id="var_3"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_sierpinski"]
 render_priority = 0
@@ -16,3 +20,5 @@ shader_parameter/energy = 1.5
 [resource]
 script = ExtResource("1_mod")
 material = SubResource("ShaderMaterial_sierpinski")
+variants = Array[ExtResource("3_bn7c5")]([ExtResource("var_0"), ExtResource("var_1"), ExtResource("var_2"), ExtResource("var_3")])
+demo_locked = true

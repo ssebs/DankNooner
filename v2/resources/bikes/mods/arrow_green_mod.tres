@@ -2,8 +2,11 @@
 
 [ext_resource type="Script" uid="uid://cjeqtuj8i15db" path="res://resources/bikes/mods/texture_mod.gd" id="1_mod"]
 [ext_resource type="Material" path="res://resources/bikes/mods/textures/arrow_green_material.tres" id="2_mat"]
+[ext_resource type="Script" uid="uid://dviinp4otorqm" path="res://resources/bikes/mods/bike_mod.gd" id="bm_script"]
+[ext_resource type="Resource" path="res://resources/bikes/mods/arrow_blue_mod.tres" id="var_0"]
+[ext_resource type="Resource" path="res://resources/bikes/mods/arrow_pink_mod.tres" id="var_1"]
 
 [resource]
 script = ExtResource("1_mod")
 material = ExtResource("2_mat")
-variants = null
+variants = Array[ExtResource("bm_script")]([ExtResource("var_0"), ExtResource("var_1")])

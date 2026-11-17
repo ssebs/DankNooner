@@ -12,3 +12,4 @@ shader_parameter/color_b = Color(0.255, 0.686, 1, 1)
 [resource]
 script = ExtResource("1_mod")
 material = SubResource("ShaderMaterial_apollonian_blue")
+demo_locked = true
