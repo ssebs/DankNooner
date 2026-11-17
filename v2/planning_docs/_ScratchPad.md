@@ -27,26 +27,26 @@ Make a hoodie
 
 
 - [ ] Demo/mvp
+  - [ ] cant navigate save slots / choose to del on gamepad
   - [ ] land 3 backflips daily doesnt count when doing a flip?
     - [ ] landing on front wheel, trick shout says wheelie
     - [ ] wheelie to backflip doesnt count as flick
-  - [ ] Add thanks for playing the demo to the demo version when you unlock everything, but players can keep playing 
+  - [ ] stop lowering boost fill by 2 bars when starting an event
   - [ ] Limit content in the game, too much for a demo tbh
-  - [ ] cant navigate save slots / choose to del on gamepad
+  - [ ] Add thanks for playing the demo to the demo version when you unlock everything, but players can keep playing 
+  - [ ] when host starts an event have a smol countdown telling players whats starting / transition
   - [ ] add more incentive to doing stunts and driving around the map instead of just going from checkpoint to checkpoint
     - [ ] score is a reason but not obvious enough
     - [ ] need to give $ per trick done too?
     - [ ] Maybe during stunt race you have to land a specific tricks off a ramp for 4x points like CS2 bonus weapon in death match?
-  - [ ] stop lowering boost fill by 2 bars when starting an event
-  - [ ] when host starts an event have a smol countdown telling players whats starting / transition
   - [ ] change order of shown items in customize menu, should always show unlocked first, then order by unlock type (mini bike challenge, naked challenge, etc.)
   - [ ] more wheelie tricks (air/ground are good for now, need wheelie variants)
 
 - [ ] tweaks
-  - [ ] too easy to crash when steering a stoppie, allow some steering
-  - [ ] add sounds when body hits the ground
   - [ ] in customize, hovering the item should show the challenge text in the title
+  - [ ] too easy to crash when steering a stoppie, allow some steering
   - [ ] time attack race 1 shouldnt make you drive there first
+  - [ ] add sounds when body hits the ground
 
 - [ ] new skin popup when doing a challenge
   - [ ] should show thumb right of the count in profilecard
