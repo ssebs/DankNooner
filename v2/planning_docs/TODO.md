@@ -5,7 +5,6 @@
 	- [Steam Prep](#steam-prep)
 - [Tasks 📋](#tasks-)
 	- [Game-breaking bugs](#game-breaking-bugs)
-	- [Challenges](#challenges)
 	- [Controller UX Improvements](#controller-ux-improvements)
 	- [HUD Improvements](#hud-improvements)
 	- [New Large Map](#new-large-map)
@@ -40,9 +39,7 @@
   - [ ] size challenge / daily payouts
   - [ ] challenge content
     - [x] ~10 challenges per bike type
-    - [ ] bigger daily pool
     - [ ] confetti vfx
-    - [ ] daily reset timer + auto-open card on new dailies
   - [ ] mods
     - [x] meshes
     - [ ] mod effects (wheelie bar, training wheels, wings)
@@ -59,10 +56,10 @@
 - [ ] Demo release
   - [x] Start with tutorial level (lock StuntCity until tutorial is complete)
   - [x] Demo build validated
-  - [ ] Demo savegame should be different from main game
+  - [x] Demo savegame should be different from main game
+  - [x] Basic progression w/ limit content
   - [ ] verify difficulty works
   - [ ] Balancing points / score
-  - [ ] Basic progression, limit content
   - [ ] Cleanup / refactor:
     - [ ] del unused code/assets
     - [ ] cleanup repo for public (Demo is open source, new private repo for full version)
@@ -75,20 +72,10 @@
 ### Game-breaking bugs
 - [ ] Npcs missing checkpoints makes the player respawn
   - [ ] need to confirm
-- [ ] Npcs drive off road too much
-- [ ] when a car crashes it jitters back/forth after you respawn
 - [ ] return to lobby (force everyone)
 - [ ] review all code & cleanup to call authority done
 - [ ] Review WebRTC gen code for security
 - [ ] TP commands dont work on multiplayer?
-
-### Challenges
-- [ ] Make challenges like cod skin grind
-  - [ ] Daily challenges, per bike challenges (10x double backflip, 10 mins of total wheelie duration, etc), win/loss challenges
-  - [ ] Menu for checking stats
-- [ ] Rewards are skin unlocks? Or currency to buy unlocks
-  - [ ] Xp unlocks, money buys items?
-  - [ ] Gamba: spin the wheel (or roulette / random game) to win unique prizes when leveling up? Can buy with $
 
 ### Controller UX Improvements
 - [ ] full navigation across menus, HUDs & in-world UI
@@ -202,6 +189,7 @@
 - [ ] trick tweaks (just move butt a little from base trick)
   - [x] Land into wheelie / stoppie should be a trick
   - [ ] Wheelie + RIGHT animation (hand grab) — IK hand twd ground
+  - [ ] more wheelie tricks
 - [ ] trick animation to move up then play the mixamo anims
 
 ### Cutscenes
@@ -228,6 +216,17 @@
 ---
 
 ## Done ✅
+
+- [x] Rewards are skin unlocks? Or currency to buy unlocks
+  - [x] Xp unlocks, money buys items?
+
+- [x] Make challenges like cod skin grind
+  - [x] Daily challenges, per bike challenges (10x double backflip, 10 mins of total wheelie duration, etc), win/loss challenges
+  - [x] Menu for checking stats
+
+- [x] when a car crashes it jitters back/forth after you respawn
+
+- [x] Npcs drive off road too much
 
 - [x] trick battle needs npcs
 
