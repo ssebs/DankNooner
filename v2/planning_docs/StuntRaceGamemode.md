@@ -126,9 +126,8 @@ partial fill.
   HUD's money live; the pump cuts off when the bill reaches the wallet, and `_on_session_end` pays
   it (rounded up) via `SaveManager.spend`, so cancels pay too. A broke rider still gets their pump,
   it just won't pump.
-- **Payout differs by mode.** Free roam never lowers the meter (see above). Pre-race starts every
-  tank at most `FULL_TANK_DRAIN_SEGMENTS` below full so full riders still play; finishing reports
-  the fill and the server sets boost to it.
+- **Payout differs by mode.** Free roam never lowers the meter (see above). Pre-race starts the
+  tank at the rider's boost too; finishing reports the fill and the server sets boost to it.
 - **The cap target is per bike:** `BikeSkinDefinition.gas_cap_position`, authored with
   PlayerEntity's `gas_cap_marker`.
 - **Why the minigame starts on `respawned`, not `Enter`:** the teleport's `do_respawn` flips the HUD

@@ -11,9 +11,6 @@ class_name FuelUpGameMode extends GameModeType
 @export var save_manager: SaveManager
 @export var tour_manager: TourManager
 
-## Riders start at most this many segments below full, so a full tank still has to play.
-const FULL_TANK_DRAIN_SEGMENTS: float = 2.0
-
 var _event: GameModeEvent
 ## This client's pump; null once it's done.
 var _minigame: FuelUpMinigame
@@ -49,9 +46,6 @@ func Enter(state_context: StateContext):
 		hud_manager,
 		save_manager,
 		tour_manager
-	)
-	_minigame.fill = minf(
-		_minigame.fill, 1.0 - FULL_TANK_DRAIN_SEGMENTS / BoostController.BOOST_SEGMENTS
 	)
 
 	if multiplayer.is_server():

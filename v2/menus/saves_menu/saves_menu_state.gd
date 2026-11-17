@@ -287,6 +287,10 @@ func _build_challenge_lists():
 			var source: Variant = null if is_mastery_card else challenge
 			var reward: Array = rewards.filter(func(r): return r["challenge"] == source)
 			_add_challenge_card(cards, base, row, reward[0] if !reward.is_empty() else {})
+		# follow_focus only shows the card; keep its bike's header in view too.
+		var outer: ScrollContainer = _bike_list.get_parent()
+		for card: Control in cards.get_children():
+			card.focus_entered.connect(func(): outer.ensure_control_visible.call_deferred(header))
 
 
 ## A card: the reward's name, the reward (base bike wearing it, dimmed until earned), then the

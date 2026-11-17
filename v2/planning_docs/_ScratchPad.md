@@ -27,11 +27,11 @@ Make a hoodie
 
 
 - [ ] Demo/mvp
-  - [ ] cant navigate save slots / choose to del on gamepad
-  - [ ] land 3 backflips daily doesnt count when doing a flip?
-    - [ ] landing on front wheel, trick shout says wheelie
-    - [ ] wheelie to backflip doesnt count as flick
-  - [ ] stop lowering boost fill by 2 bars when starting an event
+  - [x] cant navigate save slots / choose to del on gamepad
+  - [x] land 3 backflips daily doesnt count when doing a flip?
+    - [x] landing on front wheel, trick shout says wheelie
+    - [x] wheelie to backflip doesnt count as flick
+  - [x] stop lowering boost fill by 2 bars when starting an event
   - [ ] Limit content in the game, too much for a demo tbh
   - [ ] Add thanks for playing the demo to the demo version when you unlock everything, but players can keep playing 
   - [ ] when host starts an event have a smol countdown telling players whats starting / transition
