@@ -24,14 +24,22 @@ Make a hoodie
 
 ## NOW
 
+- [ ] Add thanks for playing the demo to the demo version when you unlock everything, but players can keep playing 
+- [ ] Limit content in the game, too much for a demo tbh
+
+- [ ] boost trail color
+- [ ] add sounds when body hits the ground
 - [ ] cant navigate save slots / choose to del on gamepad
 - [ ] add more incentive to doing stunts and driving around the map instead of just going from checkpoint to checkpoint
   - [ ] score is a reason but not obvious enough
   - [ ] need to give $ per trick done too?
+  - [ ] Maybe during stunt race you have to land a specific tricks off a ramp for 4x points like CS2 bonus weapon in death match?
+- [ ] Do specific tricks in a line mode? S.T.U.N.T?
 - [ ] too easy to crash when steering a stoppie, allow some steering
 - [ ] in customize, hovering the item should show the challenge text in the title
 - [ ] land 3 backflips daily doesnt count when doing a flip?
   - [ ] landing on front wheel, trick shout says wheelie
+  - [ ] wheelie to backflip doesnt count as flick
 - [ ] new skin popup when doing a challenge
   - [ ] should show thumb right of the count in profilecard
   - [ ] popup should last 2sec
