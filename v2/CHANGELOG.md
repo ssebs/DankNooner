@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.1.6 - 2026-11-16
+
+- in customize, hovering the item should show the challenge text in the title + too easy to crash when steering a stoppie, allow some steering
+- change order of shown items in customize menu, should always show unlocked first, then order by unlock type (mini bike challenge, naked challenge, etc.)
+- demo unlock msg
+- p lowering boost fill by 2 bars when starting an event
+- navigate save slots / choose to del on gamepad + backflip trick recognition
+- fix  when a car crashes it jitters back/forth after you respawn
+
 ## v0.1.5 - 2026-11-15
 
 - fix racing line baking
