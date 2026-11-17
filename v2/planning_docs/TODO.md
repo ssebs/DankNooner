@@ -24,6 +24,7 @@
 
 ## In-Progress 🚨
 > Don't forget, have fun :D
+
 - [ ] [WIP MISC](_ScratchPad.md)
 
 - [ ] [Progression/Challenges](./Progression.md)

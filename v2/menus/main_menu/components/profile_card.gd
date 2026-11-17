@@ -234,7 +234,9 @@ func show_challenges(bike_type: BikeTypeDefinition, save_dict: Dictionary, juice
 	# Named for the type, so it's clear which bike's list this is (main menu: the active loadout's).
 	_challenges_tab.text = bike_type.name_key
 	_challenges_done.text = tr("BIKE_CHALLENGES_DONE").format({"type": tr(bike_type.name_key)})
-	var bike := challenge_rows(bike_type.challenges, SaveManager.bike_challenge_progress(save_dict))
+	var bike := challenge_rows(
+		SaveManager.open_challenges(bike_type, save_dict), SaveManager.bike_challenge_progress(save_dict)
+	)
 	# Unfinished sort first, so the slice is all done only when the whole list is.
 	var bike_done := _show_rows_or_done(
 		Tab.CHALLENGES,

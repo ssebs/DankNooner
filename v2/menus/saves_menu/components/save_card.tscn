@@ -8,6 +8,8 @@
 
 [node name="SaveCard" type="PanelContainer"]
 custom_minimum_size = Vector2(300, 440)
+focus_neighbor_top = NodePath("Margin/Filled/TopRow/DeleteSlot/DeleteBtn")
+focus_neighbor_bottom = NodePath("Margin/Filled/NameEdit")
 script = ExtResource("1_card")
 
 [node name="Margin" type="MarginContainer" parent="."]
@@ -67,11 +69,11 @@ grow_horizontal = 0
 tooltip_text = "DELETE_LABEL"
 mouse_default_cursor_shape = 2
 theme_override_colors/icon_hover_color = Color(1.4, 1.4, 1.4, 1)
+theme_override_colors/icon_focus_color = Color(1.4, 1.4, 1.4, 1)
 theme_override_styles/normal = SubResource("StyleBoxEmpty_x")
 theme_override_styles/hover = SubResource("StyleBoxEmpty_x")
 theme_override_styles/pressed = SubResource("StyleBoxEmpty_x")
 theme_override_styles/hover_pressed = SubResource("StyleBoxEmpty_x")
-theme_override_styles/focus = SubResource("StyleBoxEmpty_x")
 icon = ExtResource("3_close")
 flat = true
 icon_alignment = 1

@@ -13,6 +13,10 @@ const MIN_CARDS := 3
 const SAVE_CARD_SCENE := preload("res://menus/saves_menu/components/save_card.tscn")
 const THUMB_SCENE := preload("res://utils/components/thumbnail_3d.tscn")
 const CARD_WIDTH := 220.0
+## The focus ring's corners, matching the challenge card panel's.
+const CARD_RING_RADIUS := 12
+## Pixels per second the right stick scrolls at full tilt.
+const STICK_SCROLL_SPEED := 1400.0
 const REWARD_THUMB_SIZE := Vector2(172, 112)
 ## Space between a scrollbar and the cards it scrolls.
 const SCROLLBAR_GAP := 12
@@ -51,6 +55,8 @@ const CAREER_DIVIDER := Color(1, 1, 1, 0.08)
 var _card_by_slot: Dictionary = {}
 ## Runs on the confirm box's yes (load or delete).
 var _on_confirm: Callable
+## The card the confirm box refocuses on close.
+var _confirm_slot: int
 ## Opened mid-game: swapping saves under a live session isn't allowed.
 var _in_session: bool = false
 
@@ -79,10 +85,12 @@ func Enter(state_context: StateContext):
 	_username_edit.focus_exited.connect(_on_username_focus_exited)
 	_close_btn.pressed.connect(_on_close_pressed)
 	_confirm_yes_btn.pressed.connect(_on_confirm_yes)
-	_confirm_no_btn.pressed.connect(_confirm_box.hide)
+	_confirm_no_btn.pressed.connect(_close_confirm)
 	input_state_manager.device_changed.connect(_tabs.show_prompts)
+	_tabs.tab_changed.connect(_on_tab_changed)
 	_tabs.show_prompts(input_state_manager.is_gamepad)
 	_build_cards()
+	_on_tab_changed(_tabs.current_tab)
 
 
 func Exit(_state_context: StateContext):
@@ -91,12 +99,29 @@ func Exit(_state_context: StateContext):
 	_username_edit.focus_exited.disconnect(_on_username_focus_exited)
 	_close_btn.pressed.disconnect(_on_close_pressed)
 	_confirm_yes_btn.pressed.disconnect(_on_confirm_yes)
-	_confirm_no_btn.pressed.disconnect(_confirm_box.hide)
+	_confirm_no_btn.pressed.disconnect(_close_confirm)
 	input_state_manager.device_changed.disconnect(_tabs.show_prompts)
+	_tabs.tab_changed.disconnect(_on_tab_changed)
 	for list: Node in [_cards, _career_list, _bike_list, _challenge_list]:
 		for child in list.get_children():
 			child.queue_free()
 	_card_by_slot.clear()
+
+
+## Right stick scrolls the tab up/down and the focused card's row sideways. Gamepad only: the
+## arrow keys share the cam actions and already move focus.
+func Update(delta: float):
+	var stick := Input.get_vector("cam_left", "cam_right", "cam_up", "cam_down")
+	if !input_state_manager.is_gamepad or stick == Vector2.ZERO:
+		return
+	var tab := _tabs.get_current_tab_control()
+	if tab is ScrollContainer:
+		tab.scroll_vertical += int(stick.y * STICK_SCROLL_SPEED * delta)
+	var row: Node = get_viewport().gui_get_focus_owner()
+	while row != null and !(row is ScrollContainer and row.horizontal_scroll_mode != ScrollContainer.SCROLL_MODE_DISABLED):
+		row = row.get_parent()
+	if row != null:
+		row.scroll_horizontal += int(stick.x * STICK_SCROLL_SPEED * delta)
 
 
 ## progression.stats, a section per category: a line per stat, columns Total then each bike type.
@@ -228,7 +253,8 @@ func _build_challenge_lists():
 			child.queue_free()
 	var active_type := save_manager.get_player_definition().bike_skin.bike_type
 	var progress := SaveManager.bike_challenge_progress(save_manager.current_save)
-	ProfileCard.build_rows(_challenge_list, ProfileCard.challenge_rows(active_type.challenges, progress))
+	var open := SaveManager.open_challenges(active_type, save_manager.current_save)
+	ProfileCard.build_rows(_challenge_list, ProfileCard.challenge_rows(open, progress))
 	for bike_type in save_manager.bike_types:
 		var header := Label.new()
 		header.theme_type_variation = &"Heading2Label"
@@ -239,6 +265,7 @@ func _build_challenge_lists():
 		# Scrolls sideways so a long list doesn't widen the tab
 		var scroll := ScrollContainer.new()
 		scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		scroll.follow_focus = true
 		scroll.add_theme_constant_override("scrollbar_v_separation", SCROLLBAR_GAP)
 		_bike_list.add_child(scroll)
 		var cards := HBoxContainer.new()
@@ -246,10 +273,15 @@ func _build_challenge_lists():
 		scroll.add_child(cards)
 		var base := _base_skin(bike_type)
 		var rewards := save_manager.mod_rewards().filter(func(r): return r["bike_type"] == bike_type)
+		var type_open := SaveManager.open_challenges(bike_type, save_manager.current_save)
 		for i in bike_type.challenges.size():
 			var challenge := bike_type.challenges[i]
 			var one: Array[ChallengeDefinition] = [challenge]
 			var row := ProfileCard.challenge_rows(one, progress)[0]
+			if challenge not in type_open:
+				row["title"] = tr("CHALLENGE_LOCKED_FINAL").format(
+					{"title": row["title"], "n": type_open.size()}
+				)
 			# The last card shows the mod finishing the list earns, when its challenge has no own reward
 			var is_mastery_card := i == bike_type.challenges.size() - 1 and challenge.reward_mod == null
 			var source: Variant = null if is_mastery_card else challenge
@@ -265,6 +297,17 @@ func _add_challenge_card(cards: Container, base: BikeSkinDefinition, row: Dictio
 	card.theme_type_variation = &"TrickRowPanel"
 	card.custom_minimum_size.x = CARD_WIDTH
 	cards.add_child(card)
+	# Focusable so a gamepad can walk (and scroll) the cards; focus rings it with the buttons' style.
+	card.focus_mode = Control.FOCUS_ALL
+	var ring: StyleBoxFlat = card.get_theme_stylebox("focus", "Button").duplicate()
+	ring.draw_center = false
+	ring.set_corner_radius_all(CARD_RING_RADIUS)
+	card.draw.connect(func():
+		if card.has_focus():
+			card.draw_style_box(ring, Rect2(Vector2.ZERO, card.size))
+	)
+	card.focus_entered.connect(card.queue_redraw)
+	card.focus_exited.connect(card.queue_redraw)
 	var body := VBoxContainer.new()
 	card.add_child(body)
 	if !reward.is_empty():
@@ -372,27 +415,53 @@ func _on_slot_name_submitted(slot_name: String, slot: int):
 
 
 func _on_load_pressed(slot: int):
-	_confirm(tr("SAVE_LOAD_CONFIRM") % _slot_name(slot), "LOAD_LABEL", _load_slot.bind(slot))
+	_confirm(slot, tr("SAVE_LOAD_CONFIRM") % _slot_name(slot), "LOAD_LABEL", _load_slot.bind(slot))
 
 
 func _on_delete_pressed(slot: int):
-	_confirm(tr("GARAGE_DELETE_CONFIRM") % _slot_name(slot), "DELETE_LABEL", _delete_slot.bind(slot))
+	_confirm(slot, tr("GARAGE_DELETE_CONFIRM") % _slot_name(slot), "DELETE_LABEL", _delete_slot.bind(slot))
 
 
 func _slot_name(slot: int) -> String:
 	return SaveCard.display_name(slot, save_manager.read_slot(slot))
 
 
-func _confirm(question: String, yes_label: String, on_yes: Callable):
+func _confirm(slot: int, question: String, yes_label: String, on_yes: Callable):
 	_confirm_label.text = question
 	_confirm_yes_btn.text = yes_label
 	_on_confirm = on_yes
+	_confirm_slot = slot
 	_confirm_box.show()
+	_confirm_no_btn.grab_focus()
 
 
 func _on_confirm_yes():
-	_confirm_box.hide()
 	_on_confirm.call()
+	_close_confirm()
+
+
+func _close_confirm():
+	_confirm_box.hide()
+	_focus_card(_card_by_slot[_confirm_slot])
+
+
+## The card, or its first focusable child (`+` or Delete) when it can't load.
+func _focus_card(card: SaveCard):
+	(card if card.focus_mode != Control.FOCUS_NONE else card.find_next_valid_focus()).grab_focus()
+
+
+## Hiding the old tab drops focus, stranding a gamepad. Deferred to land after MenuManager's grab.
+func _on_tab_changed(_tab: int):
+	_focus_current_tab.call_deferred()
+
+
+## Save Slots: the first save card. Otherwise the tab's first focusable, or Back past an empty one.
+func _focus_current_tab():
+	var tab := _tabs.get_current_tab_control()
+	if tab == _save_slots:
+		_focus_card(_card_by_slot.values()[0])
+	else:
+		tab.find_next_valid_focus().grab_focus()
 
 
 func _on_username_submitted(username: String):
@@ -412,7 +481,7 @@ func _on_close_pressed():
 #override
 func on_cancel_key_pressed():
 	if _confirm_box.visible:
-		_confirm_box.hide()
+		_close_confirm()
 		return
 	_on_close_pressed()
 

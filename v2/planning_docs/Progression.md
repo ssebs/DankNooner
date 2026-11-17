@@ -80,7 +80,8 @@ TODO.
 - **Mod rewards** (step 2, built + playtested 2026-11-14): `ChallengeDefinition.reward_mod` (a
   `TextureMod`) and `BikeTypeDefinition.mastery_mod` (an `AttachmentMod` for the whole list: mini
   wheelie bar, naked training wheels, sport wings), listed by `SaveManager.mod_rewards()`. A type has one reward
-  per challenge: the last challenge has no `reward_mod`, and its card shows the mastery mod. Reward
+  per challenge: the last challenge has no `reward_mod`, and its card shows the mastery mod. It
+  takes no progress (and hides from the HUD list) until the rest are done (`SaveManager.open_challenges()`). Reward
   textures are pattern families, each unlocking with its color `variants`: mini gets the basic
   ones, naked cooler ones, sport the trippiest. The
   Saves menu cards show each reward as a `Thumbnail3D` of the type's base bike wearing it (the

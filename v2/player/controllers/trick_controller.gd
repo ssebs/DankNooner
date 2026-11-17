@@ -400,11 +400,10 @@ func _stick_dir() -> int:
 	return Dir.RIGHT if x > 0.0 else Dir.LEFT
 
 
-## Bank a chunk per full air rotation as it completes. air_pitch_total resets to 0 on takeoff /
-## landing, so the paid-out counter re-arms on the ground.
+## Bank a chunk per flip as it completes (completed_flips). The paid-out counter re-arms on the ground.
 func _award_flip_boost():
 	if not movement_controller.is_on_floor:
-		var completed := int(movement_controller.air_pitch_total / TAU)
+		var completed := completed_flips()
 		if completed > _air_flips_awarded:
 			ComboRules.award_flips(self, boost_controller, completed - _air_flips_awarded)
 			_air_flips_awarded = completed
@@ -617,9 +616,15 @@ func is_in_wheelie() -> bool:
 	return current_trick in [Trick.WHEELIE_SITTING, Trick.WHEELIE_MOD, Trick.DRIFT_WHEELIE]
 
 
-## A full flip completed this jump. air_pitch_total resets on landing, so false once grounded.
+## A full flip completed this jump.
 func has_flipped() -> bool:
-	return movement_controller.air_pitch_total >= TAU * 0.9
+	return completed_flips() > 0
+
+
+## Flips this jump: net turns from level (so a wheelie takeoff's lean counts), 0.9 of one counting
+## as whole. pitch_angle only wraps on landing, so 0 once grounded.
+func completed_flips() -> int:
+	return int(absf(movement_controller.pitch_angle) / TAU + 0.1)
 
 
 ## On the ground past the wheelie / stoppie threshold.

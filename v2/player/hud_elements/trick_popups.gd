@@ -23,6 +23,9 @@ const TRICK_CALLOUTS: Dictionary = {
 	TrickController.Trick.HIGH_CHAIR: "CALLOUT_HIGH_CHAIR",
 	TrickController.Trick.DRIFT_WHEELIE: "CALLOUT_DRIFT_WHEELIE",
 }
+## Flips in one jump -> callout text key, popped as that rotation completes; more uses
+## CALLOUT_MULTI_FLIP.
+const MULTI_FLIP_CALLOUTS: Dictionary = {2: "CALLOUT_DOUBLE_FLIP", 3: "CALLOUT_TRIPLE_FLIP"}
 ## Callout text key -> condition: the rider holds one of `tricks` (at the wheelie balance point
 ## too, if `balance_point`) for `hold` seconds. Fires once per continuous hold.
 const HOLD_CALLOUTS: Dictionary = {
@@ -106,6 +109,8 @@ var _last_named: TrickController.Trick = TrickController.Trick.NONE
 var _held: Dictionary[String, float] = {}
 ## A flip was completed last frame, to catch it landing into a wheelie / stoppie.
 var _was_flipped: bool = false
+## TrickController.air_flips last frame, to catch each extra rotation.
+var _last_flips: int = 0
 var _oof_index: int = 0
 ## Callouts on screen, oldest first — each in its own holder, so the stack push moves the holder and
 ## never fights the label's drift tween.
@@ -169,6 +174,11 @@ func track(
 	_multiplier.position = _live.position + Vector2(_live.size.x + MULTIPLIER_GAP_PX, 0.0)
 
 	_track_trick_start(tc)
+	# The first rotation is the flip trick's own callout
+	if tc.air_flips > _last_flips and tc.air_flips >= 2:
+		var key: String = MULTI_FLIP_CALLOUTS.get(tc.air_flips, "CALLOUT_MULTI_FLIP")
+		pop_callout(tr(key).format({"count": tc.air_flips}))
+	_last_flips = tc.air_flips
 	_track_hold_callouts(player, delta)
 	if _was_flipped and tc.is_landed_in_trick() and not player.is_crashed:
 		pop_callout(tr("CALLOUT_STUCK_LANDING"))

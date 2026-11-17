@@ -51,7 +51,7 @@ func _on_stat_recorded(key: String, value: float):
 	var save := save_manager.current_save
 	var bike_type := save_manager.get_player_definition().bike_skin.bike_type
 	var bike_progress := SaveManager.bike_challenge_progress(save)
-	if _advance(bike_type.challenges, bike_progress, key, value):
+	if _advance(SaveManager.open_challenges(bike_type, save), bike_progress, key, value):
 		_announce_unlocks(bike_type)
 	_advance(SaveManager.daily_challenges(save), SaveManager.daily_progress(save), key, value)
 

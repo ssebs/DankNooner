@@ -258,6 +258,17 @@ func mastery(bike_type: BikeTypeDefinition) -> int:
 	).size()
 
 
+## A type's challenges that take progress: the last (the mastery card) waits for the rest.
+static func open_challenges(
+	bike_type: BikeTypeDefinition, save_dict: Dictionary
+) -> Array[ChallengeDefinition]:
+	var progress := bike_challenge_progress(save_dict)
+	var rest: Array[ChallengeDefinition] = bike_type.challenges.slice(0, -1)
+	if rest.all(func(c: ChallengeDefinition): return progress.get(c.resource_path, 0.0) >= c.target):
+		return bike_type.challenges
+	return rest
+
+
 ## Spend `price` to own `path`. In memory only — the caller's next update_save writes it.
 func purchase(path: String, price: int) -> bool:
 	var player_def := get_player_definition()

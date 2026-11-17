@@ -1847,6 +1847,7 @@ width = 8.0
 
 [node name="EventStartCircle1" parent="." unique_id=459761741 node_paths=PackedStringArray("gas_station", "props", "spawns", "checkpoints") instance=ExtResource("22_eair3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -150, 0, 59)
+visible = false
 gas_station = NodePath("../GasStations/StuntRace01GasStation")
 props = NodePath("Props")
 spawns = NodePath("Spawns")
@@ -3758,7 +3759,7 @@ transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, -475
 size = 16
 aspect = 4
 has_collision = true
-snapped_heights = PackedFloat32Array(nan, -255.66507, -255.58182, -255.6476, -255.61609, -255.6762, -255.59137, -255.70132, nan, -255.63464, -255.71545, -255.71448, -255.74643, -255.58717, -255.63492, -255.70044)
+snapped_heights = PackedFloat32Array(nan, -255.66507, -255.58182, -255.6476, -255.61609, -255.6762, -255.59137, nan, nan, -255.63464, -255.71545, -255.71448, -255.74643, -255.58717, -255.63492, nan)
 
 [node name="TreeBundle50" parent="_Trees_/Treesoutskirtsandintown" unique_id=2106627367 instance=ExtResource("25_x6w3k")]
 transform = Transform3D(1.3113416e-07, 0, -1, 0, 1, 0, 1, 0, 1.3113416e-07, -413.5, 256, 370)
@@ -4665,7 +4666,8 @@ transform = Transform3D(0.7071067, 0, -0.7071068, 0, 1, 0, 0.7071068, 0, 0.70710
 transform = Transform3D(-0.70710677, 0, 0.70710677, 0, 1, 0, -0.70710677, 0, -0.70710677, -208.51044, 0, 376.23834)
 
 [node name="Ramp8" parent="props" unique_id=1887397100 instance=ExtResource("6_w1aki")]
-transform = Transform3D(5.9604645e-08, 0, 0.99999994, 0, 1, 0, -0.99999994, 0, 5.9604645e-08, -512.87823, 0, 462.7878)
+transform = Transform3D(5.9604645e-08, 0, 0.99999994, 0, 1, 0, -0.99999994, 0, 5.9604645e-08, -512.87823, 0, 465.0378)
+width = 32
 
 [node name="Ramp9" parent="props" unique_id=1825882042 instance=ExtResource("6_w1aki")]
 transform = Transform3D(0.7071067, 0, -0.7071067, 0, 1, 0, 0.7071067, 0, 0.7071067, -199.109, 0, 620.0747)
@@ -4687,6 +4689,21 @@ transform = Transform3D(0.553933, 0, 0.83256125, 0, 1, 0, -0.83256125, 0, 0.5539
 
 [node name="Ramp2" parent="props" unique_id=1585675927 instance=ExtResource("6_w1aki")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -119, 0, 159)
+
+[node name="Ramp4" parent="props" unique_id=980516282 instance=ExtResource("6_w1aki")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -157.15, 0, 153.125)
+height = 0
+width = 8
+
+[node name="Ramp6" parent="props" unique_id=274212521 instance=ExtResource("6_w1aki")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -401.025, -0.049999714, 599.925)
+height = 0
+width = 32
+
+[node name="Ramp13" parent="props" unique_id=516389398 instance=ExtResource("6_w1aki")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -401.025, -0.049999714, 599.925)
+height = 0
+width = 32
 
 [node name="Ramp3" parent="props" unique_id=1552895077 instance=ExtResource("6_w1aki")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -99, 0, 159)
@@ -4851,6 +4868,9 @@ length = 80.0
 [node name="GrindRail2" parent="props" unique_id=1482532521 instance=ExtResource("44_yucqr")]
 transform = Transform3D(0.028790731, 0, 0.99958575, 0, 1, 0, -0.99958575, 0, 0.028790731, -596.7504, 1.25, 668.00214)
 length = 80.0
+
+[node name="Garage3" parent="props" unique_id=903090429 instance=ExtResource("32_0ogqk")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -848, 0, 752)
 
 [node name="groundonisland" parent="." unique_id=20255310 instance=ExtResource("18_dc022")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -758.5, 0, 265.5)

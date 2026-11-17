@@ -46,6 +46,12 @@ func _ready():
 	_delete_btn.pressed.connect(delete_pressed.emit)
 	_name_edit.text_submitted.connect(name_submitted.emit)
 	_name_edit.focus_exited.connect(_on_name_focus_exited)
+	focus_entered.connect(_restyle)
+	focus_exited.connect(_restyle)
+	# The icon-only Delete takes the buttons' focus style hollow, like ProfileCard's caret.
+	var ring: StyleBoxFlat = get_theme_stylebox("focus", "Button").duplicate()
+	ring.draw_center = false
+	_delete_btn.add_theme_stylebox_override("focus", ring)
 
 
 ## _input, not mouse_entered / _gui_input: the card's own buttons and name field (the empty
@@ -59,13 +65,14 @@ func _input(event: InputEvent):
 
 
 ## Clicks the card's Delete and name field keep; the preview, labels and containers pass up.
+## ui_accept loads when the card has gamepad focus.
 func _gui_input(event: InputEvent):
-	if (
-		_loadable
-		and event is InputEventMouseButton
-		and event.button_index == MOUSE_BUTTON_LEFT
-		and !event.pressed
-	):
+	if !_loadable:
+		return
+	if event.is_action_pressed("ui_accept"):
+		accept_event()
+		load_pressed.emit()
+	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and !event.pressed:
 		load_pressed.emit()
 
 
@@ -74,7 +81,7 @@ func _is_hovered() -> bool:
 
 
 func _restyle():
-	var hovered := _loadable and _is_hovered()
+	var hovered := _loadable and (_is_hovered() or has_focus())
 	var state := "pressed" if _held and hovered else ("hover" if hovered else "normal")
 	if state != _style_state:
 		_style_state = state
@@ -120,4 +127,8 @@ func set_active(is_active: bool, locked: bool = false) -> void:
 	_delete_btn.visible = !locked
 	_loadable = !locked and (_new_btn.visible or (_is_current_version and !is_active))
 	mouse_default_cursor_shape = CURSOR_POINTING_HAND if _loadable else CURSOR_ARROW
+	# Directional focus skips a focused control's children, so card <-> Delete is linked by hand.
+	var focusable := _loadable and !_new_btn.visible
+	focus_mode = FOCUS_ALL if focusable else FOCUS_NONE
+	_delete_btn.focus_neighbor_bottom = _delete_btn.get_path_to(self) if focusable else NodePath()
 	_restyle()

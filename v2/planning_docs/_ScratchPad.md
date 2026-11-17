@@ -60,6 +60,11 @@ Make a hoodie
   - [ ] add glow to naked bike
   - [ ] boost trail color
 
+
+---
+##
+## NEXT
+
 - [ ] Mods
   - [ ] Wings as mod for sport bike 
     - [x] mesh
@@ -71,21 +76,18 @@ Make a hoodie
   - [ ] Training wheels
     - [x] mesh
     - [ ] (lowside prevention) effect
-  - [ ] Underglow on bike
-  - [ ] exhaust
-
-
----
-##
-## NEXT
-
-- [ ] gas station minimap icon looks like gun store
-- [ ] Do specific tricks in a line mode? S.T.U.N.T?
-- [ ] Gamba: spin the wheel (or roulette / random game) to win unique prizes when leveling up? Can buy with $
+  - [ ] Underglow on bike?
+  - [ ] exhaust?
 
 - [ ] find a way to record my gameplay but play it back from another camera angle/slowmo
   - [ ] Replay studio for trailer footage: review the "Calls I made" section, then plan. Spec: [____REPLAY_WIP.md](./____REPLAY_WIP.md)
   - [ ] also see `resources/img/marketing` and `scripts/key_art`. currently exists but jank! getting better, but not library header
+
+### Full game scope
+
+- [ ] gas station minimap icon looks like gun store
+- [ ] Do specific tricks in a line mode? S.T.U.N.T?
+- [ ] Gamba: spin the wheel (or roulette / random game) to win unique prizes when leveling up? Can buy with $
 
 - [ ] wheelie bar as item in stunt race
   - [ ] add wheelie bar for a few seconds

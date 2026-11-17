@@ -76,6 +76,17 @@ func test_mastery_gates_fit_their_list():
 		assert_lte(skin.unlock_mastery, sizes[skin.bike_type], file)
 
 
+func test_last_challenge_opens_once_the_rest_are_done():
+	var bike_type: BikeTypeDefinition = _bike_types()[0]
+	var last: ChallengeDefinition = bike_type.challenges.back()
+	var progress := {}
+	var save_dict := {"progression": {"challenges": progress}}
+	assert_false(last in SaveManager.open_challenges(bike_type, save_dict))
+	for challenge in bike_type.challenges.slice(0, -1):
+		progress[challenge.resource_path] = challenge.target
+	assert_true(last in SaveManager.open_challenges(bike_type, save_dict))
+
+
 func test_count_goal_only_counts_samples_at_its_min():
 	var challenge := ChallengeDefinition.new()
 	challenge.goal = ChallengeDefinition.Goal.COUNT

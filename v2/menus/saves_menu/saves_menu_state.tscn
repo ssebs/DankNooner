@@ -89,6 +89,7 @@ visible = false
 layout_mode = 2
 theme_type_variation = &"InsetScroll"
 theme_override_constants/scrollbar_h_separation = 12
+follow_focus = true
 horizontal_scroll_mode = 0
 metadata/_tab_index = 1
 
@@ -120,6 +121,7 @@ max_length = 32
 [node name="Scroll" type="ScrollContainer" parent="UI/AspectRatioContainer/MarginContainer/Layout/Body/TabPanel/Tabs/SaveSlots"]
 layout_mode = 2
 size_flags_vertical = 3
+follow_focus = true
 horizontal_scroll_mode = 3
 vertical_scroll_mode = 0
 
@@ -207,11 +209,23 @@ theme_override_constants/separation = 12
 [node name="ConfirmNoBtn" type="Button" parent="UI/ConfirmBox/Inset/VBox/Buttons"]
 unique_name_in_owner = true
 layout_mode = 2
+focus_neighbor_left = NodePath(".")
+focus_neighbor_top = NodePath(".")
+focus_neighbor_right = NodePath("../ConfirmYesBtn")
+focus_neighbor_bottom = NodePath(".")
+focus_next = NodePath("../ConfirmYesBtn")
+focus_previous = NodePath("../ConfirmYesBtn")
 size_flags_horizontal = 3
 text = "CANCEL_LABEL"
 
 [node name="ConfirmYesBtn" type="Button" parent="UI/ConfirmBox/Inset/VBox/Buttons"]
 unique_name_in_owner = true
 layout_mode = 2
+focus_neighbor_left = NodePath("../ConfirmNoBtn")
+focus_neighbor_top = NodePath(".")
+focus_neighbor_right = NodePath(".")
+focus_neighbor_bottom = NodePath(".")
+focus_next = NodePath("../ConfirmNoBtn")
+focus_previous = NodePath("../ConfirmNoBtn")
 size_flags_horizontal = 3
 text = "DELETE_LABEL"
