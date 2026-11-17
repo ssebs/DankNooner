@@ -1,7 +1,8 @@
-[gd_resource type="Resource" script_class="TextureMod" format=3]
+[gd_resource type="Resource" script_class="TextureMod" format=3 uid="uid://bjxfdgyedh1ki"]
 
 [ext_resource type="Script" uid="uid://cjeqtuj8i15db" path="res://resources/bikes/mods/texture_mod.gd" id="1_mod"]
 [ext_resource type="Shader" uid="uid://dy7ep4e0bun3i" path="res://resources/bikes/mods/textures/truchet.gdshader" id="2_shader"]
+[ext_resource type="Script" uid="uid://dviinp4otorqm" path="res://resources/bikes/mods/bike_mod.gd" id="3_gco82"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_truchet_red"]
 render_priority = 0
@@ -17,3 +18,4 @@ shader_parameter/energy = 3.0
 [resource]
 script = ExtResource("1_mod")
 material = SubResource("ShaderMaterial_truchet_red")
+demo_locked = null

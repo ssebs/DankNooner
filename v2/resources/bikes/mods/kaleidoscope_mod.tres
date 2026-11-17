@@ -23,4 +23,4 @@ shader_parameter/energy = 1.2
 script = ExtResource("1_mod")
 material = SubResource("ShaderMaterial_kaleidoscope")
 variants = Array[ExtResource("3_biud3")]([ExtResource("var_0"), ExtResource("var_1"), ExtResource("var_2"), ExtResource("var_3")])
-demo_locked = true
+demo_locked = null

@@ -271,32 +271,40 @@ func _build_challenge_lists():
 		var cards := HBoxContainer.new()
 		cards.add_theme_constant_override("separation", 24)
 		scroll.add_child(cards)
-		var base := _base_skin(bike_type)
-		var rewards := save_manager.mod_rewards().filter(func(r): return r["bike_type"] == bike_type)
-		var type_open := SaveManager.open_challenges(bike_type, save_manager.current_save)
+		var base := base_skin(bike_type)
 		for i in bike_type.challenges.size():
-			var challenge := bike_type.challenges[i]
-			var one: Array[ChallengeDefinition] = [challenge]
-			var row := ProfileCard.challenge_rows(one, progress)[0]
-			if challenge not in type_open:
-				row["title"] = tr("CHALLENGE_LOCKED_FINAL").format(
-					{"title": row["title"], "n": type_open.size()}
-				)
-			# The last card shows the mod finishing the list earns, when its challenge has no own reward
-			var is_mastery_card := i == bike_type.challenges.size() - 1 and challenge.reward_mod == null
-			var source: Variant = null if is_mastery_card else challenge
-			var reward: Array = rewards.filter(func(r): return r["challenge"] == source)
-			_add_challenge_card(cards, base, row, reward[0] if !reward.is_empty() else {})
+			add_challenge_card(cards, save_manager, bike_type, i, base)
 		# follow_focus only shows the card; keep its bike's header in view too.
 		var outer: ScrollContainer = _bike_list.get_parent()
 		for card: Control in cards.get_children():
 			card.focus_entered.connect(func(): outer.ensure_control_visible.call_deferred(header))
 
 
-## A card: the reward's name, the reward (base bike wearing it, dimmed until earned), then the
-## challenge's row. Cards in a row share its height (the HBox stretches them). reward: a
-## SaveManager.mod_rewards entry, empty for none.
-func _add_challenge_card(cards: Container, base: BikeSkinDefinition, row: Dictionary, reward: Dictionary):
+## A card for bike_type's challenge `index`: the reward's name, the reward (base bike wearing it,
+## dimmed until earned), then the challenge's row. Cards in a row share its height (the HBox
+## stretches them). Also GarageUI's locked-mod popup.
+static func add_challenge_card(
+	cards: Container,
+	saves: SaveManager,
+	bike_type: BikeTypeDefinition,
+	index: int,
+	base: BikeSkinDefinition
+):
+	var challenge := bike_type.challenges[index]
+	var one: Array[ChallengeDefinition] = [challenge]
+	var row := ProfileCard.challenge_rows(one, SaveManager.bike_challenge_progress(saves.current_save))[0]
+	var type_open := SaveManager.open_challenges(bike_type, saves.current_save)
+	if challenge not in type_open:
+		row["title"] = cards.tr("CHALLENGE_LOCKED_FINAL").format(
+			{"title": row["title"], "n": type_open.size()}
+		)
+	# The last card shows the mod finishing the list earns, when its challenge has no own reward
+	var is_mastery_card := index == bike_type.challenges.size() - 1 and challenge.reward_mod == null
+	var source: Variant = null if is_mastery_card else challenge
+	var rewards := saves.mod_rewards().filter(
+		func(r): return r["bike_type"] == bike_type and r["challenge"] == source
+	)
+	var reward: Dictionary = rewards[0] if !rewards.is_empty() else {}
 	var card := PanelContainer.new()
 	card.theme_type_variation = &"TrickRowPanel"
 	card.custom_minimum_size.x = CARD_WIDTH
@@ -325,7 +333,7 @@ func _add_challenge_card(cards: Container, base: BikeSkinDefinition, row: Dictio
 			mod_name = mod_name.get_slice("_", 0)
 		title.text = GarageUI.skin_label(mod_name)
 		if reward["mod"].demo_locked and UtilsConstants.is_demo_build():
-			title.text = "%s · %s" % [tr("DEMO_LOCKED_LABEL"), title.text]
+			title.text = "%s · %s" % [cards.tr("DEMO_LOCKED_LABEL"), title.text]
 		body.add_child(title)
 		var thumb: Thumbnail3D = THUMB_SCENE.instantiate()
 		thumb.custom_minimum_size = REWARD_THUMB_SIZE
@@ -338,7 +346,7 @@ func _add_challenge_card(cards: Container, base: BikeSkinDefinition, row: Dictio
 			more.add_theme_color_override("font_color", CAREER_SECONDARY)
 			more.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			more.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
-			more.text = tr("REWARD_PLUS_COLORS").format({"n": colors})
+			more.text = cards.tr("REWARD_PLUS_COLORS").format({"n": colors})
 			body.add_child(more)
 		var fitted: BikeSkinDefinition = base.duplicate()
 		var mods: Array[BikeMod] = [reward["mod"]]
@@ -349,7 +357,7 @@ func _add_challenge_card(cards: Container, base: BikeSkinDefinition, row: Dictio
 
 
 ## The type's base skin (the one no mastery gates), which its reward thumbnails wear.
-func _base_skin(bike_type: BikeTypeDefinition) -> BikeSkinDefinition:
+static func base_skin(bike_type: BikeTypeDefinition) -> BikeSkinDefinition:
 	var bases := SkinScanner.scan_skin_dir(GarageUI.BIKE_SKINS_DIR).values().map(load).filter(
 		func(skin: BikeSkinDefinition): return skin.bike_type == bike_type and skin.unlock_mastery == 0
 	)

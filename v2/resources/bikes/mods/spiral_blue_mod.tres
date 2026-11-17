@@ -21,4 +21,4 @@ shader_parameter/energy = 2.0
 script = ExtResource("1_mod")
 material = SubResource("ShaderMaterial_spiral_blue")
 variants = Array[ExtResource("3_myxj2")]([ExtResource("var_0"), ExtResource("var_1"), ExtResource("var_2")])
-demo_locked = true
+demo_locked = null

@@ -35,6 +35,9 @@ Make a hoodie
   - [x] Limit content in the game, too much for a demo tbh
   - [x] Add thanks for playing the demo to the demo version when you unlock everything, but players can keep playing 
   - [x] change order of shown items in customize menu, should always show unlocked first, then order by unlock type (mini bike challenge, naked challenge, etc.)
+  - [x] in customize, hovering the item should show the challenge card
+  - [x] too easy to crash when steering a stoppie, allow some steering
+  - [ ] wire up trick battle arena @ eventstartcircle4
   
   - [ ] when host starts an event have a smol countdown telling players whats starting / transition
   - [ ] add more incentive to doing stunts and driving around the map instead of just going from checkpoint to checkpoint
@@ -45,8 +48,6 @@ Make a hoodie
   - [ ] disable some `dbg_` commands (progression), but keep TP/helpers
 
 - [ ] tweaks
-  - [ ] in customize, hovering the item should show the challenge text in the title
-  - [ ] too easy to crash when steering a stoppie, allow some steering
   - [ ] time attack race 1 shouldnt make you drive there first
   - [ ] add sounds when body hits the ground
 

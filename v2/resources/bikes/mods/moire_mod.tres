@@ -22,4 +22,4 @@ shader_parameter/energy = 1.2
 script = ExtResource("1_mod")
 material = SubResource("ShaderMaterial_moire")
 variants = Array[ExtResource("3_lyw8f")]([ExtResource("var_0"), ExtResource("var_1"), ExtResource("var_2"), ExtResource("var_3")])
-demo_locked = true
+demo_locked = null

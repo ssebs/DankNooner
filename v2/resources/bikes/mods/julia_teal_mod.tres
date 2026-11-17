@@ -1,7 +1,8 @@
-[gd_resource type="Resource" script_class="TextureMod" format=3]
+[gd_resource type="Resource" script_class="TextureMod" format=3 uid="uid://b52hx4afo8iom"]
 
 [ext_resource type="Script" uid="uid://cjeqtuj8i15db" path="res://resources/bikes/mods/texture_mod.gd" id="1_mod"]
 [ext_resource type="Shader" uid="uid://r4pb20o4pihs" path="res://resources/bikes/mods/textures/julia.gdshader" id="2_shader"]
+[ext_resource type="Script" uid="uid://dviinp4otorqm" path="res://resources/bikes/mods/bike_mod.gd" id="3_ntj3j"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_julia_teal"]
 render_priority = 0
@@ -10,7 +11,10 @@ shader_parameter/color_a = Color(0.1, 0.4, 0.295, 1)
 shader_parameter/color_b = Color(0.255, 1, 0.738, 1)
 shader_parameter/scale = 2.0
 shader_parameter/speed = 0.2
+shader_parameter/line_width = 0.3
+shader_parameter/energy = 1.2
 
 [resource]
 script = ExtResource("1_mod")
 material = SubResource("ShaderMaterial_julia_teal")
+demo_locked = null

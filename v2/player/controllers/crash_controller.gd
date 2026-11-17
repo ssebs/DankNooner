@@ -34,9 +34,9 @@ const DRIFT_HIGHSIDE_HARD_ANGLE_DEG: float = 65.0
 const DRIFT_CHOP_WOBBLE_STRENGTH: float = 9.0
 ## Min speed for a highside to be dangerous.
 const DRIFT_HIGHSIDE_MIN_SPEED: float = 12.0
-## Lean (deg) allowed in a stoppie before the loaded front tire washes out (lowside). Reads
-## roll_angle (already time-eased) not raw steer, so a KBM tap stays under it but a hard hold crosses.
-const STOPPIE_STEER_CRASH_ANGLE_DEG: float = 10.0
+## Fraction of the stoppie's lean cap (MovementController.STOPPIE_STEER_SCALE) the front tire holds
+## before washing out (lowside). Reads eased roll, so partial steer is safe; a near-full hold crosses.
+const STOPPIE_WASHOUT_LEAN_FRAC: float = 0.7
 ## At/below this speed, a stoppie held high enough (see fraction below) can be pivot-steered
 ## without washing out — you're balanced on the front, not carrying speed the tire can wash off.
 const STOPPIE_PIVOT_MAX_SPEED: float = 10.0
@@ -210,7 +210,10 @@ func _detect_crash():
 		if (
 			movement_controller.is_stoppie
 			and not stoppie_pivot
-			and absf(movement_controller.roll_angle) > deg_to_rad(STOPPIE_STEER_CRASH_ANGLE_DEG)
+			and (
+				movement_controller.get_lean_usage()
+				> MovementController.STOPPIE_STEER_SCALE * STOPPIE_WASHOUT_LEAN_FRAC
+			)
 		):
 			DebugUtils.DebugMsg("stoppie steer washout crash")
 			trigger_crash(CrashType.LOWSIDE)

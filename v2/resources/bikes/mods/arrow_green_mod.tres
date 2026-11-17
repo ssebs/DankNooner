@@ -10,3 +10,4 @@
 script = ExtResource("1_mod")
 material = ExtResource("2_mat")
 variants = Array[ExtResource("bm_script")]([ExtResource("var_0"), ExtResource("var_1")])
+demo_locked = null

@@ -23,6 +23,8 @@ const FONT_SIZE: int = 16
 const MAX_LIST_HEIGHT: float = 480
 ## Longer loadout names ellipsize; the tab strip scrolls.
 const TAB_MAX_WIDTH: float = 200
+## Between the list panel and a locked mod's challenge card.
+const REWARD_GAP: float = 12
 
 ## Clickable only in CustomizeMenuState (see its scene).
 @onready var save_card: ProfileCard = %SaveCard
@@ -50,6 +52,7 @@ const TAB_MAX_WIDTH: float = 200
 @onready var _confirm_label: Label = %ConfirmLabel
 @onready var _confirm_yes_btn: Button = %ConfirmYesBtn
 @onready var _confirm_no_btn: Button = %ConfirmNoBtn
+@onready var _reward_box: Control = %RewardBox
 @onready var _tour: Tour = %CustomizeTour
 @onready var _profile_step: TourStep = %ProfileStep
 @onready var _loadouts_step: TourStep = %LoadoutsStep
@@ -514,14 +517,12 @@ func _build_mod_list_page(title_key: String, type: Script):
 			continue
 		if !sources.any(func(reward): return reward["earned"]):
 			var source: Dictionary = sources[0]
-			var type_name := tr(source["bike_type"].name_key)
-			var goal := tr("REWARD_ALL_CHALLENGES")
-			if source["challenge"] != null:
-				goal = source["challenge"].title()
 			var right := tr("GARAGE_LOCKED_MOD").format(
-				{"type": type_name, "price": MoneyLabel.format(mod.price)}
+				{"type": tr(source["bike_type"].name_key), "price": MoneyLabel.format(mod.price)}
 			)
-			_add_locked_row(mod_name, right, "%s: %s" % [type_name, goal], preview)
+			var row := _add_locked_row(mod_name, right, "", preview)
+			row.focus_entered.connect(_show_reward.bind(source, row))
+			row.focus_exited.connect(_reward_box.hide)
 			continue
 		var path := mod.resource_path
 		var owned := _save_manager.is_owned(path)
@@ -660,10 +661,11 @@ func _on_row_focused(control: Control, preview: Callable):
 		_preview_current()
 
 
-func _add_locked_row(skin_name: String, right: String, tooltip: String, preview: Callable):
+func _add_locked_row(skin_name: String, right: String, tooltip: String, preview: Callable) -> GarageRow:
 	var row := _add_row(skin_label(skin_name), right, func(): pass, preview)
 	row.disabled = true
 	row.tooltip_text = tooltip
+	return row
 
 
 func _on_skin_pressed(skin_name: String, path: String, price: int, apply: Callable):
@@ -811,6 +813,30 @@ func _on_confirm_yes():
 func _close_confirm():
 	_confirm_box.hide()
 	_rebuild(_confirm_return_index)
+
+
+#endregion
+
+
+#region reward box
+## The Career tab's card for a locked mod's challenge (a mod_rewards entry), beside its row like a
+## tooltip. Focus-driven rather than a real tooltip, so the pad sees it too.
+func _show_reward(source: Dictionary, row: GarageRow):
+	var bike_type: BikeTypeDefinition = source["bike_type"]
+	var challenges := bike_type.challenges
+	var index := challenges.size() - 1 if source["challenge"] == null else challenges.find(source["challenge"])
+	for child in _reward_box.get_children():
+		_reward_box.remove_child(child)
+		child.queue_free()
+	SavesMenuState.add_challenge_card(
+		_reward_box, _save_manager, bike_type, index, SavesMenuState.base_skin(bike_type)
+	)
+	# Display only: the pad must not walk onto it.
+	_reward_box.get_child(0).focus_mode = Control.FOCUS_NONE
+	_reward_box.reset_size()
+	var y := minf(row.global_position.y, get_viewport_rect().size.y - _reward_box.size.y)
+	_reward_box.global_position = Vector2(_panel.get_global_rect().end.x + REWARD_GAP, y)
+	_reward_box.show()
 
 
 #endregion

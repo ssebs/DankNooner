@@ -322,6 +322,12 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "GARAGE_BUY"
 
+[node name="RewardBox" type="MarginContainer" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+mouse_filter = 2
+
 [node name="ColorPanel" type="PanelContainer" parent="."]
 unique_name_in_owner = true
 visible = false

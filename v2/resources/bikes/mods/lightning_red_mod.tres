@@ -1,15 +1,19 @@
-[gd_resource type="Resource" script_class="TextureMod" format=3]
+[gd_resource type="Resource" script_class="TextureMod" format=3 uid="uid://cwgkroja56fm1"]
 
 [ext_resource type="Script" uid="uid://cjeqtuj8i15db" path="res://resources/bikes/mods/texture_mod.gd" id="1_mod"]
 [ext_resource type="Shader" uid="uid://dfgvj5qo7qrg2" path="res://resources/bikes/mods/textures/lightning.gdshader" id="2_shader"]
+[ext_resource type="Script" uid="uid://dviinp4otorqm" path="res://resources/bikes/mods/bike_mod.gd" id="3_h73p1"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_lightning_red"]
 render_priority = 0
 shader = ExtResource("2_shader")
 shader_parameter/bolt_color = Color(0.98, 0.2, 0.2, 1)
 shader_parameter/scale = 4.0
+shader_parameter/speed = 0.15
+shader_parameter/line_px = 1.5
+shader_parameter/energy = 3.0
 
 [resource]
 script = ExtResource("1_mod")
 material = SubResource("ShaderMaterial_lightning_red")
-demo_locked = true
+demo_locked = null

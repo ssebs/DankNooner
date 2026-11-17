@@ -20,4 +20,4 @@ shader_parameter/energy = 3.0
 script = ExtResource("1_mod")
 material = SubResource("ShaderMaterial_lightning")
 variants = Array[ExtResource("3_bxu5l")]([ExtResource("var_0"), ExtResource("var_1"), ExtResource("var_2")])
-demo_locked = true
+demo_locked = null

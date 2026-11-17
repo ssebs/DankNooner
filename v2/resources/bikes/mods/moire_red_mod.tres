@@ -1,15 +1,20 @@
-[gd_resource type="Resource" script_class="TextureMod" format=3]
+[gd_resource type="Resource" script_class="TextureMod" format=3 uid="uid://blvtai2icwk7h"]
 
 [ext_resource type="Script" uid="uid://cjeqtuj8i15db" path="res://resources/bikes/mods/texture_mod.gd" id="1_mod"]
-[ext_resource type="Shader" path="res://resources/bikes/mods/textures/moire.gdshader" id="2_shader"]
+[ext_resource type="Shader" uid="uid://di8lfgjolubo4" path="res://resources/bikes/mods/textures/moire.gdshader" id="2_shader"]
+[ext_resource type="Script" uid="uid://dviinp4otorqm" path="res://resources/bikes/mods/bike_mod.gd" id="3_kuvmh"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_moire_red"]
 render_priority = 0
 shader = ExtResource("2_shader")
 shader_parameter/color_a = Color(0.39, 0.08, 0.08, 1)
 shader_parameter/color_b = Color(0.98, 0.2, 0.2, 1)
+shader_parameter/scale = 1.5
+shader_parameter/speed = 0.4
+shader_parameter/rings = 45.0
+shader_parameter/energy = 1.2
 
 [resource]
 script = ExtResource("1_mod")
 material = SubResource("ShaderMaterial_moire_red")
-demo_locked = true
+demo_locked = null
