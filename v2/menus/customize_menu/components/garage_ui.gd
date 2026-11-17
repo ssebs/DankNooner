@@ -371,7 +371,19 @@ func _build_loadout_root():
 func _build_bike_page():
 	_title.text = tr("GARAGE_BIKE")
 	var loadout := _loadout()
-	for skin_name in _bikes:
+	var names := _bikes.keys()
+	# Unlocked first, then by SaveManager.bike_types order, then name.
+	var rank := func(skin_name: String) -> int:
+		var path: String = _bikes[skin_name]
+		var type_index := _save_manager.bike_types.find(load(path).bike_type)
+		return type_index + (_save_manager.bike_types.size() if _save_manager.is_locked(path) else 0)
+	names.sort_custom(
+		func(a: String, b: String) -> bool:
+			var a_rank: int = rank.call(a)
+			var b_rank: int = rank.call(b)
+			return a_rank < b_rank if a_rank != b_rank else a < b
+	)
+	for skin_name in names:
 		var path: String = _bikes[skin_name]
 		var def := load(path) as BikeSkinDefinition
 		_add_skin_row(
@@ -482,10 +494,13 @@ func _build_mods_page():
 func _build_mod_list_page(title_key: String, type: Script):
 	_title.text = tr(title_key)
 	var rewards := _save_manager.mod_rewards()
+	# Earned first, each group in mod_rewards order (bike type, then challenge).
 	var mods: Array[BikeMod] = []
-	for mod in rewards.map(func(reward): return reward["mod"]):
-		if is_instance_of(mod, type) and mod not in mods:
-			mods.append(mod)
+	for earned in [true, false]:
+		for reward in rewards:
+			var mod: BikeMod = reward["mod"]
+			if reward["earned"] == earned and is_instance_of(mod, type) and mod not in mods:
+				mods.append(mod)
 	var fitted := _loadout().bike.mods
 	for mod in mods:
 		var sources := rewards.filter(func(reward): return reward["mod"] == mod)

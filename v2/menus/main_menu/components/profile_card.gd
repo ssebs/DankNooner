@@ -40,7 +40,7 @@ const CHALLENGE_DONE_PEEK_SECS := 6.0
 ## and the caret pulses.
 static var _opened_once: bool = false
 static var _expanded: bool = false
-static var _tab: Tab = Tab.LEADERBOARD
+static var _tab: Tab = Tab.DAILY
 ## The last board pushed (see show_board); empty headers = no board up.
 static var _board_headers: PackedStringArray = PackedStringArray()
 static var _board_rows: Array = []

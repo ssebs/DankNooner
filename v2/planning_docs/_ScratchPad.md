@@ -34,7 +34,7 @@ Make a hoodie
   - [x] stop lowering boost fill by 2 bars when starting an event
   - [x] Limit content in the game, too much for a demo tbh
   - [x] Add thanks for playing the demo to the demo version when you unlock everything, but players can keep playing 
-  - [ ] change order of shown items in customize menu, should always show unlocked first, then order by unlock type (mini bike challenge, naked challenge, etc.)
+  - [x] change order of shown items in customize menu, should always show unlocked first, then order by unlock type (mini bike challenge, naked challenge, etc.)
   
   - [ ] when host starts an event have a smol countdown telling players whats starting / transition
   - [ ] add more incentive to doing stunts and driving around the map instead of just going from checkpoint to checkpoint
