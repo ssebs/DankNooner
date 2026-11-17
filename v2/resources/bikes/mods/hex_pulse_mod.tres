@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cjeqtuj8i15db" path="res://resources/bikes/mods/texture_mod.gd" id="1_mod"]
 [ext_resource type="Shader" uid="uid://wrr7hyhrdrxf" path="res://resources/bikes/mods/textures/hex_pulse.gdshader" id="2_shader"]
+[ext_resource type="Script" uid="uid://dviinp4otorqm" path="res://resources/bikes/mods/bike_mod.gd" id="3_348pu"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_hex_pulse"]
 render_priority = 0

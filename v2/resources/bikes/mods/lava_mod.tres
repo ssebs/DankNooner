@@ -2,6 +2,7 @@
 
 [ext_resource type="Shader" uid="uid://dcrd21vlkakud" path="res://entities/vfx/exhaust_flame_particles.gdshader" id="1_stcdc"]
 [ext_resource type="Script" uid="uid://cjeqtuj8i15db" path="res://resources/bikes/mods/texture_mod.gd" id="2_pgk1g"]
+[ext_resource type="Script" uid="uid://dviinp4otorqm" path="res://resources/bikes/mods/bike_mod.gd" id="3_aex3i"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_wpb6x"]
 render_priority = 0

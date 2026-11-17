@@ -2,6 +2,7 @@
 
 [ext_resource type="Shader" uid="uid://ec3pkc3qmf2y" path="res://levels/assets/skybox_aurora.gdshader" id="1_tv63g"]
 [ext_resource type="Script" uid="uid://cjeqtuj8i15db" path="res://resources/bikes/mods/texture_mod.gd" id="2_3fpg2"]
+[ext_resource type="Script" uid="uid://dviinp4otorqm" path="res://resources/bikes/mods/bike_mod.gd" id="3_m5srm"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_wpb6x"]
 render_priority = 0
@@ -17,4 +18,3 @@ shader_parameter/vertical_falloff = 0.42000001669012
 [resource]
 script = ExtResource("2_3fpg2")
 material = SubResource("ShaderMaterial_wpb6x")
-variants = null

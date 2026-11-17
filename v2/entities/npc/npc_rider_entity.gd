@@ -414,6 +414,8 @@ func horizontal_speed(racer: Node3D) -> float:
 func crash() -> void:
 	npc_state = NPCState.CRASHED
 	velocity = Vector3.ZERO
+	# Traffic stops calling ride_to, so a stale _phys_prev would flicker the wreck between two ticks
+	_phys_prev = _sync_pose()
 
 
 ## Called by whoever rode into us (see CrashController) or hit us with an item.
