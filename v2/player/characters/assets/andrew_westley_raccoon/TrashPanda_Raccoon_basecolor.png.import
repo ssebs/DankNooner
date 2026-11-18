@@ -2,21 +2,21 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bmyjavrfbk86x"
-path.s3tc="res://.godot/imported/Coon_cute_raccoon_3d_model_tripo_part_4_basecolor.jpg-39e53a2259c59de490cdfc6feac4a4a5.s3tc.ctex"
-path.etc2="res://.godot/imported/Coon_cute_raccoon_3d_model_tripo_part_4_basecolor.jpg-39e53a2259c59de490cdfc6feac4a4a5.etc2.ctex"
+uid="uid://bng30w1bdt120"
+path.s3tc="res://.godot/imported/TrashPanda_Raccoon_basecolor.png-43c175794caab21177ce2320c1dda01e.s3tc.ctex"
+path.etc2="res://.godot/imported/TrashPanda_Raccoon_basecolor.png-43c175794caab21177ce2320c1dda01e.etc2.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc", "etc2_astc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "87b9f193596831075f3348f537abbd8f"
+"md5": "727d6816c7f6b8954f1611a2d81e778b"
 }
 
 [deps]
 
-source_file="res://player/characters/assets/andrew_westley_raccoon/Coon_cute_raccoon_3d_model_tripo_part_4_basecolor.jpg"
-dest_files=["res://.godot/imported/Coon_cute_raccoon_3d_model_tripo_part_4_basecolor.jpg-39e53a2259c59de490cdfc6feac4a4a5.s3tc.ctex", "res://.godot/imported/Coon_cute_raccoon_3d_model_tripo_part_4_basecolor.jpg-39e53a2259c59de490cdfc6feac4a4a5.etc2.ctex"]
+source_file="res://player/characters/assets/andrew_westley_raccoon/TrashPanda_Raccoon_basecolor.png"
+dest_files=["res://.godot/imported/TrashPanda_Raccoon_basecolor.png-43c175794caab21177ce2320c1dda01e.s3tc.ctex", "res://.godot/imported/TrashPanda_Raccoon_basecolor.png-43c175794caab21177ce2320c1dda01e.etc2.ctex"]
 
 [params]
 

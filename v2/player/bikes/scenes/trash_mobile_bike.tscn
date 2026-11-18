@@ -1,0 +1,41 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" uid="uid://dnutod8ekbds8" path="res://player/bikes/assets/trashcanBike/TrashMobile.glb" id="1_trash"]
+[ext_resource type="Script" uid="uid://c3lu6b0rly65d" path="res://utils/components/skin_color.gd" id="2_skin"]
+[ext_resource type="Script" uid="uid://sl8xxfrqs5w1" path="res://utils/components/skin_slot.gd" id="3_slot"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_crate"]
+albedo_color = Color(0.01, 0.09, 0.42, 1)
+
+[sub_resource type="Resource" id="Resource_paint"]
+script = ExtResource("3_slot")
+display_name = "GARAGE_SLOT_BODY"
+color = Color(0.01, 0.09, 0.42, 1)
+use_standard_material = true
+surface_index = 7
+standard_material = SubResource("StandardMaterial3D_crate")
+metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tail"]
+albedo_color = Color(0.58, 0, 0.066, 1)
+emission_enabled = true
+emission = Color(1, 0.03, 0.03, 1)
+emission_energy_multiplier = 1.6
+
+[sub_resource type="Resource" id="Resource_tail"]
+script = ExtResource("3_slot")
+color = Color(0.58, 0, 0.066, 1)
+use_standard_material = true
+standard_material = SubResource("StandardMaterial3D_tail")
+metadata/_custom_type_script = "uid://sl8xxfrqs5w1"
+
+[node name="TrashMobile" node_paths=PackedStringArray("meshes", "steering_rotation_node", "front_wheel_node", "rear_wheel_node", "taillight_mesh") instance=ExtResource("1_trash")]
+script = ExtResource("2_skin")
+slots = Array[ExtResource("3_slot")]([SubResource("Resource_paint")])
+meshes = [NodePath("Motorcycle_mesh")]
+steering_rotation_node = NodePath("Top")
+front_wheel_node = NodePath("Top/FrontWheel")
+rear_wheel_node = NodePath("RearWheel")
+wheel_rot_axis = Vector3(0, 0, 1)
+taillight_slot = SubResource("Resource_tail")
+taillight_mesh = NodePath("TailLight")

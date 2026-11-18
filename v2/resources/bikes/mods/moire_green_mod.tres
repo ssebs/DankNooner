@@ -17,4 +17,3 @@ shader_parameter/energy = 1.2
 [resource]
 script = ExtResource("1_mod")
 material = SubResource("ShaderMaterial_moire_green")
-demo_locked = null

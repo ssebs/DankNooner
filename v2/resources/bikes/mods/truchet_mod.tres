@@ -3,10 +3,10 @@
 [ext_resource type="Script" uid="uid://cjeqtuj8i15db" path="res://resources/bikes/mods/texture_mod.gd" id="1_mod"]
 [ext_resource type="Shader" uid="uid://dy7ep4e0bun3i" path="res://resources/bikes/mods/textures/truchet.gdshader" id="2_shader"]
 [ext_resource type="Script" uid="uid://dviinp4otorqm" path="res://resources/bikes/mods/bike_mod.gd" id="3_0w3gg"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/truchet_blue_mod.tres" id="var_0"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/truchet_green_mod.tres" id="var_1"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/truchet_red_mod.tres" id="var_2"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/truchet_teal_mod.tres" id="var_3"]
+[ext_resource type="Resource" uid="uid://cxmlcpiba6ytm" path="res://resources/bikes/mods/truchet_blue_mod.tres" id="var_0"]
+[ext_resource type="Resource" uid="uid://ppo6qcdyd6ck" path="res://resources/bikes/mods/truchet_green_mod.tres" id="var_1"]
+[ext_resource type="Resource" uid="uid://bjxfdgyedh1ki" path="res://resources/bikes/mods/truchet_red_mod.tres" id="var_2"]
+[ext_resource type="Resource" uid="uid://ukugwnwc8hlf" path="res://resources/bikes/mods/truchet_teal_mod.tres" id="var_3"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_truchet"]
 render_priority = 0
@@ -23,4 +23,3 @@ shader_parameter/energy = 3.0
 script = ExtResource("1_mod")
 material = SubResource("ShaderMaterial_truchet")
 variants = Array[ExtResource("3_0w3gg")]([ExtResource("var_0"), ExtResource("var_1"), ExtResource("var_2"), ExtResource("var_3")])
-demo_locked = null

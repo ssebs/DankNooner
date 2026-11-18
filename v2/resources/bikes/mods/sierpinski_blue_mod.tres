@@ -16,4 +16,3 @@ shader_parameter/energy = 1.5
 [resource]
 script = ExtResource("1_mod")
 material = SubResource("ShaderMaterial_sierpinski_blue")
-demo_locked = null

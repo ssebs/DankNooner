@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://c5m2d6yo5mem4"
-path="res://.godot/imported/cute+raccoon+3d+model.glb-37a2aeccd9e7b8a8cb0cc7640d5728f8.scn"
+uid="uid://dnutod8ekbds8"
+path="res://.godot/imported/TrashMobile.glb-6a75fd4552da2162f8616a0c713d4e36.scn"
 
 [deps]
 
-source_file="res://player/characters/assets/andrew_westley_raccoon/cute+raccoon+3d+model.glb"
-dest_files=["res://.godot/imported/cute+raccoon+3d+model.glb-37a2aeccd9e7b8a8cb0cc7640d5728f8.scn"]
+source_file="res://player/bikes/assets/trashcanBike/TrashMobile.glb"
+dest_files=["res://.godot/imported/TrashMobile.glb-6a75fd4552da2162f8616a0c713d4e36.scn"]
 
 [params]
 
