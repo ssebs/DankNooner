@@ -9,6 +9,8 @@
 [resource]
 script = ExtResource("2_4wyad")
 skin_name = "trash_mobile"
+price = 6000
+unlock_mastery = 6
 bike_type = ExtResource("9_type")
 mesh_res = ExtResource("1_hvuo0")
 mesh_position_offset = Vector3(0, 0.014, 0.004)
