@@ -68,6 +68,8 @@ Make a hoodie
 ##
 ## NEXT
 
+- [ ] Coon => trash panda
+
 - [ ] Mods
   - [ ] Wings as mod for sport bike 
     - [x] mesh

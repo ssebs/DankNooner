@@ -16,4 +16,3 @@ shader_parameter/energy = 3.0
 [resource]
 script = ExtResource("1_mod")
 material = SubResource("ShaderMaterial_lightning_green")
-demo_locked = null

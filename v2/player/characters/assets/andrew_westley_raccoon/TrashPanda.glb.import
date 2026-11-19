@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://cpsv1lcj40ti8"
-path="res://.godot/imported/Coon.glb-ef042b04d9f2f4121ce822f0f66c55bf.scn"
+uid="uid://d4e5m0q1abuws"
+path="res://.godot/imported/TrashPanda.glb-33a6d46ed175297a5ce52e71139f7eef.scn"
 
 [deps]
 
-source_file="res://player/characters/assets/andrew_westley_raccoon/Coon.glb"
-dest_files=["res://.godot/imported/Coon.glb-ef042b04d9f2f4121ce822f0f66c55bf.scn"]
+source_file="res://player/characters/assets/andrew_westley_raccoon/TrashPanda.glb"
+dest_files=["res://.godot/imported/TrashPanda.glb-33a6d46ed175297a5ce52e71139f7eef.scn"]
 
 [params]
 

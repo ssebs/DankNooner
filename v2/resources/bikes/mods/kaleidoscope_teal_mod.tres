@@ -18,4 +18,3 @@ shader_parameter/energy = 1.2
 [resource]
 script = ExtResource("1_mod")
 material = SubResource("ShaderMaterial_kaleidoscope_teal")
-demo_locked = null

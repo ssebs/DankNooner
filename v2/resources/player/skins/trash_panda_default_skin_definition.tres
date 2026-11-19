@@ -1,11 +1,11 @@
 [gd_resource type="Resource" script_class="CharacterSkinDefinition" format=3 uid="uid://tvmsjcs7u3sp"]
 
-[ext_resource type="PackedScene" uid="uid://ckx6a3vrahpwg" path="res://player/characters/scenes/raccoon_skin.tscn" id="1_scene"]
+[ext_resource type="PackedScene" uid="uid://ckx6a3vrahpwg" path="res://player/characters/scenes/trash_panda_skin.tscn" id="1_scene"]
 [ext_resource type="Script" uid="uid://bh7rf77tqy8xb" path="res://resources/player/character_skin_definition.gd" id="2_def"]
 
 [resource]
 script = ExtResource("2_def")
-skin_name = "raccoon_default"
+skin_name = "trash_panda_default"
 demo_locked = true
 mesh_res = ExtResource("1_scene")
 price = 2000

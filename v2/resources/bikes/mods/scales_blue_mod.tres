@@ -3,9 +3,9 @@
 [ext_resource type="Script" uid="uid://cjeqtuj8i15db" path="res://resources/bikes/mods/texture_mod.gd" id="1_mod"]
 [ext_resource type="Shader" uid="uid://b86rer81hyec" path="res://resources/bikes/mods/textures/tile_pattern.gdshader" id="2_shader"]
 [ext_resource type="Script" uid="uid://dviinp4otorqm" path="res://resources/bikes/mods/bike_mod.gd" id="3_mq1lv"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/scales_green_mod.tres" id="var_0"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/scales_red_mod.tres" id="var_1"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/scales_teal_mod.tres" id="var_2"]
+[ext_resource type="Resource" uid="uid://d0jl3uc1m47md" path="res://resources/bikes/mods/scales_green_mod.tres" id="var_0"]
+[ext_resource type="Resource" uid="uid://bog3ecxql3ks7" path="res://resources/bikes/mods/scales_red_mod.tres" id="var_1"]
+[ext_resource type="Resource" uid="uid://vv4aflv0wjae" path="res://resources/bikes/mods/scales_teal_mod.tres" id="var_2"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_scales_blue"]
 render_priority = 0
@@ -21,4 +21,3 @@ shader_parameter/energy = 2.0
 script = ExtResource("1_mod")
 material = SubResource("ShaderMaterial_scales_blue")
 variants = Array[ExtResource("3_mq1lv")]([ExtResource("var_0"), ExtResource("var_1"), ExtResource("var_2")])
-demo_locked = null

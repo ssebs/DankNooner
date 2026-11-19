@@ -3,9 +3,9 @@
 [ext_resource type="Script" uid="uid://cjeqtuj8i15db" path="res://resources/bikes/mods/texture_mod.gd" id="1_mod"]
 [ext_resource type="Shader" uid="uid://dfgvj5qo7qrg2" path="res://resources/bikes/mods/textures/lightning.gdshader" id="2_shader"]
 [ext_resource type="Script" uid="uid://dviinp4otorqm" path="res://resources/bikes/mods/bike_mod.gd" id="3_bxu5l"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/lightning_green_mod.tres" id="var_0"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/lightning_red_mod.tres" id="var_1"]
-[ext_resource type="Resource" path="res://resources/bikes/mods/lightning_teal_mod.tres" id="var_2"]
+[ext_resource type="Resource" uid="uid://chcwbidessj2p" path="res://resources/bikes/mods/lightning_green_mod.tres" id="var_0"]
+[ext_resource type="Resource" uid="uid://cwgkroja56fm1" path="res://resources/bikes/mods/lightning_red_mod.tres" id="var_1"]
+[ext_resource type="Resource" uid="uid://b3glil37q18bn" path="res://resources/bikes/mods/lightning_teal_mod.tres" id="var_2"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_lightning"]
 render_priority = 0
@@ -20,4 +20,3 @@ shader_parameter/energy = 3.0
 script = ExtResource("1_mod")
 material = SubResource("ShaderMaterial_lightning")
 variants = Array[ExtResource("3_bxu5l")]([ExtResource("var_0"), ExtResource("var_1"), ExtResource("var_2")])
-demo_locked = null

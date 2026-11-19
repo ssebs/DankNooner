@@ -132,6 +132,7 @@
   - [ ] tron bike
   - [ ] pocket bike
   - [ ] use shrunken car as a joke motorcycle
+  - [ ] invisible bike
   - [ ] Create model combo for Dilly
     - [ ] e-bike
     - [ ] guy riding a bicycle with gloves & bicycle helmet

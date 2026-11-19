@@ -18,4 +18,3 @@ shader_parameter/energy = 3.0
 [resource]
 script = ExtResource("1_mod")
 material = SubResource("ShaderMaterial_truchet_red")
-demo_locked = null

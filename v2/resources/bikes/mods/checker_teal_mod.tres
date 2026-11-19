@@ -17,4 +17,3 @@ shader_parameter/energy = 2.0
 [resource]
 script = ExtResource("1_mod")
 material = SubResource("ShaderMaterial_checker_teal")
-demo_locked = null

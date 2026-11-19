@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://d0rgswc73h64f"]
 
 [ext_resource type="Script" uid="uid://bnop7vr1q4gwg" path="res://player/player_entity.gd" id="1_0jc3c"]
-[ext_resource type="Resource" uid="uid://bu5x25m0vsrv3" path="res://resources/bikes/skins/sport_default_skin_definition.tres" id="2_trfvj"]
+[ext_resource type="Resource" uid="uid://csoncq7hurrwv" path="res://resources/bikes/skins/trash_mobile_skin_definition.tres" id="2_8e6id"]
 [ext_resource type="Resource" uid="uid://bxa7gt83qt1yh" path="res://resources/player/skins/squid_default_skin_definition.tres" id="3_am3pr"]
 [ext_resource type="Script" uid="uid://d350u8evihs1u" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="3_faflk"]
 [ext_resource type="Script" uid="uid://dour8fehaaugp" path="res://addons/netfox/tick-interpolator.gd" id="4_ri2qi"]
@@ -21,7 +21,6 @@
 [ext_resource type="Script" uid="uid://coopftft0wwho" path="res://player/controllers/camera_controller.gd" id="17_0jgj5"]
 [ext_resource type="PackedScene" uid="uid://c73uvu152n4lh" path="res://entities/vfx/exhaust_flame_particles.tscn" id="17_htgu7"]
 [ext_resource type="PackedScene" uid="uid://cf0bolmhpsorl" path="res://levels/assets/props/BaseballBat.glb" id="18_0jgj5"]
-[ext_resource type="Shape3D" uid="uid://b8p2240dsk6s2" path="res://resources/bikes/hitbox/bike_hitbox.tres" id="25_xcneo"]
 [ext_resource type="PackedScene" uid="uid://cu0vh8sgp0l2e" path="res://entities/vfx/spark_particles.tscn" id="29_3kl2f"]
 [ext_resource type="Script" uid="uid://cajkhr7cisa7f" path="res://player/controllers/skidmark_controller.gd" id="30_skid"]
 [ext_resource type="Script" uid="uid://dbl1ukq1dy3xd" path="res://entities/vfx/rider_vfx.gd" id="31_rvfx"]
@@ -36,6 +35,10 @@
 [ext_resource type="Resource" uid="uid://c3jxw4a0vjh33" path="res://resources/bikes/mods/training_wheels_mod.tres" id="91_twmod"]
 [ext_resource type="Resource" path="res://resources/bikes/mods/wheelie_bar_mod.tres" id="92_wbmod"]
 [ext_resource type="Resource" uid="uid://oi1hqqhxvtma" path="res://resources/bikes/mods/wings_mod.tres" id="93_wingsmod"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_oq5os"]
+radius = 0.4
+height = 1.8
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_wig4y"]
 size = Vector3(8, 20, 2)
@@ -52,7 +55,7 @@ floor_block_on_wall = false
 floor_max_angle = 1.3962634
 safe_margin = 0.01
 script = ExtResource("1_0jc3c")
-bike_definition = ExtResource("2_trfvj")
+bike_definition = ExtResource("2_8e6id")
 character_definition = ExtResource("3_am3pr")
 collision_shape_3d = NodePath("CollisionShape3D")
 input_controller = NodePath("_Controllers/InputController")
@@ -248,27 +251,27 @@ hitbox = NodePath("../../../../GunCollisionArea/GunCollisionShape")
 
 [node name="ButtTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=2080337299]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, -1.2789769e-13, 0, 1, 0, 1.2789769e-13, 0, 1, 1.385633e-07, 0.95820665, -0.34479797)
+transform = Transform3D(1, 0, -1.563194e-13, 0, 1, 0, 1.563194e-13, 0, 1, 1.385633e-07, 0.95820665, -0.34479797)
 
 [node name="ChestTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=1108562279]
 unique_name_in_owner = true
-transform = Transform3D(0.9999999, 0, -5.6843415e-14, 0, 1, 0, 5.684342e-14, 0, 0.9999998, -1.7008484e-09, 1.1697934, 0.0032738894)
+transform = Transform3D(0.9999999, 0, -7.1054274e-14, 0, 1, 0, 5.684342e-14, 0, 0.9999998, -1.7008484e-09, 1.1697934, 0.0032738894)
 
 [node name="HeadTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=190960288]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, -4.2632564e-14, 0, 1, 0, 4.2632564e-14, 0, 1, -1.4981957e-08, 1.5793936, -0.4448575)
+transform = Transform3D(1, 0, -2.842171e-14, 0, 1, 0, 2.842171e-14, 0, 1, -1.4981957e-08, 1.5793936, -0.4448575)
 
 [node name="LeftHandTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=811111111]
 unique_name_in_owner = true
-transform = Transform3D(0.18152155, 0.9399326, 0.2890966, -0.13363789, 0.31483126, -0.9396926, -0.9742642, 0.13194023, 0.18275926, 0.251, 0.914, 0.287)
+transform = Transform3D(0.027228236, 0.14098987, 0.04336449, -0.020045687, 0.047224686, -0.1409539, -0.14613965, 0.019791033, 0.02741389, 0.3323374, 1.3996754, 0.16598289)
 
 [node name="RightHandTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=822222222]
 unique_name_in_owner = true
-transform = Transform3D(0.2333382, -0.9285764, -0.28861547, 0.11576331, 0.32122487, -0.93990076, 0.9654802, 0.18590368, 0.18244913, -0.25104135, 0.9143868, 0.28719392)
+transform = Transform3D(0.03500073, -0.13928649, -0.043292318, 0.017364495, 0.048183743, -0.1409851, 0.14482202, 0.027885558, 0.027367368, -0.2523459, 1.400705, 0.14345135)
 
 [node name="LeftFootTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=833333333]
 unique_name_in_owner = true
-transform = Transform3D(-0.75502855, 0.6541009, 0.045650028, 0.057082213, -0.0037862144, 0.9983623, 0.6532025, 0.75639784, -0.034478825, 0.183, 0.567, -0.227)
+transform = Transform3D(-0.75502855, 0.6541009, 0.045650028, 0.057082213, -0.0037862144, 0.9983623, 0.6532025, 0.75639784, -0.034478825, 0.19393389, 0.3859288, 0.17073241)
 
 [node name="SparkParticlesLeft" parent="VisualRoot/IKTargets/LeftFootTarget" unique_id=1003989945 instance=ExtResource("29_3kl2f")]
 unique_name_in_owner = true
@@ -277,7 +280,7 @@ emitting = false
 
 [node name="RightFootTarget" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=844444444]
 unique_name_in_owner = true
-transform = Transform3D(-0.9787893, 0.022497118, 0.2036314, 0.20170887, 0.27976713, 0.93863934, -0.035852674, 0.9598043, -0.27837086, -0.18314199, 0.5666657, -0.22655825)
+transform = Transform3D(-0.9712475, -0.08569867, 0.2221128, 0.22521195, -0.028248217, 0.9739002, -0.077187665, 0.9959206, 0.04673637, -0.18517818, 0.3886758, 0.18899645)
 
 [node name="SparkParticlesRight" parent="VisualRoot/IKTargets/RightFootTarget" unique_id=1985641876 instance=ExtResource("29_3kl2f")]
 unique_name_in_owner = true
@@ -286,50 +289,50 @@ emitting = false
 
 [node name="LeftArmMagnet" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=811601522]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, -7.1054274e-14, 0, 1, 0, 7.1054274e-14, 0, 1, 0.41947496, 0.90092236, -0.011527833)
+transform = Transform3D(1, 0, -7.1054274e-14, 0, 1, 0, 7.1054274e-14, 0, 1, 0.6170054, 1.0199555, 0.024424452)
 
 [node name="RightArmMagnet" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=593977268]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, -1.4210855e-14, 0, 1, 0, 1.4210855e-14, 0, 1, -0.419, 0.901, -0.012)
+transform = Transform3D(1, 0, -2.842171e-14, 0, 1, 0, 2.842171e-14, 0, 1, -0.617, 0.9550245, 0.0145990215)
 
 [node name="LeftLegMagnet" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=423836538]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, -9.947598e-14, 0, 1, 0, 9.947598e-14, 0, 1, 0.46395656, 0.5692559, 0.42930415)
+transform = Transform3D(1, 0, -9.947598e-14, 0, 1, 0, 9.947598e-14, 0, 1, 0.29177234, 0.56925595, 0.42887357)
 
 [node name="RightLegMagnet" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=132337519]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.464, 0.569, 0.429)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.292, 0.569, 0.429)
 
 [node name="FrontWheelGroundMarker" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=728490293]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, -8.526513e-14, 0, 1, 0, 8.526513e-14, 0, 1, -1.6558204e-08, 0, 0.70154446)
+transform = Transform3D(1, 0, -1.1368684e-13, 0, 1, 0, 1.1368684e-13, 0, 1, 0, 0, 0.791)
 
 [node name="FrontWheelFrontMarker" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=140751727]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, -8.526513e-14, 0, 1, 0, 8.526513e-14, 0, 1, -2.7424491e-08, 0, 0.99627286)
+transform = Transform3D(1, 0, -9.947598e-14, 0, 1, 0, 9.947598e-14, 0, 1, -1.2805685e-09, 0, 1.0244806)
 
 [node name="RearWheelGroundMarker" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=635276085]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, -7.1054274e-14, 0, 1, 0, 7.1054274e-14, 0, 1, 1.8712825e-08, 0, -0.6885047)
+transform = Transform3D(1, 0, -8.526513e-14, 0, 1, 0, 8.526513e-14, 0, 1, 8.171696e-09, 0, -0.7541186)
 
 [node name="RearWheelBackMarker" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=2142896443]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, -7.1054274e-14, 0, 1, 0, 7.1054274e-14, 0, 1, 3.369678e-08, 0, -1.0035067)
+transform = Transform3D(1, 0, -8.526513e-14, 0, 1, 0, 8.526513e-14, 0, 1, 5.8081326e-09, 0, -1.0534654)
 
 [node name="ExhaustTipMarker" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=698596267]
 unique_name_in_owner = true
-transform = Transform3D(0.9694882, 0.13598482, 0.20394884, 0, 0.83201444, -0.55475265, -0.24512602, 0.53782815, 0.8066299, -0.22484247, 0.4660294, -0.5100629)
+transform = Transform3D(0.9908137, -0.011542959, -0.13471949, 0.004596548, 0.9986485, -0.051759433, 0.13513473, 0.050664894, 0.98952967, 0.20314097, 0.29817712, -0.820374)
 
 [node name="ExhaustFlameParticles" parent="VisualRoot/IKTargets/ExhaustTipMarker" unique_id=469568345 instance=ExtResource("17_htgu7")]
 unique_name_in_owner = true
 
 [node name="BikeSkin" parent="VisualRoot/IKTargets" unique_id=1727462617 instance=ExtResource("7_lfjd4")]
 unique_name_in_owner = true
-skin_definition = ExtResource("2_trfvj")
+skin_definition = ExtResource("2_8e6id")
 
 [node name="HeadlightMarker" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=602305415]
 unique_name_in_owner = true
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 2.624415e-08, 0.6928464, 0.8001981)
+transform = Transform3D(-1, 0, -1.5815073e-06, 0, 1, 0, 1.5815073e-06, 0, -1, -9.174502e-08, 0.9467146, 0.6407075)
 
 [node name="SpotLight3D" type="SpotLight3D" parent="VisualRoot/IKTargets/HeadlightMarker" unique_id=1112210254]
 light_color = Color(0.953125, 0.9419265, 0.6664429, 1)
@@ -340,27 +343,27 @@ spot_angle = 26.0
 
 [node name="GasCapMarker" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=1414693499]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, -3.9790393e-13, 0, 1, 0, 3.9790393e-13, 0, 1, 0, 0.97512925, 0.1212935)
+transform = Transform3D(1, 0, -4.405365e-13, 0, 1, 0, 4.405365e-13, 0, 1, 0.006218692, 1.1681985, 0.09273531)
 
 [node name="TrainingWheelsMarker" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=1700000101]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, -1.1652901e-12, 0, 1, 0, 1.1652901e-12, 0, 1, 0.049778417, 0.27647012, -0.6417369)
+transform = Transform3D(1, 0, -1.1368684e-13, 0, 1, 0, 1.1368684e-13, 0, 1, 0.007989365, 0.2731909, -0.7062209)
 
 [node name="WheelieBarMarker" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=1700000102]
 unique_name_in_owner = true
-transform = Transform3D(-1, 0, -1.3430887e-06, 0, 1, 0, 1.3430887e-06, 0, -1, 0.018999962, 0.8510816, -0.61166734)
+transform = Transform3D(-1, 0, -6.278331e-07, 0, 1, 0, 6.2783295e-07, 0, -1, 0.01899998, 0.77214235, -0.74519545)
 
 [node name="WingsMarker" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=1700000103]
 unique_name_in_owner = true
-transform = Transform3D(-1, 0, -3.8941442e-07, 0, 1, 0, 3.8941437e-07, 0, -1.0000001, 0.0371993, 0.6742644, 0.1364354)
+transform = Transform3D(-1, 0, -3.894144e-07, 0, 1, 0, 3.8941437e-07, 0, -1.0000001, -0.11083289, 0.68406796, -0.3249227)
 
 [node name="GrindSpotFrontMarker" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=614634209]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, -2.842171e-14, 0, 1, 0, 2.842171e-14, 0, 1, -2.359349e-08, 0.18483545, 0.40625262)
+transform = Transform3D(1, 0, -4.2632564e-14, 0, 1, 0, 4.2632564e-14, 0, 1, -7.3394517e-09, 0.21410117, 0.4548595)
 
 [node name="GrindSpotRearMarker" type="Marker3D" parent="VisualRoot/IKTargets" unique_id=1333420793]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, -2.842171e-14, 0, 1, 0, 2.842171e-14, 0, 1, 5.495558e-08, 0.22485137, -0.36395437)
+transform = Transform3D(1, 0, -4.2632564e-14, 0, 1, 0, 4.2632564e-14, 0, 1, 9.123806e-09, 0.18061762, -0.42437857)
 
 [node name="CharacterSkin" parent="VisualRoot" unique_id=259227641 instance=ExtResource("6_1vqn6")]
 unique_name_in_owner = true
@@ -381,8 +384,8 @@ near = 0.115
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=412612653]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0.44, 0)
-shape = ExtResource("25_xcneo")
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0.4, -0.01)
+shape = SubResource("CapsuleShape3D_oq5os")
 
 [node name="GunCollisionArea" type="Area3D" parent="." unique_id=1949974523]
 unique_name_in_owner = true
@@ -487,12 +490,12 @@ bus = &"SFX"
 
 [node name="RearRayCast" type="RayCast3D" parent="." unique_id=1983600718]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5248494e-08, 0.5, 0.6885047)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.05697055e-07, 0.5, 0.7527557)
 target_position = Vector3(0, -1.5, 0)
 
 [node name="FrontRayCast" type="RayCast3D" parent="." unique_id=391878602]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.9372065e-08, 0.5, -0.70154446)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.05848045e-07, 0.5, -0.7484802)
 target_position = Vector3(0, -1.5, 0)
 
 [node name="BoostTrail" type="MeshInstance3D" parent="." unique_id=240067857 node_paths=PackedStringArray("bike_skin")]
