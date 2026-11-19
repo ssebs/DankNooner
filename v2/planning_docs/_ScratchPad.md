@@ -68,7 +68,7 @@ Make a hoodie
 ##
 ## NEXT
 
-- [ ] Coon => trash panda
+- [ ] tweak dirt bike / adv bike models
 
 - [ ] Mods
   - [ ] Wings as mod for sport bike 
