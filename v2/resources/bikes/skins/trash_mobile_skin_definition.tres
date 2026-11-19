@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="BikeSkinDefinition" format=3 uid="uid://csoncq7hurrwv"]
 
-[ext_resource type="PackedScene" path="res://player/bikes/scenes/trash_mobile_bike.tscn" id="1_hvuo0"]
+[ext_resource type="PackedScene" uid="uid://f0clr41ihe5j" path="res://player/bikes/scenes/trash_mobile_bike.tscn" id="1_hvuo0"]
 [ext_resource type="Script" uid="uid://bqkmh4ppf72gt" path="res://resources/bikes/bike_skin_definition.gd" id="2_4wyad"]
 [ext_resource type="Script" uid="uid://dviinp4otorqm" path="res://resources/bikes/mods/bike_mod.gd" id="4_mc37m"]
 [ext_resource type="Curve" uid="uid://c1f077u0478o4" path="res://resources/bikes/grom_rpm_pitch_curve.tres" id="6_grom"]
