@@ -24,6 +24,35 @@ Make a hoodie
 
 ## NOW
 
+---
+
+- hide the racing line before race starts
+- tell them theyre going wrong way driving to the start of a race
+- pinned trick should be more obvious (glow when doing wrong trick in tutorial)
+- tutorial "now land it" pink text not obvious enough
+- tutorial shouldnt do progression
+- change a color in customize inaccessible via controller
+- customize menu "All" skins should be explained if not already
+- invite btn on pause menu
+- dont play horn while ded
+- show level on race finish screen
+- mute other players horn option or cooldown after 3x
+- joining from customize menu doesnt let you til you leave
+- joining another lobby while in game doesn't back you out first, so you never join
+- lobby scroll list of players can be longer...
+- friend names are too big/in the way
+- tell players to wait while everyone else is filling up
+- lightning item shouldnt affect player who used it
+- can't do a wheelie while going fast on the mini bike
+- customize leave txt => exit
+- change stoppie challenge from 3s to 2.5s
+- player names should be diff color
+- naked bike in tutorial?
+- starting event in customize menu doesnt TP them properly
+- menu navigation needs to be smoother
+- engine upgrade unlocks? change level 1 is mini, level 2 is naked, level 3 is sport, level 4 is sport+ or something
+- crazy lag when peeps join at diff times playtest_logs/godot.log
+---
 
 
 - [ ] Demo/mvp
