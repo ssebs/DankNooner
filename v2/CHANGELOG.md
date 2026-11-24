@@ -1,5 +1,28 @@
 # Changelog
 
+## v0.1.7 - 2026-11-23
+
+- fix joining invite doesnt take you out of current game + host start countdown
+- horn cooldown
+- mute other players horn option or cooldown after 5x +dont play horn while ded
+- customize leave txt => exit + lobby scroll list of players can be longer + adjust spacing
+- customize menu "All" skins should be explained if not already in tour + show player level on race finish screen
+- change stoppie challenge from 3s to 2.5s
+- invite btn on pause menu for clients + btn to open menu should go away once new menu pops up / merge these
+- ui tweak
+- player names should be diff color in leaderboard/trick feed + stop making players wait when doing fill up before race that you have to drive to, once they hit the btn they can start moving. + rally up item shouldnt affect player who used it + fuel up minigame refactor to be part of drive to start runner instead of its own gamemode
+- hide the racing line before race starts + tell them theyre going wrong way driving to the start of a race
+- fix late-join lag: clients sync to host tick, two-way drift snap
+- playtest  notes
+- need to tweak the models but will import them
+- Add ADV and dirt bike models
+- imports
+- unlock
+- credits
+- new markers
+- working model, need to resize / set markers properly
+- Add trash bike and rigged raccoon assets
+
 ## v0.1.6 - 2026-11-16
 
 - in customize, hovering the item should show the challenge text in the title + too easy to crash when steering a stoppie, allow some steering
