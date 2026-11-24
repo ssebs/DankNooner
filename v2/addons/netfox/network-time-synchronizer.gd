@@ -237,10 +237,12 @@ func _discipline_clock() -> void:
 
 @rpc("any_peer", "call_remote", "unreliable")
 func _send_ping(idx: int) -> void:
-	var ping_received := _clock.get_time()
+	# DankNooner patch: reply with the host's tick time, not its wall clock, so a host whose tick
+	# lags its clock can't leave clients ticking ahead of the state it sends.
+	var ping_received := NetworkTime.get_tick_time()
 	var sender := multiplayer.get_remote_sender_id()
 
-	_send_pong.rpc_id(sender, idx, ping_received, _clock.get_time())
+	_send_pong.rpc_id(sender, idx, ping_received, NetworkTime.get_tick_time())
 
 @rpc("any_peer", "call_remote", "unreliable")
 func _send_pong(idx: int, ping_received: float, pong_sent: float) -> void:
@@ -267,7 +269,8 @@ func _send_pong(idx: int, ping_received: float, pong_sent: float) -> void:
 @rpc("any_peer", "call_remote", "reliable")
 func _request_timestamp() -> void:
 	_logger.debug("Requested initial timestamp @ %.4fs raw time", [_clock.get_raw_time()])
-	_set_timestamp.rpc_id(multiplayer.get_remote_sender_id(), _clock.get_time())
+	# DankNooner patch: see _send_ping
+	_set_timestamp.rpc_id(multiplayer.get_remote_sender_id(), NetworkTime.get_tick_time())
 
 @rpc("any_peer", "call_remote", "reliable")
 func _set_timestamp(timestamp: float) -> void:

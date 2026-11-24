@@ -23,7 +23,6 @@ Make a hoodie
 ---
 
 ## NOW
-
 ---
 
 - hide the racing line before race starts
@@ -51,7 +50,6 @@ Make a hoodie
 - starting event in customize menu doesnt TP them properly
 - menu navigation needs to be smoother
 - engine upgrade unlocks? change level 1 is mini, level 2 is naked, level 3 is sport, level 4 is sport+ or something
-- crazy lag when peeps join at diff times playtest_logs/godot.log
 ---
 
 
@@ -92,7 +90,8 @@ Make a hoodie
   - [ ] add glow to naked bike
   - [ ] boost trail color
 
-
+- [ ] sentry.io log shipping for crash logs
+  - [ ] they have free tier
 ---
 ##
 ## NEXT

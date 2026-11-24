@@ -221,6 +221,7 @@
 
 - [x] Rewards are skin unlocks? Or currency to buy unlocks
   - [x] Xp unlocks, money buys items?
+- [x] fix late-join lag: clients sync to host tick, two-way drift snap
 
 - [x] Make challenges like cod skin grind
   - [x] Daily challenges, per bike challenges (10x double backflip, 10 mins of total wheelie duration, etc), win/loss challenges

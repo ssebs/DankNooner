@@ -493,6 +493,10 @@ func ticks_to_seconds(ticks: int) -> float:
 func seconds_to_ticks(seconds: float) -> int:
 	return int(seconds * tickrate)
 
+## DankNooner patch: the host's simulated time, which clients sync to instead of its wall clock.
+func get_tick_time() -> float:
+	return ticks_to_seconds(_tick - 1) + tick_factor * ticktime
+
 ## Calculate the duration between two ticks in seconds
 ##
 ## [i]Note:[/i] Returns negative values if tick_to is smaller than tick_from
@@ -523,12 +527,12 @@ func _get_tick_tag() -> String:
 	return "@%d" % tick
 
 func _loop() -> void:
-	# DankNooner patch: stretch and max_ticks_per_frame only catch up slowly, so a tick far behind
-	# the synced clock (late-join clock correction, hitch run) sends inputs past the host's history
-	# and the peer never gets state again. Snap like a pause instead.
+	# DankNooner patch: stretch and max_ticks_per_frame only catch up slowly, so a tick far off
+	# the synced clock (late-join clock correction, hitch run) falls out of the other side's
+	# history: behind, the host drops our input; ahead, we drop the host's state. Snap instead.
 	var drift := NetworkTimeSynchronizer.get_time() - ticks_to_seconds(_tick)
-	if drift > stall_threshold:
-		_logger.warning("Tick %.2fs behind synced clock, snapping to resync", [drift])
+	if absf(drift) > stall_threshold:
+		_logger.warning("Tick %.2fs off synced clock, snapping to resync", [drift])
 		_clock.set_time(NetworkTimeSynchronizer.get_time())
 		_last_process_time = _clock.get_time()
 		_next_tick_time = _last_process_time

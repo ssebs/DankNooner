@@ -635,14 +635,18 @@ Each client captures input locally and predicts off it immediately. netfox's
 broadcasts the resulting state properties back; clients resimulate from the corrected state on
 mismatch. There is no hand-written input RPC — netfox owns the whole path.
 
-**Local netfox patch** (`addons/netfox/network-time.gd`, `_loop`, marked `DankNooner patch` —
-re-apply on addon upgrade): if the tick falls more than `stall_threshold` behind the synced
-clock, it snaps to it like a pause. Stock netfox only snaps on a single frame longer than
-`stall_threshold`; otherwise it catches up via clock stretch and `max_ticks_per_frame`, both
-slow. A late joiner whose clock sync corrects by seconds after its level load (or a run of
-shorter hitches) stays behind long enough that its inputs fall out of the host's history — the
-host never simulates it, never sends it state, and it resimulates the full history every frame
-forever.
+**Local netfox patches** (marked `DankNooner patch` — re-apply on addon upgrade):
+
+- **Clients sync to the host's tick** (`network-time-synchronizer.gd`, `NetworkTime.get_tick_time`):
+  the host answers clock-sync pings with its simulated tick time instead of its wall clock. Stock
+  netfox syncs to the wall clock, so a host whose tick lags it (slow frames, hitches) leaves every
+  client ticking ahead of the state it sends.
+- **Snap on drift** (`network-time.gd`, `_loop`): if the tick is more than `stall_threshold` off
+  the synced clock in either direction, it snaps to it like a pause. Stock netfox only snaps on a
+  single frame longer than `stall_threshold`; otherwise it catches up via clock stretch and
+  `max_ticks_per_frame`, both slow. A tick that stays far enough off falls out of the other side's
+  history: behind, the host drops its input and never sends it state; ahead, it drops the host's
+  state. Either way it resimulates the full history every frame forever.
 
 ### Authority Summary
 
