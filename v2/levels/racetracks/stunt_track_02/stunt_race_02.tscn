@@ -56,7 +56,7 @@ metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 script = ExtResource("12_evdef")
 name = "EVENT_TRICK_BATTLE_NAME"
 description = "EVENT_TRICK_BATTLE_DESC"
-target_gamemode = 8
+target_gamemode = 7
 metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
 [node name="StuntRace02" type="Node3D" unique_id=419655892 node_paths=PackedStringArray("player_spawn")]

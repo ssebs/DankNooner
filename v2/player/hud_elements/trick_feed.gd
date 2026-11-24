@@ -13,9 +13,6 @@ const FADE_OUT_SECS: float = 0.5
 const FLASH_COLOR := Color(2.4, 2.4, 2.4)
 const FLASH_OWN_COLOR := Color(3.2, 2.6, 0.8)
 const FLASH_BAIL_COLOR := Color(3.2, 0.6, 0.6)
-const NAME_COLOR := Color.WHITE
-## Your name, like your leaderboard row.
-const OWN_NAME_COLOR := UtilsConstants.UI_BLUE
 ## A combo longer than this shows only its last tricks, plus how many were cut.
 const MAX_TRICK_NAMES: int = 3
 
@@ -26,6 +23,7 @@ const MAX_TRICK_NAMES: int = 3
 func push(
 	username: String,
 	is_own: bool,
+	is_bot: bool,
 	tricks: PackedInt32Array,
 	points: int,
 	multiplier: int,
@@ -42,7 +40,7 @@ func push(
 	line.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	line.add_theme_font_size_override("normal_font_size", font_size)
 	line.add_theme_font_size_override("bold_font_size", font_size)
-	line.text = _format(username, is_own, tricks, points, multiplier, crashed, launch_m, crash_hint)
+	line.text = _format(username, is_own, is_bot, tricks, points, multiplier, crashed, launch_m, crash_hint)
 	add_child(line)
 	move_child(line, 0)
 	while get_child_count() > MAX_LINES:
@@ -63,6 +61,7 @@ func push(
 func _format(
 	username: String,
 	is_own: bool,
+	is_bot: bool,
 	tricks: PackedInt32Array,
 	points: int,
 	multiplier: int,
@@ -71,7 +70,11 @@ func _format(
 	crash_hint: String
 ) -> String:
 	# [lb] escapes BBCode in the username.
-	var name_color := OWN_NAME_COLOR if is_own else NAME_COLOR
+	var name_color := (
+		UtilsConstants.NAME_OWN_COLOR if is_own
+		else UtilsConstants.NAME_BOT_COLOR if is_bot
+		else UtilsConstants.NAME_PLAYER_COLOR
+	)
 	var shown_name := (
 		"[color=#%s]%s[/color]" % [name_color.to_html(false), username.replace("[", "[lb]")]
 	)

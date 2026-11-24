@@ -16,9 +16,6 @@
   to its state node in `main_game.tscn`.
 - **`FreeRoamGameMode`** — the hub. Event circles open the event picker from here. Also hosts
   `FreeRoamActivity`s (below) per rider, without leaving free roam.
-- **`FuelUpGameMode`** — not a runner mode: a pre-race step for events flagged `fuel_up_first`.
-  Every rider plays the gas pump minigame locally, then it hands the same event to its
-  `target_gamemode`. See [StuntRaceGamemode — Fuel-up](./StuntRaceGamemode.md#fuel-up).
 - **`RunnerGameMode`** (`runner_gamemode.gd`) — base for every mode that runs a `GameModeEvent`'s
   task runners: runner chaining, dep injection, crash respawn, late-join, disconnect, input reset,
   the results countdown and the return to free roam. Subclasses call `super()` from
@@ -53,7 +50,7 @@ plumbing, and Road/Street race differed only in traffic start/stop.
   share a group by linking the same one. `set_props_active()` toggles everything but the start zone
   (drive to the start); configuration warnings flag missing links for race / grid events.
 - **`GameModeEventDefinition`** (`resources/`) — name/description, `target_gamemode`, forced bike,
-  and the race flags (`enable_npcs`, `enable_traffic`, `race_challenges`, `fuel_up_first`). Authored as an embedded
+  and the race flags (`enable_npcs`, `enable_traffic`, `race_challenges`). Authored as an embedded
   sub-resource on the event.
 - **`SpawnGrid`** — `@tool` Node3D placed on the road's centre line facing travel (-Z); lays out its
   Marker3D children across the road's `side` (LEFT / RIGHT / FULL) of `width`, as many columns as
@@ -121,10 +118,9 @@ IslandStation (EventStartCircle)       picker lists its GameModeEvent children
 
 1. **Pick:** entering a circle in free roam opens `GamemodeEventHUDState`'s picker over
    `circle.get_events()` (host only). Submit → `GamemodeManager.change_gamemode(kind, peer_id,
-   event_path)`, with `kind = FUEL_UP` when the event has `fuel_up_first`.
+   event_path)`.
 2. **Transition:** `change_gamemode()` is the single entry point (guards: server only; a
-   non-late-joinable mode only accepts a return to `FREE_ROAM`, except fuel-up handing its own
-   event on to the race). It broadcasts
+   non-late-joinable mode only accepts a return to `FREE_ROAM`). It broadcasts
    `_rpc_transition_gamemode`; every peer resolves the **event node path** against its own copy of
    the level — node refs can't cross RPC boundaries, the path is the sync mechanism. The
    `GamemodeStateContext` carries the event, `peer_id` and `return_spawn`.

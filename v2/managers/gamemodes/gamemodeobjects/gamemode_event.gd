@@ -162,8 +162,9 @@ func _get_configuration_warnings() -> PackedStringArray:
 	if runners.is_empty():
 		issues.append("needs at least one TaskRunner child")
 	var circle := get_parent() as EventStartCircle
-	if definition != null and definition.fuel_up_first and circle != null and circle.gas_station == null:
-		issues.append("fuel_up_first needs gas_station set on the parent EventStartCircle")
+	var has_fuel_up := not find_children("*", "FuelUpTask", true, false).is_empty()
+	if has_fuel_up and circle != null and circle.gas_station == null:
+		issues.append("a FuelUpTask needs gas_station set on the parent EventStartCircle")
 	if props.has(null):
 		issues.append("props has an empty slot")
 

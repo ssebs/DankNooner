@@ -21,6 +21,7 @@
 [ext_resource type="Script" uid="uid://nyvpj8qcqqww" path="res://managers/gamemodes/tasks/long_jump_task.gd" id="22_ps8o8"]
 [ext_resource type="PackedScene" uid="uid://rervqxotioc4" path="res://levels/components/props/ramp.tscn" id="23_4m0o6"]
 [ext_resource type="Script" uid="uid://cpw0t2dffsgdo" path="res://managers/gamemodes/runners/drive_to_start_runner.gd" id="drive_to_start_runner"]
+[ext_resource type="Script" uid="uid://bxintgvstd4yv" path="res://managers/gamemodes/tasks/fuel_up_task.gd" id="fuel_up_task"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ps8o8"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -40,7 +41,6 @@ script = ExtResource("9_aul3u")
 name = "Track Race"
 description = "test"
 target_gamemode = 1
-fuel_up_first = true
 metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
 [sub_resource type="Resource" id="Resource_tv2pq"]
@@ -60,7 +60,7 @@ metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 script = ExtResource("9_aul3u")
 name = "Trick Battle"
 description = "test"
-target_gamemode = 8
+target_gamemode = 7
 metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
 [sub_resource type="Resource" id="Resource_udgxj"]
@@ -165,6 +165,9 @@ start_zone = NodePath("../StartZone")
 
 [node name="DriveToStartRunner" type="Node" parent="TrackRace/TrackRace" unique_id=1816487405]
 script = ExtResource("drive_to_start_runner")
+
+[node name="FuelUpTask" type="Node" parent="TrackRace/TrackRace/DriveToStartRunner" unique_id=1160564595]
+script = ExtResource("fuel_up_task")
 
 [node name="SequentialTaskRunner" type="Node" parent="TrackRace/TrackRace" unique_id=1410867313]
 script = ExtResource("10_ssdfk")

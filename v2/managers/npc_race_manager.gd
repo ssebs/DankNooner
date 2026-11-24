@@ -335,13 +335,15 @@ func _on_settings_changed(settings: Dictionary) -> void:
 #region Items
 
 
-## Every peer, from ItemManager's Rally Up: bots ride its skins too, then their own.
-func set_rally_up(active: bool) -> void:
+## Every peer, from ItemManager's Rally Up: bots ride its skins too, then their own. The bot that
+## used it keeps its own.
+func set_rally_up(active: bool, user_id: int) -> void:
 	for npc_id in _npcs:
 		var def := _definition_for(npc_id)
+		var swap := active and npc_id != user_id
 		_npcs[npc_id].update_skins(
-			ItemManager.RALLY_UP_BIKE if active else def.bike_skin,
-			ItemManager.RALLY_UP_CHARACTER if active else def.character_skin
+			ItemManager.RALLY_UP_BIKE if swap else def.bike_skin,
+			ItemManager.RALLY_UP_CHARACTER if swap else def.character_skin
 		)
 
 

@@ -49,6 +49,7 @@ const _TRICK_ROWS_PER_COLUMN := 3
 @onready var _trick_popups: TrickPopups = %TrickPopups
 @onready var _trick_feed: TrickFeed = %HUD_TrickFeed
 @onready var _target_compass: TargetCompass = %TargetCompass
+@onready var _compass_strip: CompassStrip = %CompassStrip
 @onready var _event_warning: Label = %HUD_EventWarning
 @onready var _event_tricks: Label = %HUD_EventTricks
 @onready var _boost_gauge: BoostGauge = %BoostGauge
@@ -539,6 +540,7 @@ func show_ui() -> void:
 	ui.visible = true
 	minimap.activate(player_entity)
 	_target_compass.activate(player_entity)
+	_compass_strip.activate(player_entity)
 	# Also on re-show after pause, since Settings may have remapped a binding.
 	_refresh_prompts()
 
@@ -839,7 +841,11 @@ func _rpc_trickfeed(
 	crash_hint: String
 ):
 	var is_own := peer_id == multiplayer.get_unique_id()
-	_trick_feed.push(username, is_own, tricks, points, multiplier, crashed, launch_m, crash_hint)
+	# NPC ids are negative (NPCRaceManager)
+	var is_bot := peer_id < 0
+	_trick_feed.push(
+		username, is_own, is_bot, tricks, points, multiplier, crashed, launch_m, crash_hint
+	)
 
 
 ## Server-side: show a (pre-localized) callout on every rider's HUD, e.g. a round winner.
@@ -863,6 +869,7 @@ func hide_ui() -> void:
 	_profile_card.set_peek(false)
 	minimap.deactivate()
 	_target_compass.deactivate()
+	_compass_strip.deactivate()
 
 
 ## Called from player_entity.gd's do_respawn

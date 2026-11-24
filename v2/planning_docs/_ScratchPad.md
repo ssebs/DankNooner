@@ -26,10 +26,14 @@ Make a hoodie
 ---
 
 
-- [ ] lightning item shouldnt affect player who used it
+- [x] rally up item shouldnt affect player who used it
+- [x] fuel up minigame refactor to be part of drive to start runner instead of its own gamemode
+- [x] stop making players wait when doing fill up before race that you have to drive to, once they hit the btn they can start moving.
+- [x] friend names are too big/in the way (maybe move them to a hight set by viewport Y?)
 
-- [ ] friend names are too big/in the way (maybe move them to a hight set by viewport Y?)
+
 - [ ] player names should be diff color in leaderboard/trick feed
+- [ ] btn to open menu should go away once new menu pops up / merge these
 
 
 - [ ] menu navigation needs to be smoother
@@ -41,7 +45,6 @@ Make a hoodie
 - [ ] joining from customize menu doesnt let you til you leave
 - [ ] starting event in customize menu doesnt TP them properly
 
-- [ ] tell players to wait while everyone else is filling up (or let them drive to the start point?)
 
 - [ ] can't do a wheelie while going fast on the mini bike
 

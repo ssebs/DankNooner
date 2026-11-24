@@ -21,12 +21,10 @@ const OPTIONAL_TASKS: Array[String] = [
 ## {"gaps": failing messages, "untested": warnings for optional gaps}
 static func check(tree: SceneTree) -> Dictionary:
 	var kinds := {}
-	var has_fuel_up := false
 	var tasks := {}
 	for circle: EventStartCircle in tree.get_nodes_in_group(UtilsConstants.GROUPS["EventCircles"]):
 		for event in circle.get_events():
 			kinds[event.definition.target_gamemode] = true
-			has_fuel_up = has_fuel_up or event.definition.fuel_up_first
 			for node in event.find_children("*", "", true, false):
 				if node is GameModeTask:
 					tasks[(node.get_script() as Script).get_global_name()] = true
@@ -40,8 +38,7 @@ static func check(tree: SceneTree) -> Dictionary:
 		var kind: int = GameModeType.Kind[kind_name]
 		if kind in SKIPPED_KINDS:
 			continue
-		var covered := has_fuel_up if kind == GameModeType.Kind.FUEL_UP else kinds.has(kind)
-		if !covered:
+		if !kinds.has(kind):
 			var message := "gym has no %s event" % kind_name
 			(untested if kind in OPTIONAL_KINDS else gaps).append(message)
 	for task_class in _subclasses("GameModeTask", "TaskRunner"):

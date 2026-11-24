@@ -1,4 +1,4 @@
-## One gas pump in a station. FuelUpGameMode assigns each rider a pump pre-race; in free roam it's
+## One gas pump in a station. FuelUpTask assigns each rider a pump pre-race; in free roam it's
 ## a FreeRoamActivity. Either way the minigame runs locally on that rider's client: click the
 ## handle to pick it up, hold click to spray (recoil kicks the cursor), move it back onto the pump
 ## to hang it up, and click %EndBtn to finish whenever. Spray that misses the cap is spilled.

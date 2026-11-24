@@ -52,7 +52,8 @@ func set_board(headers: PackedStringArray, rows: Array) -> void:
 			_ranks[peer_id] = rank
 			var tween := create_tween().set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 			tween.tween_property(_rows[peer_id], "position:y", _rank_y(rank), REORDER_SECS)
-		_set_cells(_rows[peer_id], rows[rank]["cells"], peer_id == own_id)
+		# NPC ids are negative (NPCRaceManager)
+		_set_cells(_rows[peer_id], rows[rank]["cells"], peer_id == own_id, peer_id < 0)
 
 	for peer_id in _rows.keys():
 		if !live.has(peer_id):
@@ -114,12 +115,19 @@ func _add_row() -> HBoxContainer:
 
 
 ## Grows/trims the row's labels to match, then sets their text. First column is the (wider) name;
-## your own row is blue.
-func _set_cells(row: HBoxContainer, texts: PackedStringArray, own: bool = false) -> void:
+## your whole row takes your name color.
+func _set_cells(
+	row: HBoxContainer, texts: PackedStringArray, own: bool = false, bot: bool = false
+) -> void:
 	while row.get_child_count() > texts.size():
 		var extra := row.get_child(row.get_child_count() - 1)
 		row.remove_child(extra)
 		extra.queue_free()
+	var name_color := (
+		UtilsConstants.NAME_OWN_COLOR if own
+		else UtilsConstants.NAME_BOT_COLOR if bot
+		else UtilsConstants.NAME_PLAYER_COLOR
+	)
 	while row.get_child_count() < texts.size():
 		var label := Label.new()
 		var is_name := row.get_child_count() == 0
@@ -127,7 +135,9 @@ func _set_cells(row: HBoxContainer, texts: PackedStringArray, own: bool = false)
 			HORIZONTAL_ALIGNMENT_LEFT if is_name else HORIZONTAL_ALIGNMENT_CENTER
 		)
 		label.add_theme_font_size_override("font_size", _font_size())
-		label.theme_type_variation = &"OwnLabel" if own else &"HUDTitleLabel"
+		label.theme_type_variation = &"HUDTitleLabel"
+		if row != _header and (is_name or own):
+			label.add_theme_color_override("font_color", name_color)
 		row.add_child(label)
 	for i in texts.size():
 		var label := row.get_child(i) as Label

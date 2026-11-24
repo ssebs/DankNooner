@@ -1,3 +1,4 @@
+@tool
 ## Button prompt: the glyph `action` is bound to on the rider's current device.
 class_name InputPrompt extends HBoxContainer
 
@@ -5,6 +6,12 @@ class_name InputPrompt extends HBoxContainer
 
 @onready var _icon: TextureRect = %Icon
 @onready var _key: Label = %Key
+
+
+func _ready():
+	# Editor preview: InputMap only has built-in actions there, so read the project's KBM defaults.
+	if Engine.is_editor_hint() and action != "":
+		_key.text = _key_text(ProjectSettings.get_setting("input/" + action)["events"], false)
 
 
 ## Called by RidingHUDState on a device switch and whenever the HUD shows (bindings may have changed).
@@ -16,12 +23,7 @@ func refresh(gamepad: bool) -> void:
 		return
 	_icon.texture = ControlBindings.event_icon(event)
 	_icon.visible = _icon.texture != null
-	# Every key/mouse binding on this device, e.g. trick reads "T / Right Click".
-	var texts := PackedStringArray()
-	for bound in InputMap.action_get_events(action):
-		if ControlBindings.is_gamepad(bound) == gamepad and ControlBindings.event_text(bound) != "":
-			texts.append(tr(ControlBindings.event_text(bound)))
-	_key.text = " / ".join(texts)
+	_key.text = _key_text(InputMap.action_get_events(action), gamepad)
 	_key.visible = _key.text != ""
 
 
@@ -29,3 +31,12 @@ func refresh(gamepad: bool) -> void:
 func set_held(held: bool) -> void:
 	_key.theme_type_variation = &"HeldKeyLabel" if held else &"GestureChipLabel"
 	_icon.modulate = UtilsConstants.UI_BLUE if held else Color.WHITE
+
+
+## Every key/mouse binding on this device, e.g. trick reads "T / Right Click".
+func _key_text(events: Array, gamepad: bool) -> String:
+	var texts := PackedStringArray()
+	for bound: InputEvent in events:
+		if ControlBindings.is_gamepad(bound) == gamepad and ControlBindings.event_text(bound) != "":
+			texts.append(tr(ControlBindings.event_text(bound)))
+	return " / ".join(texts)

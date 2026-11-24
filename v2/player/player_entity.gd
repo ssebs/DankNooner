@@ -115,9 +115,6 @@ const FREE_ROAM_MARKER_MATERIAL: Material = preload("res://levels/assets/props/m
 @onready var character_skin: CharacterSkin = %CharacterSkin
 @onready var bike_skin: BikeSkin = %BikeSkin
 @onready var bike_wreck: BikeWreck = %BikeWreck
-## 2D so it draws over the 3D pass's glow; placed over name_tag_marker each frame
-@onready var name_label: Label = %NameLabel
-@onready var name_tag_marker: Marker3D = %NameTagMarker
 ## Red over other racers, teal in free roam
 @onready var racer_marker: MeshInstance3D = %RacerMarker
 @onready var rear_raycast: RayCast3D = %RearRayCast
@@ -141,11 +138,7 @@ var settings_manager: SettingsManager
 var gamemode_manager: GamemodeManager
 var hud_manager: HUDManager
 var horn_definition: HornDefinition
-var username: String:
-	set(v):
-		username = v
-		if is_node_ready():
-			name_label.text = username
+var username: String
 # `name` is also set from spawn_manager
 #endregion
 
@@ -389,13 +382,6 @@ func _process(delta: float) -> void:
 		# Synced state, so a remote rider's RPM is current every frame.
 		if remote_engine.playing:
 			remote_engine.set_rpm(gearing_controller.get_rpm_ratio())
-		var camera := get_viewport().get_camera_3d()
-		var dist := global_position.distance_to(camera.global_position)
-		name_label.text = "%s · %dm" % [username, dist]
-		name_label.visible = !camera.is_position_behind(name_tag_marker.global_position)
-		name_label.position = (
-			camera.unproject_position(name_tag_marker.global_position) - name_label.size / 2
-		)
 		var is_free_roam := gamemode_manager.current_game_mode == GameModeType.Kind.FREE_ROAM
 		racer_marker.material_override = (
 			FREE_ROAM_MARKER_MATERIAL if is_free_roam else ENEMY_MARKER_MATERIAL
@@ -628,7 +614,6 @@ func _apply_rider_pose_from_definition():
 func _deferred_init():
 	if int(name) == multiplayer.get_unique_id():
 		is_local_client = true
-		name_label.hide()
 		racer_marker.hide()
 		camera_controller.deferred_init()
 		_init_audio()

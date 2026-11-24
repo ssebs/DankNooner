@@ -42,7 +42,6 @@ enum MatchState {
 @export var tutorial_mode: TutorialGameMode
 @export var stunt_challenge_mode: StuntChallengeGameMode
 @export var long_jump_mode: LongJumpGameMode
-@export var fuel_up_mode: FuelUpGameMode
 @export var trick_battle_mode: TrickBattleGameMode
 @export var crash_launch_mode: CrashLaunchGameMode
 
@@ -71,7 +70,6 @@ func _ready():
 		GameModeType.Kind.TUTORIAL: tutorial_mode,
 		GameModeType.Kind.STUNT_CHALLENGE: stunt_challenge_mode,
 		GameModeType.Kind.LONG_JUMP: long_jump_mode,
-		GameModeType.Kind.FUEL_UP: fuel_up_mode,
 		GameModeType.Kind.TRICK_BATTLE: trick_battle_mode,
 		GameModeType.Kind.CRASH_LAUNCH: crash_launch_mode,
 	}
@@ -136,19 +134,11 @@ func change_gamemode(
 ):
 	if !multiplayer.is_server():
 		return
-	if gamemode == GameModeType.Kind.FUEL_UP and dbg_skip_prerace:
-		gamemode = (get_node(event_path) as GameModeEvent).definition.target_gamemode
-
 	# A race is running — only a return to free roam (host cancel / race end) may
 	# interrupt it. Blocks a free-roaming late joiner starting a second event.
-	# Exception: fuel-up handing its own event on to the race.
-	var is_fuel_up_handoff := (
-		current_game_mode == GameModeType.Kind.FUEL_UP and event_path == current_event.get_path()
-	)
 	if (
 		!_gamemode_map[current_game_mode].is_late_joinable()
 		and gamemode != GameModeType.Kind.FREE_ROAM
-		and !is_fuel_up_handoff
 	):
 		return
 
@@ -280,8 +270,8 @@ func _on_gamemode_transitioned(_old_state: State, new_state: State):
 	if _is_server():
 		steam_manager.set_lobby_state((new_state as GameModeType).is_late_joinable(), current_level_name)
 
-	# Fuel-up and the tutorial are lead-ins, so they keep the free roam playlist
-	if new_state in [free_roam_mode, fuel_up_mode, tutorial_mode]:
+	# The tutorial is a lead-in, so it keeps the free roam playlist
+	if new_state in [free_roam_mode, tutorial_mode]:
 		audio_manager.play_music(AudioManager.MusicType.FREE_ROAM)
 	else:
 		audio_manager.play_music(AudioManager.MusicType.EVENT)
@@ -397,8 +387,6 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("tutorial_mode must not be empty")
 	if stunt_challenge_mode == null:
 		issues.append("stunt_challenge_mode must not be empty")
-	if fuel_up_mode == null:
-		issues.append("fuel_up_mode must not be empty")
 	if trick_battle_mode == null:
 		issues.append("trick_battle_mode must not be empty")
 	if crash_launch_mode == null:

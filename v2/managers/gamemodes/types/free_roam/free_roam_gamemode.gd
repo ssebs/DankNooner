@@ -281,10 +281,9 @@ func _on_game_mode_event_confirm_hud_submitted(peer_id: int, event_index: int):
 		request_start_activity.rpc_id(1, _entered_activity.get_path())
 		return
 	var event := _entered_circle.get_events()[event_index]
-	var target := event.definition.target_gamemode
-	if event.definition.fuel_up_first:
-		target = GameModeType.Kind.FUEL_UP
-	gamemode_manager.change_gamemode.rpc_id(1, target, peer_id, event.get_path())
+	gamemode_manager.change_gamemode.rpc_id(
+		1, event.definition.target_gamemode, peer_id, event.get_path()
+	)
 
 
 func Exit(_state_context: StateContext):

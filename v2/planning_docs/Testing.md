@@ -150,7 +150,7 @@ Drives, not teleports, so handling and stuck-on-geometry regressions are caught.
 - **No progress toward the waypoint for too long** = failure: screenshot, respawn, continue.
 - **Every feature has a time budget**, timed from its own start so queueing for the mouse
   doesn't count: the pump (mouse grant to End), the garage, and each event by gamemode kind
-  (leaving free roam to coming back; a `fuel_up_first` event adds a pump per rider). A kind with
+  (leaving free roam to coming back; an event with a `FuelUpTask` adds a pump per rider). A kind with
   no budget fails loudly.
 
 ### Invariants
@@ -180,8 +180,8 @@ skipped while a menu is open. The expected player count is the host's lobby.
 in the lobby's level dropdown). Compact, wide, flat courses, so a stuck bot means a regression,
 not hard terrain. It holds:
 
-- an `EventStartCircle` per gamemode (including each race `race_type` and a `fuel_up_first`
-  event);
+- an `EventStartCircle` per gamemode (including each race `race_type` and an event with a
+  `FuelUpTask`);
 - every `FreeRoamActivity` (gas station, garage);
 - pickup spawners on the drive paths.
 

@@ -31,6 +31,7 @@ func _init(runner: Node) -> void:
 		TeleportTask: _idle,
 		SFXTask: _idle,
 		CountdownTask: _hold,
+		FuelUpTask: _hold,
 		RaceTask: _race,
 		CheckpointTask: _checkpoint,
 		SpeedAboveTask: _straight,

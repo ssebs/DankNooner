@@ -393,7 +393,7 @@ simulation state. `LevelManager` flips back to `NullHUDState` when leaving gamep
   machine but are shown/hidden by their owning gamemode via `@rpc` calls (grep the gamemode for the
   `rpc_*` entry points). They never become the machine's `current_state`.
 - **Riding HUD layout is one job per corner, no panels** — FPS top-left, money/XP +
-  event warning top-centre, profile card (event pane + leaderboard) + trick feed top-right, held item + minimap bottom-left, speed/gear/RPM + vertical boost gauge
+  compass strip + event warning top-centre, profile card (event pane + leaderboard) + trick feed top-right, held item + minimap bottom-left, speed/gear/RPM + vertical boost gauge
   bottom-right, trick prompt mid-left. Labels read over the world via the outline/shadow in
   `resources/themes/hud_neon.tres`, set on the HUD's `MarginContainer`.
 - **Button prompts are `InputPrompt`s** (`player/hud_elements/`) — the glyph an action is bound to
@@ -413,6 +413,9 @@ simulation state. `LevelManager` flips back to `NullHUDState` when leaving gamep
   guide target is on screen it pins over it instead, and the distance shows under the arrow or pin.
   It hides near the target, where the server's pass lags the predicted rider and the bearing
   would spin.
+- **`CompassStrip`** (top-centre) plots `Minimap.get_markers()` by bearing across the camera's
+  horizontal FOV, under N/E/S/W ticks. Other players show `name · distance` there and on the full
+  map; there are no in-world name tags.
 - Pause hides the current HUD in place (`set_hud_hidden`) instead of transitioning, so unpause
   restores it without a state change.
 - The `dbg_hud` console command hides every HUD state for recording clips. It sets alpha
@@ -450,8 +453,8 @@ simulation state. `LevelManager` flips back to `NullHUDState` when leaving gamep
   - `StuntChallengeGameMode` - race through a fixed sequence of `PerformTrickTask`s, ranked by completion time
   - `LongJumpGameMode` - timed `LongJumpTask` attempts off one jump, ranked by best attempt's trick score
   - `TrickBattleGameMode` - timed free trick session, ranked by total trick score (open combo at the buzzer counts). Shares the session clock / cancel / results with Long Jump via `TimedScoreGameMode`. Optional bots lap a hidden `bot_route` (see [Trick battle](./GamemodeSystem.md#trick-battle))
-  - `FuelUpGameMode` - pre-race step for events with `fuel_up_first`. Each rider is teleported to a pump (`FuelUpMinigame`) in the circle's `gas_station`, assigned by sorted peer id so every peer agrees without an RPC, and frozen. Each client then plays its own pump locally: pump camera, `IN_MINIGAME` input state, `FuelUpHUDState` in place of the riding HUD. It reports its fill whenever the rider ends it, and gets boost for the fill. When every rider has reported, it hands the same event to `target_gamemode` — the one non-free-roam transition `change_gamemode()` allows out of a running mode
-    - The minigame starts on the rider's `respawned` signal, not in `Enter`: the teleport's `do_respawn` flips the HUD back to riding. The pump camera is re-asserted every frame, because respawn resims re-run `CameraController.do_reset()`
+  - Fuel-up is not a gamemode: `FuelUpTask` is the first step of a race event's `DriveToStartRunner`. Each rider is teleported to a pump (`FuelUpMinigame`) in the circle's `gas_station`, assigned by their place in the runner's peer order (the server sends the index), and frozen. Each client then plays its own pump locally: pump camera, `IN_MINIGAME` input state, `FuelUpHUDState` in place of the riding HUD. It reports its fill whenever the rider ends it, gets boost for the fill, and is unfrozen straight onto the drive to the start, without waiting for the others. `RaceGameMode` injects the pump's managers and calls `FuelUpTask.reset()` on every peer at `Exit`, ending a pump still running
+    - The minigame starts on the rider's `respawned` signal, not when the task begins: the teleport's `do_respawn` flips the HUD back to riding. The pump camera is re-asserted every frame, because respawn resims re-run `CameraController.do_reset()`
     - Pump pick areas sit on their own `interactable` physics layer so the cursor ray never hits the rider's own areas
     - The pump (`FuelUpMinigame.begin()` / `end()`) owns the local session. It's also a `FreeRoamActivity`, so free roam runs it per rider from its own small start circle. See [GamemodeSystem](./GamemodeSystem.md)
   - The `Kind` enum runs ahead of the implementation — it carries reserved entries with no

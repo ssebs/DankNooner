@@ -13,6 +13,9 @@ enum RaceType { RACE, STUNT_RACE, TIME_ATTACK }
 ## When true, finishing the race teleports everyone back to the grid; otherwise they stay
 ## where they finished and only the results HUD closes.
 @export var teleport_to_start_on_finish: bool = false
+## For a FuelUpTask's pump, on top of the runner deps.
+@export var hud_manager: HUDManager
+@export var tour_manager: TourManager
 
 @export_group("Components")
 @export var traffic: TrafficComponent
@@ -100,6 +103,8 @@ func Exit(state_context: StateContext):
 		race_task = null
 	elif traffic != null:
 		traffic.client_exit()
+	for task: FuelUpTask in _get_fuel_up_tasks():
+		task.reset()
 
 	super(state_context)
 	_components = []
@@ -226,6 +231,20 @@ func _payout_score(peer_id: int) -> float:
 
 
 #override
+func _inject_runner_deps():
+	super()
+	for task: FuelUpTask in _get_fuel_up_tasks():
+		task.input_state_manager = input_state_manager
+		task.hud_manager = hud_manager
+		task.save_manager = save_manager
+		task.tour_manager = tour_manager
+
+
+func _get_fuel_up_tasks() -> Array[Node]:
+	return _event.find_children("*", "FuelUpTask", true, false)
+
+
+#override
 ## Straight back to the race's runner (its grid), skipping pre-race ones like drive to the start.
 func _restart():
 	_active_runner_index = _race_runner_index - 1
@@ -283,6 +302,10 @@ func _return_spawn() -> GamemodeStateContext.ReturnSpawn:
 
 func _get_configuration_warnings() -> PackedStringArray:
 	var issues := super()
+	if hud_manager == null:
+		issues.append("hud_manager must not be empty")
+	if tour_manager == null:
+		issues.append("tour_manager must not be empty")
 	for component_name: String in REQUIRED_COMPONENTS[race_type]:
 		if get(component_name) == null:
 			issues.append(

@@ -75,6 +75,7 @@
 [ext_resource type="Script" uid="uid://cs1xwvbafeajh" path="res://managers/gamemodes/tasks/crash_launch_task.gd" id="99_crshlchtask"]
 [ext_resource type="PackedScene" path="res://managers/gamemodes/gamemodeobjects/start_zone.tscn" id="99_startzone"]
 [ext_resource type="Script" uid="uid://cpw0t2dffsgdo" path="res://managers/gamemodes/runners/drive_to_start_runner.gd" id="drive_to_start_runner"]
+[ext_resource type="Script" uid="uid://bxintgvstd4yv" path="res://managers/gamemodes/tasks/fuel_up_task.gd" id="fuel_up_task"]
 [ext_resource type="Script" uid="uid://pulnqxx1eaja" path="res://managers/gamemodes/gamemodeobjects/gamemode_event.gd" id="mig_event"]
 [ext_resource type="Script" uid="uid://16q3wevm2ngw" path="res://managers/gamemodes/tasks/trick_battle_task.gd" id="mig_trkbtl"]
 [ext_resource type="Script" uid="uid://5vyieksd13uf" path="res://levels/components/npc_nav_region.gd" id="npc_nav_region"]
@@ -127,7 +128,6 @@ description = "EVENT_STUNT_RACE_DESC"
 target_gamemode = 2
 enable_npcs = true
 enable_traffic = true
-fuel_up_first = true
 race_challenges = Array[ExtResource("6_a4ddl")]([ExtResource("6_lwhch")])
 metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
@@ -141,7 +141,7 @@ target_gamemode = 3
 script = ExtResource("24_l8nu3")
 name = "EVENT_TRICK_BATTLE_NAME"
 description = "EVENT_TRICK_BATTLE_DESC"
-target_gamemode = 8
+target_gamemode = 7
 enable_npcs = true
 metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
@@ -149,7 +149,7 @@ metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 script = ExtResource("24_l8nu3")
 name = "EVENT_CRASH_LAUNCH_NAME"
 description = "EVENT_CRASH_LAUNCH_DESC"
-target_gamemode = 9
+target_gamemode = 8
 payout_money = 110
 payout_xp = 28
 metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
@@ -161,7 +161,6 @@ description = "EVENT_STUNT_RACE_2_DESC"
 target_gamemode = 2
 enable_npcs = true
 enable_traffic = true
-fuel_up_first = true
 metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
 [sub_resource type="Resource" id="Resource_i0vae"]
@@ -180,14 +179,13 @@ description = "EVENT_STUNT_RACE_4_DESC"
 target_gamemode = 2
 enable_npcs = true
 enable_traffic = true
-fuel_up_first = true
 metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
 [sub_resource type="Resource" id="Resource_oywnx"]
 script = ExtResource("24_l8nu3")
 name = "EVENT_TRICK_BATTLE_NAME"
 description = "EVENT_TRICK_BATTLE_DESC"
-target_gamemode = 8
+target_gamemode = 7
 enable_npcs = true
 metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
@@ -197,7 +195,6 @@ name = "EVENT_TRACK_RACE_NAME"
 description = "EVENT_ISLAND_RACE_DESC"
 target_gamemode = 1
 enable_npcs = true
-fuel_up_first = true
 metadata/_custom_type_script = "uid://dr7rsj2xcl6ga"
 
 [sub_resource type="Resource" id="Resource_5wqg6"]
@@ -2116,6 +2113,9 @@ spacing = 4.0
 [node name="DriveToStartRunner" type="Node" parent="EventStartCircle1/StuntRace" unique_id=957455660]
 script = ExtResource("drive_to_start_runner")
 
+[node name="FuelUpTask" type="Node" parent="EventStartCircle1/StuntRace/DriveToStartRunner" unique_id=1721021381]
+script = ExtResource("fuel_up_task")
+
 [node name="SequentialTaskRunner" type="Node" parent="EventStartCircle1/StuntRace" unique_id=414706176]
 script = ExtResource("20_grj8g")
 metadata/_custom_type_script = "uid://f840hmifnv7g"
@@ -2385,6 +2385,9 @@ transform = Transform3D(0.752899, 0, 0.658136, 0, 1, 0, -0.658136, 0, 0.752899, 
 
 [node name="DriveToStartRunner" type="Node" parent="EventStartCircle2/StuntRace2" unique_id=445709688]
 script = ExtResource("drive_to_start_runner")
+
+[node name="FuelUpTask" type="Node" parent="EventStartCircle2/StuntRace2/DriveToStartRunner" unique_id=1336364590]
+script = ExtResource("fuel_up_task")
 
 [node name="SequentialTaskRunner" type="Node" parent="EventStartCircle2/StuntRace2" unique_id=1752097366]
 script = ExtResource("20_grj8g")
@@ -2709,6 +2712,9 @@ spacing = 6.08
 [node name="DriveToStartRunner" type="Node" parent="EventStartCircle4/StuntRace4" unique_id=1554639557]
 script = ExtResource("drive_to_start_runner")
 
+[node name="FuelUpTask" type="Node" parent="EventStartCircle4/StuntRace4/DriveToStartRunner" unique_id=2027327153]
+script = ExtResource("fuel_up_task")
+
 [node name="SequentialTaskRunner" type="Node" parent="EventStartCircle4/StuntRace4" unique_id=1194487181]
 script = ExtResource("20_grj8g")
 metadata/_custom_type_script = "uid://f840hmifnv7g"
@@ -2865,6 +2871,9 @@ road_navmesh = ExtResource("41_kf1so")
 
 [node name="DriveToStartRunner" type="Node" parent="TrackRace/TrackRace" unique_id=403911400]
 script = ExtResource("drive_to_start_runner")
+
+[node name="FuelUpTask" type="Node" parent="TrackRace/TrackRace/DriveToStartRunner" unique_id=1506563225]
+script = ExtResource("fuel_up_task")
 
 [node name="SequentialTaskRunner" type="Node" parent="TrackRace/TrackRace" unique_id=496057780]
 script = ExtResource("20_grj8g")

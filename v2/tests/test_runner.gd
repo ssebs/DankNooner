@@ -256,7 +256,7 @@ func _run_event(circle: EventStartCircle, index: int, rejoined: bool) -> bool:
 		violate("no timeout for %s events (%s)" % [GameModeType.Kind.find_key(kind), label])
 		return true
 	var budget_s := EVENT_TIMEOUTS_S[kind]
-	if event.definition.fuel_up_first:
+	if not event.find_children("*", "FuelUpTask", true, false).is_empty():
 		# Pumps take the one mouse in turn, after the hands-off warning
 		budget_s += ActivityPlayers.PUMP_TIMEOUT_S * _ready_peers.size() + MOUSE_WARNING_S
 	DebugUtils.DebugMsg("[test] event %s" % label)

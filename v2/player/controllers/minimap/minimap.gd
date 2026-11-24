@@ -44,6 +44,9 @@ const ICON_CHECKPOINT := preload("res://resources/img/Icons/target.png")
 const ICON_EVENT := preload("res://resources/img/Icons/star.png")
 const ICON_GARAGE := preload("res://resources/img/Icons/wrench.png")
 const ICON_GAS_STATION := preload("res://resources/img/Icons/fuel.svg")
+## Other players' names on the full map and the CompassStrip.
+const COLOR_NAME_TAG := UtilsConstants.UI_GREEN
+const NAME_TAG_FONT_SIZE: int = 16
 ## Full-map legend: text key -> [blip color, icon or null for a dot].
 const LEGEND := {
 	"MAP_LEGEND_YOU": [COLOR_SELF, ICON_SELF],
@@ -97,7 +100,7 @@ func _build_legend() -> void:
 		swatch.custom_minimum_size = Vector2.ONE * full_icon_size
 		swatch.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		swatch.draw.connect(
-			func(): _draw_blip(swatch, swatch.size * 0.5, LEGEND[key][0], LEGEND[key][1])
+			func(): draw_blip(swatch, swatch.size * 0.5, LEGEND[key][0], LEGEND[key][1])
 		)
 		var label := Label.new()
 		label.text = tr(key)
@@ -220,41 +223,14 @@ func _draw_dots() -> void:
 	# activates on remote instances) — nothing to plot without a local player.
 	if !_active:
 		return
-	var self_pos := _local_player.global_position
-	for racer in get_tree().get_nodes_in_group(UtilsConstants.GROUPS["Racers"]):
-		# Ambient traffic isn't something you navigate by, and at 100+ riders plotting it
-		# was most of this pass — and most of them pin to the map edge as arrows anyway.
-		if racer.is_in_group(UtilsConstants.GROUPS["Traffic"]) or racer == _local_player:
-			continue
-		var pos := _draw_marker(
-			racer.global_position, COLOR_NPC if racer is NPCRiderEntity else COLOR_PLAYER
-		)
-		if _expanded and racer is PlayerEntity:
-			_draw_name_tag((racer as PlayerEntity).name_label, pos)
-
-	# Event start circles (local level nodes), garages and gas stations.
-	# Only in free roam; a race hides them so its checkpoint marker stands alone.
-	if _local_player.gamemode_manager.current_game_mode == GameModeType.Kind.FREE_ROAM:
-		for circle in get_tree().get_nodes_in_group(UtilsConstants.GROUPS["EventCircles"]):
-			_draw_marker(circle.global_position, COLOR_EVENT, ICON_EVENT, 0.0, _expanded)
-		_draw_nearest_pinned(
-			get_tree().get_nodes_in_group(UtilsConstants.GROUPS["FreeRoamActivities"]).filter(
-				func(a): return a is GarageActivity
-			),
-			COLOR_GARAGE,
-			ICON_GARAGE
-		)
-		_draw_nearest_pinned(
-			get_tree().get_nodes_in_group(UtilsConstants.GROUPS["GasStations"]),
-			COLOR_GAS_STATION,
-			ICON_GAS_STATION
-		)
-
-	if has_checkpoint:
-		_draw_marker(checkpoint_pos, COLOR_CHECKPOINT, ICON_CHECKPOINT)
+	for m in get_markers(_expanded):
+		var pos := _draw_marker(m.pos, m.color, m.icon, 0.0, m.pin)
+		if _expanded and m.name != "":
+			draw_name_tag(_dot_overlay, m.name, pos)
 
 	# Last so it sits on top. Heading taken in screen space, so it reads right both camera-up
 	# and north-up.
+	var self_pos := _local_player.global_position
 	var screen_fwd := (
 		_camera.unproject_position(self_pos - _local_player.global_basis.z)
 		- _camera.unproject_position(self_pos)
@@ -262,8 +238,66 @@ func _draw_dots() -> void:
 	_draw_marker(self_pos, COLOR_SELF, ICON_SELF, Vector2.UP.angle_to(screen_fwd))
 
 
+## Everything worth navigating to, besides yourself: {pos, color, icon, pin, name}. Shared with
+## CompassStrip. Unpinned markers are only drawn while in view.
+func get_markers(expanded: bool) -> Array[Dictionary]:
+	var markers: Array[Dictionary] = []
+	var self_pos := _local_player.global_position
+	for racer in get_tree().get_nodes_in_group(UtilsConstants.GROUPS["Racers"]):
+		# Ambient traffic isn't something you navigate by, and at 100+ riders plotting it
+		# was most of this pass — and most of them pin to the map edge as arrows anyway.
+		if racer.is_in_group(UtilsConstants.GROUPS["Traffic"]) or racer == _local_player:
+			continue
+		var tag := ""
+		if racer is PlayerEntity:
+			tag = "%s · %dm" % [racer.username, self_pos.distance_to(racer.global_position)]
+		markers.append(
+			marker(
+				racer.global_position,
+				COLOR_NPC if racer is NPCRiderEntity else COLOR_PLAYER,
+				null,
+				true,
+				tag
+			)
+		)
+
+	# Event start circles (local level nodes), garages and gas stations.
+	# Only in free roam; a race hides them so its checkpoint marker stands alone.
+	if _local_player.gamemode_manager.current_game_mode == GameModeType.Kind.FREE_ROAM:
+		for circle in get_tree().get_nodes_in_group(UtilsConstants.GROUPS["EventCircles"]):
+			markers.append(marker(circle.global_position, COLOR_EVENT, ICON_EVENT, expanded))
+		_append_nearest_pinned(
+			markers,
+			get_tree().get_nodes_in_group(UtilsConstants.GROUPS["FreeRoamActivities"]).filter(
+				func(a): return a is GarageActivity
+			),
+			COLOR_GARAGE,
+			ICON_GARAGE,
+			expanded
+		)
+		_append_nearest_pinned(
+			markers,
+			get_tree().get_nodes_in_group(UtilsConstants.GROUPS["GasStations"]),
+			COLOR_GAS_STATION,
+			ICON_GAS_STATION,
+			expanded
+		)
+
+	if has_checkpoint:
+		markers.append(marker(checkpoint_pos, COLOR_CHECKPOINT, ICON_CHECKPOINT))
+	return markers
+
+
+static func marker(
+	pos: Vector3, color: Color, icon: Texture2D, pin: bool = true, tag: String = ""
+) -> Dictionary:
+	return {"pos": pos, "color": color, "icon": icon, "pin": pin, "name": tag}
+
+
 ## Off the corner map they'd crowd its edge, so only the nearest keeps a pointer there.
-func _draw_nearest_pinned(nodes: Array, color: Color, icon: Texture2D) -> void:
+func _append_nearest_pinned(
+	markers: Array[Dictionary], nodes: Array, color: Color, icon: Texture2D, expanded: bool
+) -> void:
 	var self_pos := _local_player.global_position
 	var nearest: Node3D = null
 	for node in nodes:
@@ -274,7 +308,7 @@ func _draw_nearest_pinned(nodes: Array, color: Color, icon: Texture2D) -> void:
 		):
 			nearest = node
 	for node in nodes:
-		_draw_marker(node.global_position, color, icon, 0.0, _expanded or node == nearest)
+		markers.append(marker(node.global_position, color, icon, expanded or node == nearest))
 
 
 ## Plot a world position onto the overlay: clamp off-map points to the edge box
@@ -287,7 +321,7 @@ func _draw_marker(
 	angle: float = 0.0,
 	pin: bool = true
 ) -> Vector2:
-	var radius := _blip_radius(icon)
+	var radius := blip_radius(icon)
 	var center := _dot_overlay.size * 0.5
 	# Inset the clamp box so a pinned blip + border + arrow stays fully on-screen.
 	var half := center - Vector2.ONE * (radius + arrow_size)
@@ -305,43 +339,38 @@ func _draw_marker(
 		if absf(offset.y) > 0.001:
 			t = minf(t, half.y / absf(offset.y))
 		pos = center + offset * t
-		_draw_edge_arrow(pos, offset.normalized(), radius, color)
-	_draw_blip(_dot_overlay, pos, color, icon, angle)
+		draw_edge_arrow(_dot_overlay, pos, offset.normalized(), radius, color)
+	draw_blip(_dot_overlay, pos, color, icon, angle)
 	return pos
 
 
-## The rider's in-world nametag (text + style) above their blip, kept on the map.
-func _draw_name_tag(label: Label, pos: Vector2) -> void:
-	var font := label.get_theme_font("font")
-	var font_size := label.get_theme_font_size("font_size")
-	var width := font.get_string_size(label.text, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size).x
-	var lift := _blip_radius(null) + font.get_descent(font_size)
+## A rider's name above their blip, kept inside `canvas`.
+func draw_name_tag(canvas: Control, text: String, pos: Vector2) -> void:
+	var font := canvas.get_theme_font("font", &"Label")
+	var width := (
+		font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, NAME_TAG_FONT_SIZE).x
+	)
+	var lift := blip_radius(null) + font.get_descent(NAME_TAG_FONT_SIZE)
 	var baseline := (pos - Vector2(width * 0.5, lift)).clamp(
-		Vector2(0.0, font.get_ascent(font_size)), _dot_overlay.size - Vector2(width, 0.0)
+		Vector2(0.0, font.get_ascent(NAME_TAG_FONT_SIZE)), canvas.size - Vector2(width, 0.0)
 	)
-	_dot_overlay.draw_string_outline(
+	canvas.draw_string_outline(
 		font,
 		baseline,
-		label.text,
+		text,
 		HORIZONTAL_ALIGNMENT_LEFT,
 		-1,
-		font_size,
-		label.get_theme_constant("outline_size"),
-		label.get_theme_color("font_outline_color")
+		NAME_TAG_FONT_SIZE,
+		canvas.get_theme_constant("outline_size", &"Label"),
+		canvas.get_theme_color("font_outline_color", &"Label")
 	)
-	_dot_overlay.draw_string(
-		font,
-		baseline,
-		label.text,
-		HORIZONTAL_ALIGNMENT_LEFT,
-		-1,
-		font_size,
-		label.get_theme_color("font_color")
+	canvas.draw_string(
+		font, baseline, text, HORIZONTAL_ALIGNMENT_LEFT, -1, NAME_TAG_FONT_SIZE, COLOR_NAME_TAG
 	)
 
 
 ## Outer radius, black ring included.
-func _blip_radius(icon: Texture2D) -> float:
+func blip_radius(icon: Texture2D) -> float:
 	if icon == null:
 		return dot_radius + border_width
 	return (full_icon_size if _expanded else icon_size) * 0.5
@@ -349,10 +378,10 @@ func _blip_radius(icon: Texture2D) -> float:
 
 ## A dot, or a pin: black glyph on a `color` disc, ringed white then black so it reads on
 ## both dark and light ground.
-func _draw_blip(
+func draw_blip(
 	canvas: CanvasItem, pos: Vector2, color: Color, icon: Texture2D = null, angle: float = 0.0
 ) -> void:
-	var radius := _blip_radius(icon)
+	var radius := blip_radius(icon)
 	canvas.draw_circle(pos, radius, Color.BLACK)
 	if icon == null:
 		canvas.draw_circle(pos, dot_radius, color)
@@ -368,11 +397,13 @@ func _draw_blip(
 	canvas.draw_set_transform(Vector2.ZERO)
 
 
-func _draw_edge_arrow(pos: Vector2, dir: Vector2, radius: float, color: Color) -> void:
+func draw_edge_arrow(
+	canvas: CanvasItem, pos: Vector2, dir: Vector2, radius: float, color: Color
+) -> void:
 	var perp := Vector2(-dir.y, dir.x)
 	var base := pos + dir * radius
 	var tip := base + dir * arrow_size
-	_dot_overlay.draw_colored_polygon(
+	canvas.draw_colored_polygon(
 		PackedVector2Array([tip, base + perp * arrow_size, base - perp * arrow_size]), color
 	)
 

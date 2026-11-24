@@ -1,6 +1,7 @@
 @tool
 ## Drives every rider to the event's start_zone before the race. Builds its own CheckpointTask, so
 ## the level only places this node (before the race's runner) and links start_zone on the event.
+## Level-authored children (e.g. a FuelUpTask) run before the drive.
 class_name DriveToStartRunner extends SequentialTaskRunner
 
 var _task: CheckpointTask

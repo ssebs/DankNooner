@@ -37,8 +37,8 @@ The stunt race is `RaceGameMode` with `race_type = STUNT_RACE`: the shared race 
 
 - **A leg is one event.** A `GameModeEvent` with `target_gamemode = STUNT_RACE` under an
   `EventStartCircle`, running its linked groups (point-to-point checkpoints, grid slots,
-  `PickupSpawner`s, props) through `RaceTask`. Legs run station to station. NPC racers, traffic and
-  fuel-up are per-event flags on the definition.
+  `PickupSpawner`s, props) through `RaceTask`. Legs run station to station. NPC racers and traffic
+  are per-event flags on the definition; fuel-up is a `FuelUpTask` in the event.
 - **Standing = sum of the scoring components, frozen at the finish line.** Race bots have one too
   (style + placement; see [Architecture](./Architecture.md#npc-race-manager)):
   - Style: `StyleScoringComponent`, banked trick points (`TrickManager.get_score`) plus any combo
@@ -79,8 +79,9 @@ The stunt race is `RaceGameMode` with `race_type = STUNT_RACE`: the shared race 
 
 ## Fuel-up
 
-Events with `fuel_up_first` run `FuelUpGameMode` before the race, which hands the same event to
-its `target_gamemode` once every rider has finished. This is the boost = fuel top-off.
+A `FuelUpTask` placed as the first child of the event's `DriveToStartRunner` runs the pumps
+before the drive to the start. Each rider moves on to the drive as soon as they end their own
+pump. This is the boost = fuel top-off. See [GamemodeSystem](./GamemodeSystem.md) for the runner.
 
 **Drive to the start:** a `DriveToStartRunner` placed in the event, ahead of the race's runner.
 Riders leave the pumps free and ride to the event's `start_zone` (a `start_zone.tscn`: a
@@ -103,14 +104,14 @@ reported fill (`SpawnManager.set_boost_player`), then unfreezes. Cancelling part
 partial fill.
 
 - **Pumps** are `gas_pump.tscn` (`FuelUpMinigame`) instances in `gas_station.tscn`; the circle's
-  `gas_station` export picks the station. Riders get pumps in tree order by sorted peer id, so every
-  peer agrees without an RPC, and a station needs one pump per rider. Extra pumps sit under a
-  `GameModeObject` (`HIDE_CTRL`) so they only exist during fuel-up.
+  `gas_station` export picks the station. Riders get pumps in tree order by their place in the runner's
+  peer order, and a station needs one pump per rider. Extra pumps sit under a
+  `GameModeObject` (`HIDE_CTRL`) so they only exist until the last rider leaves the pumps.
 - **Each rider** is teleported to their pump's `BikeSpot` and frozen. Their own client then plays
   locally, outside the rollback sim: pump camera, rider hidden, `IN_MINIGAME` input state (hand
   cursor; the left stick steers it on gamepad), and `FuelUpHUDState` (boost gauge + step prompt).
-  The pump owns all of that: gamemodes call `FuelUpMinigame.begin()` / `end()` and listen for
-  `finished`.
+  The pump owns all of that: `FuelUpTask` and free roam call `FuelUpMinigame.begin()` / `end()`
+  and listen for `finished`.
 - **Play** (one button, `use_item` / A): click the handle to pick it up; it follows the cursor by
   `HandleMarkerClick`. Nearing the cap, it swings toward the `GasCapMarkerTip` pose and rides at cap
   height. Hold to spray (holding on past the pick-up click sprays too after a short grace, so riders learn to let go); it fills while
@@ -241,7 +242,7 @@ targets a different axis:
 - **Style:**
   - Deployable Ramp — start a combo anywhere.
   - Sticky Tires — tricks hold easier, multiplier climbs faster.
-  - Rally Up - "lightning" item - swaps everyone to mini bike + the astronaut skin
+  - Rally Up - "lightning" item - swaps everyone but the user to mini bike + the astronaut skin
 - **Knockout:**
   - Oil Slick — banana peel causes person riding over it to crash. *(MVP starter set)*
   - Bat — melee; the activate button swings left/right, knock a rider off their line so they almost crash.

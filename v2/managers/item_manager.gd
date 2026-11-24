@@ -142,7 +142,7 @@ func use_item(peer_id: int) -> void:
 		PickupItemDefinition.PickupItemType.SHOTGUN:
 			_fire_shotgun(peer_id, player)
 		PickupItemDefinition.PickupItemType.RALLY_UP:
-			_rally_up()
+			_rally_up(peer_id)
 
 
 ## Client-callable: discard YOUR held item. The server derives the rider from the sender.
@@ -280,10 +280,10 @@ func _on_oil_slick_body_entered(
 #region Rally Up
 
 
-## Server-only. Everyone (user included) swaps to the mini bike + astronaut until the timer ends.
-func _rally_up() -> void:
+## Server-only. Everyone but the user swaps to the mini bike + astronaut until the timer ends.
+func _rally_up(user_id: int) -> void:
 	_rally_up_id += 1
-	_rpc_set_rally_up.rpc(true)
+	_rpc_set_rally_up.rpc(true, user_id)
 	get_tree().create_timer(rally_up_duration).timeout.connect(
 		_end_rally_up.bind(_rally_up_id), CONNECT_ONE_SHOT
 	)
@@ -291,14 +291,14 @@ func _rally_up() -> void:
 
 func _end_rally_up(id: int) -> void:
 	if id == _rally_up_id:
-		_rpc_set_rally_up.rpc(false)
+		_rpc_set_rally_up.rpc(false, 0)
 
 
 ## Every peer. Ending restores each rider's lobby skins, or the event's forced bike if it has one.
-## Race bots swap too, back to their own definitions.
+## Race bots swap too, back to their own definitions. The user keeps (or gets back) their own.
 @rpc("call_local", "reliable")
-func _rpc_set_rally_up(active: bool):
-	npc_race_manager.set_rally_up(active)
+func _rpc_set_rally_up(active: bool, user_id: int):
+	npc_race_manager.set_rally_up(active, user_id)
 	var forced: BikeSkinDefinition = null
 	if gamemode_manager.current_event != null:
 		forced = gamemode_manager.current_event.definition.forced_base_bike
@@ -308,7 +308,7 @@ func _rpc_set_rally_up(active: bool):
 		var player := spawn_manager.get_player_by_peer_id(peer_id)
 		if player == null:
 			continue
-		if active:
+		if active and peer_id != user_id:
 			player.update_skins(RALLY_UP_BIKE, RALLY_UP_CHARACTER)
 		else:
 			var lobby_def := lobby_players[peer_id]
