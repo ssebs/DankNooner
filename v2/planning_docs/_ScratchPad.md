@@ -26,29 +26,40 @@ Make a hoodie
 ---
 
 
+- [ ] lightning item shouldnt affect player who used it
+
+- [ ] friend names are too big/in the way (maybe move them to a hight set by viewport Y?)
+- [ ] player names should be diff color in leaderboard/trick feed
+
+
+- [ ] menu navigation needs to be smoother
+- [ ] invite btn on pause menu
+- [ ] change a color in customize inaccessible via controller
+
+
+- [ ] joining another lobby while in game doesn't back you out first, so you never join
+- [ ] joining from customize menu doesnt let you til you leave
+- [ ] starting event in customize menu doesnt TP them properly
+
+- [ ] tell players to wait while everyone else is filling up (or let them drive to the start point?)
+
+- [ ] can't do a wheelie while going fast on the mini bike
+
 - [ ] pinned trick should be more obvious (glow when doing wrong trick in tutorial)
 - [ ] tutorial "now land it" pink text not obvious enough
 - [ ] tutorial shouldnt do progression
-- [ ] change a color in customize inaccessible via controller
-- [ ] customize menu "All" skins should be explained if not already
-- [ ] invite btn on pause menu
-- [ ] dont play horn while ded
-- [ ] show level on race finish screen
+
 - [ ] mute other players horn option or cooldown after 3x
-- [ ] joining from customize menu doesnt let you til you leave
-- [ ] joining another lobby while in game doesn't back you out first, so you never join
-- [ ] lobby scroll list of players can be longer...
-- [ ] friend names are too big/in the way
-- [ ] tell players to wait while everyone else is filling up
-- [ ] lightning item shouldnt affect player who used it
-- [ ] can't do a wheelie while going fast on the mini bike
-- [ ] customize leave txt => exit
+- [ ] dont play horn while ded
+
 - [ ] change stoppie challenge from 3s to 2.5s
-- [ ] player names should be diff color
+
+- [ ] customize menu "All" skins should be explained if not already in tour
+- [ ] show player level on race finish screen
+- [ ] lobby scroll list of players can be longer...
+- [ ] customize leave txt => exit
+
 - [ ] naked bike in tutorial?
-- [ ] starting event in customize menu doesnt TP them properly
-- [ ] menu navigation needs to be smoother
-- [ ] engine upgrade unlocks? change level 1 is mini, level 2 is naked, level 3 is sport, level 4 is sport+ or something
 ---
 
 
@@ -88,6 +99,9 @@ Make a hoodie
 - [ ] skins
   - [ ] add glow to naked bike
   - [ ] boost trail color
+
+- [ ] engine upgrade unlocks? change level 1 is mini, level 2 is naked, level 3 is sport, level 4 is sport+ or something
+
 
 - [ ] sentry.io log shipping for crash logs
   - [ ] they have free tier
