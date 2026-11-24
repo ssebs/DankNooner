@@ -99,7 +99,7 @@ func _format(
 			points_text += " ×%d" % multiplier
 		if crashed:
 			points_text = "[s]%s[/s]" % points_text
-		if crashed:
-			points_text = "[color=#%s]%s[/color]" % [TrickPopups.OOF_COLOR.to_html(false), points_text]
+		var points_color := TrickPopups.OOF_COLOR if crashed else UtilsConstants.UI_GOLD
+		points_text = "[color=#%s]%s[/color]" % [points_color.to_html(false), points_text]
 		parts.append("[b]%s[/b]" % points_text)
 	return "  ".join(parts)
