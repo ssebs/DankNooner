@@ -62,6 +62,7 @@ var default_settings: Dictionary = {
 	"sfx_vol": 1.0,
 	"mute": false,
 	"mute_unfocused": true,
+	"mute_other_horns": false,
 	"language": OS.get_locale_language(),
 	"cam_mode": 0, # CameraController.CameraMode: 0 TPS near, 1 FPS, 2 TPS far. TODO make enum
 	"invert_cam": false,

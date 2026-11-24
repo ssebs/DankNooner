@@ -25,26 +25,21 @@
 [ext_resource type="Texture2D" uid="uid://bxm512jrnrs01" path="res://resources/themes/neon/row_panel.png" id="neon_row_panel"]
 [ext_resource type="Texture2D" uid="uid://dj6s1g7matr01" path="res://resources/themes/neon/row_pressed.png" id="neon_row_pressed"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_avatarring"]
-content_margin_left = 0.0
-content_margin_top = 0.0
-content_margin_right = 0.0
-content_margin_bottom = 0.0
-bg_color = Color(0.6, 0.6, 0.6, 0)
-border_width_left = 4
-border_width_top = 4
-border_width_right = 4
-border_width_bottom = 4
-border_color = Color(0.25490198, 0.6862745, 1, 1)
-border_blend = true
-corner_radius_top_left = 64
-corner_radius_top_right = 64
-corner_radius_bottom_right = 64
-corner_radius_bottom_left = 64
-expand_margin_left = 4.0
-expand_margin_top = 4.0
-expand_margin_right = 4.0
-expand_margin_bottom = 4.0
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_avatarcircle"]
+content_margin_left = 3.0
+content_margin_top = 3.0
+content_margin_right = 3.0
+content_margin_bottom = 3.0
+bg_color = Color(0.02, 0.04, 0.12, 1)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.255, 0.686, 1, 1)
+corner_radius_top_left = 36
+corner_radius_top_right = 36
+corner_radius_bottom_right = 36
+corner_radius_bottom_left = 36
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_iun4r"]
 
@@ -109,17 +104,6 @@ corner_radius_bottom_right = 44
 corner_radius_bottom_left = 44
 shadow_color = Color(0, 1, 0.015686274, 0.45)
 shadow_size = 10
-
-[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_btn_normal"]
-content_margin_left = 24.0
-content_margin_top = 12.0
-content_margin_right = 24.0
-content_margin_bottom = 12.0
-texture = ExtResource("neon_btn_normal")
-texture_margin_left = 29.0
-texture_margin_top = 29.0
-texture_margin_right = 29.0
-texture_margin_bottom = 29.0
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxFlat_fadebottom"]
 content_margin_left = 12.0
@@ -310,12 +294,39 @@ texture_margin_bottom = 19.0
 content_margin_top = 12.0
 content_margin_bottom = 12.0
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_profilepill"]
+content_margin_left = 6.0
+content_margin_top = 6.0
+content_margin_right = 16.0
+content_margin_bottom = 6.0
+bg_color = Color(0.02, 0.027, 0.06, 0.75)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.255, 0.686, 1, 0.5)
+corner_radius_top_left = 44
+corner_radius_top_right = 44
+corner_radius_bottom_right = 44
+corner_radius_bottom_left = 44
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_optpopuphover"]
 bg_color = Color(0.255, 0.686, 1, 0.25)
 corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_btn_normal"]
+content_margin_left = 24.0
+content_margin_top = 12.0
+content_margin_right = 24.0
+content_margin_bottom = 12.0
+texture = ExtResource("neon_btn_normal")
+texture_margin_left = 29.0
+texture_margin_top = 29.0
+texture_margin_right = 29.0
+texture_margin_bottom = 29.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_optpopup"]
 content_margin_left = 8.0
@@ -457,8 +468,8 @@ texture_margin_bottom = 19.0
 [resource]
 default_font = ExtResource("1_kytw6")
 default_font_size = 24
-AvatarRingPanel/base_type = &"PanelContainer"
-AvatarRingPanel/styles/panel = SubResource("StyleBoxFlat_avatarring")
+AvatarCirclePanel/base_type = &"PanelContainer"
+AvatarCirclePanel/styles/panel = SubResource("StyleBoxFlat_avatarcircle")
 BarePanel/base_type = &"PanelContainer"
 BarePanel/styles/panel = SubResource("StyleBoxEmpty_iun4r")
 BoostCell/base_type = &"ProgressBar"
@@ -481,8 +492,6 @@ CheckBox/icons/unchecked = ExtResource("3_7depn")
 CheckBox/styles/hover_pressed = SubResource("StyleBoxFlat_btnpillhot")
 CheckBox/styles/normal = SubResource("StyleBoxFlat_btnpill")
 CheckBox/styles/pressed = SubResource("StyleBoxFlat_btnpill")
-ChipPanel/base_type = &"PanelContainer"
-ChipPanel/styles/panel = SubResource("StyleBoxTexture_btn_normal")
 DangerButton/base_type = &"Button"
 DangerButton/colors/font_color = Color(1, 0.24, 0.24, 1)
 DangerButton/colors/font_focus_color = Color(1, 0.24, 0.24, 1)
@@ -555,6 +564,8 @@ OwnLabel/base_type = &"Label"
 OwnLabel/colors/font_color = Color(0.255, 0.686, 1, 1)
 PaddedLabel/base_type = &"Label"
 PaddedLabel/styles/normal = SubResource("StyleBoxEmpty_labelpad")
+PillPanel/base_type = &"PanelContainer"
+PillPanel/styles/panel = SubResource("StyleBoxFlat_profilepill")
 PingLabel/base_type = &"Label"
 PingLabel/colors/font_color = Color(0.2, 1, 0.55, 1)
 PopupLabel/base_type = &"Label"

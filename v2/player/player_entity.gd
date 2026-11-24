@@ -106,6 +106,12 @@ const LAUNCH_SETTLE_SPEED: float = 0.5
 ## ...for this long, so the stall on first hitting the ground doesn't read as stopped.
 const LAUNCH_SETTLE_HOLD_SECS: float = 0.75
 
+## Horn plays (presses or loop restarts) allowed before it cools down.
+const HORN_SPAM_PLAYS: int = 5
+## Quiet time that forgives earlier plays.
+const HORN_SPAM_RESET_SECS: float = 3.0
+const HORN_COOLDOWN_SECS: float = 5.0
+
 const ENEMY_MARKER_MATERIAL: Material = preload("res://levels/assets/props/marker_red.tres")
 const FREE_ROAM_MARKER_MATERIAL: Material = preload("res://levels/assets/props/marker_teal.tres")
 
@@ -234,6 +240,10 @@ var _exhaust_decel_active: bool = false
 var _exhaust_coast_time: float = 0.0
 var _exhaust_burble_rolled: bool = false
 var _exhaust_prev_rpm: float = 0.0
+## Horn spam tracking (local, _process).
+var _horn_plays: int = 0
+var _horn_quiet_secs: float = 0.0
+var _horn_cooldown_secs: float = 0.0
 
 # Netcode metrics probe (debug_netcode_metrics) — predicted state snapshot taken before
 # netfox re-applies authoritative state each rollback loop, on the local client only.
@@ -374,7 +384,7 @@ func _process(delta: float) -> void:
 	if _launch_t >= 0.0:
 		_update_launch_measure(delta)
 
-	_update_horn()
+	_update_horn(delta)
 	_update_exhaust_pops(delta)
 	boost_trail.emitting = boost_controller.is_boosting
 
@@ -434,16 +444,30 @@ func _update_exhaust_pops(delta: float) -> void:
 
 ## Every peer reads the honker's synced input, so the horn is positional for everyone.
 ## Restarting it whenever it finishes loops it for as long as it's held.
-func _update_horn() -> void:
+func _update_horn(delta: float) -> void:
 	if !audio_manager:
 		return
-	var held := input_controller.nfx_horn_held
-	if held and !horn_player.playing:
-		audio_manager.get_sound_event(horn_definition.sfx).play_on(horn_player)
-		audio_manager.set_music_ducked(self, true)
+	_horn_cooldown_secs = maxf(_horn_cooldown_secs - delta, 0.0)
+	if horn_player.playing:
+		_horn_quiet_secs = 0.0
+	else:
+		_horn_quiet_secs += delta
+		if _horn_quiet_secs >= HORN_SPAM_RESET_SECS:
+			_horn_plays = 0
+
+	var muted: bool = !is_local_client and settings_manager.current_settings["mute_other_horns"]
+	var held := input_controller.nfx_horn_held and !is_crashed and !muted
+	if held and !horn_player.playing and _horn_cooldown_secs == 0.0:
+		_horn_plays += 1
+		if _horn_plays > HORN_SPAM_PLAYS:
+			_horn_plays = 0
+			_horn_cooldown_secs = HORN_COOLDOWN_SECS
+		else:
+			audio_manager.get_sound_event(horn_definition.sfx).play_on(horn_player)
 	elif !held and horn_player.playing:
 		horn_player.stop()
-		audio_manager.set_music_ducked(self, false)
+	# Every frame: a horn that ran out between frames never hits the stop branch.
+	audio_manager.set_music_ducked(self, horn_player.playing)
 
 
 ## Crash-entered edge. Ragdoll on every peer; camera + SFX local; crashed(peer_id) drives respawn.

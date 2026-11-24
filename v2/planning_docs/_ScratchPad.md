@@ -40,6 +40,8 @@ Make a hoodie
 - [x] lobby scroll list of players can be longer + adjust spacing
 - [x] customize leave txt => exit
 
+- [x] mute other players horn option or cooldown after 5x
+- [x] dont play horn while ded
 
 - [ ] menu navigation needs to be smoother
   - [ ] change a color in customize inaccessible via controller
@@ -55,8 +57,7 @@ Make a hoodie
 - [ ] tutorial "now land it" pink text not obvious enough
 - [ ] tutorial shouldnt do progression
 
-- [ ] mute other players horn option or cooldown after 3x
-- [ ] dont play horn while ded
+
 
 
 

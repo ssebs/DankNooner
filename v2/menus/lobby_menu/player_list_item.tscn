@@ -18,57 +18,61 @@ theme_override_constants/margin_right = 24
 theme_override_constants/margin_bottom = 2
 script = ExtResource("1_vlnsy")
 
-[node name="PanelContainer" type="PanelContainer" parent="." unique_id=1860626553]
+[node name="Pill" type="PanelContainer" parent="." unique_id=1860626553]
 layout_mode = 2
 size_flags_vertical = 4
-theme_type_variation = &"ChipPanel"
+theme_type_variation = &"PillPanel"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer" unique_id=1368577702]
+[node name="HBoxContainer" type="HBoxContainer" parent="Pill" unique_id=1368577702]
 layout_mode = 2
 theme_override_constants/separation = 24
 
-[node name="PlayerIcon" type="TextureRect" parent="PanelContainer/HBoxContainer" unique_id=1232060762]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(32, 32)
+[node name="Avatar" type="PanelContainer" parent="Pill/HBoxContainer" unique_id=110244629]
+custom_minimum_size = Vector2(56, 56)
 layout_mode = 2
 size_flags_vertical = 4
+theme_type_variation = &"AvatarCirclePanel"
+
+[node name="PlayerIcon" type="TextureRect" parent="Pill/HBoxContainer/Avatar" unique_id=1232060762]
+unique_name_in_owner = true
+material = SubResource("ShaderMaterial_circle")
+layout_mode = 2
 texture = ExtResource("2_vlnsy")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="AvatarIcon" type="TextureRect" parent="PanelContainer/HBoxContainer" unique_id=1232060763]
+[node name="AvatarIcon" type="TextureRect" parent="Pill/HBoxContainer/Avatar" unique_id=1232060763]
 unique_name_in_owner = true
 visible = false
 material = SubResource("ShaderMaterial_circle")
-custom_minimum_size = Vector2(32, 32)
 layout_mode = 2
-size_flags_vertical = 4
 expand_mode = 1
 stretch_mode = 6
 
-[node name="PlayerName" type="Label" parent="PanelContainer/HBoxContainer" unique_id=1488068940]
+[node name="PlayerName" type="Label" parent="Pill/HBoxContainer" unique_id=1488068940]
 unique_name_in_owner = true
 layout_mode = 2
 text = "replace_me"
 
-[node name="HostLabel" type="Label" parent="PanelContainer/HBoxContainer" unique_id=1209324352]
+[node name="HostLabel" type="Label" parent="Pill/HBoxContainer" unique_id=1209324352]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_fonts/font = ExtResource("4_fp5ot")
 theme_override_font_sizes/font_size = 18
 text = "PLAYER_IS_HOST_LABEL"
 
-[node name="PingLabel" type="Label" parent="PanelContainer/HBoxContainer" unique_id=992432967]
-unique_name_in_owner = true
-layout_mode = 2
-theme_type_variation = &"PingLabel"
-text = "Ping: -1"
-horizontal_alignment = 2
-
-[node name="KickBtn" type="Button" parent="PanelContainer/HBoxContainer" unique_id=1716978133]
+[node name="KickBtn" type="Button" parent="Pill/HBoxContainer" unique_id=1716978133]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 mouse_default_cursor_shape = 2
 theme_override_font_sizes/font_size = 18
 text = "KICK_LABEL"
+
+[node name="PingLabel" type="Label" parent="Pill/HBoxContainer" unique_id=992432967]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"PingLabel"
+text = "Ping: -1"
+horizontal_alignment = 2

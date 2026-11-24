@@ -20,7 +20,7 @@ const TAB_SETTING_KEYS: Array = [
 		"show_fps",
 		"language",
 	],
-	["master_vol", "music_vol", "sfx_vol", "menu_vol", "mute", "mute_unfocused"],
+	["master_vol", "music_vol", "sfx_vol", "menu_vol", "mute", "mute_unfocused", "mute_other_horns"],
 	[
 		"difficulty",
 		"joy_cam_sens",
@@ -53,6 +53,7 @@ const TAB_SETTING_KEYS: Array = [
 @onready var menu_vol_slider: HSlider = %MenuVolSlider
 @onready var mute_check: CheckBox = %MuteCheck
 @onready var mute_unfocused_check: CheckBox = %MuteUnfocusedCheck
+@onready var mute_other_horns_check: CheckBox = %MuteOtherHornsCheck
 
 @onready var resolution_scale_label: Label = %RESOLUTION_SCALE_LABEL
 @onready var resolution_scale: HSlider = %ResolutionScaleSlider
@@ -177,6 +178,7 @@ func load_settings_into_ui(settings: Dictionary):
 	menu_vol_slider.value = settings["menu_vol"]
 	mute_check.button_pressed = settings["mute"]
 	mute_unfocused_check.button_pressed = settings["mute_unfocused"]
+	mute_other_horns_check.button_pressed = settings["mute_other_horns"]
 
 	reduced_effects_check.button_pressed = settings["reduced_effects"]
 	resolution_scale.value = settings["resolution_scale"]
@@ -209,6 +211,7 @@ func _settings_from_ui() -> Dictionary:
 		"menu_vol": menu_vol_slider.value,
 		"mute": mute_check.button_pressed,
 		"mute_unfocused": mute_unfocused_check.button_pressed,
+		"mute_other_horns": mute_other_horns_check.button_pressed,
 		"resolution_scale": resolution_scale.value,
 		"gamma": gamma_slider.value,
 		"joy_cam_sens": joy_cam_sens.value,

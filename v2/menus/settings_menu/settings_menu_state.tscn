@@ -312,6 +312,17 @@ layout_mode = 2
 mouse_default_cursor_shape = 2
 text = "TRUE"
 
+[node name="MUTE_OTHER_HORNS_LABEL" type="Label" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Audio/Grid" unique_id=1748203961]
+layout_mode = 2
+vertical_alignment = 1
+text = "MUTE_OTHER_HORNS_LABEL"
+
+[node name="MuteOtherHornsCheck" type="CheckBox" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer/Audio/Grid" unique_id=1093675412]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_default_cursor_shape = 2
+text = "TRUE"
+
 [node name="Gameplay" type="ScrollContainer" parent="UI/AspectContainer/MarginContainer/Layout/TabPanel/TabContainer" unique_id=1400000002]
 visible = false
 layout_mode = 2
