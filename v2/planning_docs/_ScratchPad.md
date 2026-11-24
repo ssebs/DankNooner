@@ -26,48 +26,17 @@ Make a hoodie
 ---
 
 
-- [x] rally up item shouldnt affect player who used it
-- [x] fuel up minigame refactor to be part of drive to start runner instead of its own gamemode
-- [x] stop making players wait when doing fill up before race that you have to drive to, once they hit the btn they can start moving.
-- [x] friend names are too big/in the way (maybe move them to a hight set by viewport Y?)
-- [x] player names should be diff color in leaderboard/trick feed
-- [x] btn to open menu should go away once new menu pops up / merge these
-- [x] invite btn on pause menu for clients
-- [x] change stoppie challenge from 3s to 2.5s
-- [x] customize menu "All" skins should be explained if not already in tour
-- [x] show player level on race finish screen
-- [x] lobby scroll list of players can be longer + adjust spacing
-- [x] customize leave txt => exit
-- [x] mute other players horn option or cooldown after 5x
-- [x] dont play horn while ded
-
-
-- [x] joining another lobby while in game doesn't back you out first, so you never join
-- [x] joining from customize menu doesnt let you til you leave
-- [x] starting event in customize menu doesnt TP them properly
-
-- [x] when host starts an event have a smol countdown telling players whats starting / transition
-
-
-- [ ] preview audio values in settings, but only save on save.
-
 - [ ] can't do a wheelie while going fast on the mini bike
 
 - [ ] pinned trick should be more obvious (glow when doing wrong trick in tutorial)
 - [ ] tutorial "now land it" pink text not obvious enough
 - [ ] tutorial shouldnt do progression
 
-- [ ] Hdr / sdr testing with multiple monitors 
 
 - [ ] Slow down racers, but make it feel fast. 
 - [ ] Racers too fast if you crash you don't see anyone. Come catch up needed, more incentive to do tricks needed too. Dynamic speed?
 
-- [ ] add /tp command like MC / other in-game useful commands
 
-
-
-
-- [ ] naked bike in tutorial?
 ---
 
 
@@ -98,6 +67,9 @@ Make a hoodie
 - [ ] tweaks
   - [ ] time attack race 1 shouldnt make you drive there first
   - [ ] add sounds when body hits the ground
+  - [ ] preview audio values in settings, but only save on save.
+  - [ ] Hdr / sdr testing with multiple monitors 
+
 
 - [ ] new skin popup when doing a challenge
   - [ ] should show thumb right of the count in profilecard
@@ -113,7 +85,6 @@ Make a hoodie
 
 - [ ] engine upgrade unlocks? change level 1 is mini, level 2 is naked, level 3 is sport, level 4 is sport+ or something
 
-
 - [ ] sentry.io log shipping for crash logs
   - [ ] they have free tier
 ---
@@ -121,7 +92,7 @@ Make a hoodie
 ## NEXT
 
 - [ ] tweak dirt bike / adv bike models
-
+- [ ] add /tp command like MC / other in-game useful commands
 - [ ] Mods
   - [ ] Wings as mod for sport bike 
     - [x] mesh

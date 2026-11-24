@@ -220,32 +220,39 @@
 
 ## Done ✅
 
+- [x] rally up item shouldnt affect player who used it
+- [x] fuel up minigame refactor to be part of drive to start runner instead of its own gamemode
+- [x] stop making players wait when doing fill up before race that you have to drive to, once they hit the btn they can start moving.
+- [x] friend names are too big/in the way (maybe move them to a hight set by viewport Y?)
+- [x] player names should be diff color in leaderboard/trick feed
+- [x] btn to open menu should go away once new menu pops up / merge these
+- [x] invite btn on pause menu for clients
+- [x] change stoppie challenge from 3s to 2.5s
+- [x] customize menu "All" skins should be explained if not already in tour
+- [x] show player level on race finish screen
+- [x] lobby scroll list of players can be longer + adjust spacing
+- [x] customize leave txt => exit
+- [x] mute other players horn option or cooldown after 5x
+- [x] dont play horn while ded
+- [x] joining another lobby while in game doesn't back you out first, so you never join
+- [x] joining from customize menu doesnt let you til you leave
+- [x] starting event in customize menu doesnt TP them properly
+- [x] when host starts an event have a smol countdown telling players whats starting / transition
 - [x] tell them theyre going wrong way driving to the start of a race
-
 - [x] hide the racing line before race starts
-
 - [x] Rewards are skin unlocks? Or currency to buy unlocks
   - [x] Xp unlocks, money buys items?
 - [x] fix late-join lag: clients sync to host tick, two-way drift snap
-
 - [x] Make challenges like cod skin grind
   - [x] Daily challenges, per bike challenges (10x double backflip, 10 mins of total wheelie duration, etc), win/loss challenges
   - [x] Menu for checking stats
-
 - [x] when a car crashes it jitters back/forth after you respawn
-
 - [x] Npcs drive off road too much
-
 - [x] trick battle needs npcs
-
 - [x] profile card should be clickable in more places
-
 - [x] more shader texture materials like aurora/lava
-
 - [x] fix UVs on bikes so I can place actual textures
-
 - [x] make press A to open eventstartcircle more obvious
-
 - [x] make red warn label more obvious
 - [x] in tutorial - "Do a wheelie for 2s" should be in the new profilecard panel instead of showing the challenges
   - [x] also gold text?
