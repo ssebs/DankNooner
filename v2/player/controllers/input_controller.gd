@@ -84,7 +84,7 @@ func _gather():
 		_pending_gear_reset = false
 
 	# Zeroed, not skipped: skipping would hold whatever was pressed when the menu opened
-	if _is_ui_open() or _is_typing():
+	if _is_ui_open() or is_typing():
 		nfx_throttle = 0.0
 		nfx_front_brake = 0.0
 		nfx_rear_brake = 0.0
@@ -144,7 +144,7 @@ func _process(delta):
 		return
 	if !is_multiplayer_authority():
 		return
-	if _is_typing():
+	if is_typing():
 		return
 
 	var in_menu := _is_ui_open()
@@ -226,7 +226,7 @@ func _is_ui_open() -> bool:
 
 ## True when the console is open or a text field has keyboard focus (e.g. username/code entry) —
 ## game input polls global Input and bypasses GUI focus, so block it while typing.
-func _is_typing() -> bool:
+func is_typing() -> bool:
 	var focused := get_viewport().gui_get_focus_owner()
 	return Console.is_visible() or focused is LineEdit or focused is TextEdit
 

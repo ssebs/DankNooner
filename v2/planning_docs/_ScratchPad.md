@@ -36,20 +36,22 @@ Make a hoodie
 - [x] change stoppie challenge from 3s to 2.5s
 - [x] customize menu "All" skins should be explained if not already in tour
 - [x] show player level on race finish screen
-
 - [x] lobby scroll list of players can be longer + adjust spacing
 - [x] customize leave txt => exit
-
 - [x] mute other players horn option or cooldown after 5x
 - [x] dont play horn while ded
 
 - [ ] menu navigation needs to be smoother
   - [ ] change a color in customize inaccessible via controller
+  - [ ] general controller UX is bad when trying to switch menus / do stuff
+  - [ ] Look to GTA vi for hud/menu ideas (smoothness vs what it looks like)
 
 - [ ] joining another lobby while in game doesn't back you out first, so you never join
 - [ ] joining from customize menu doesnt let you til you leave
 - [ ] starting event in customize menu doesnt TP them properly
 
+- [ ] preview audio values in settings, but only save on save.
+- [ ] when host starts an event have a smol countdown telling players whats starting / transition
 
 - [ ] can't do a wheelie while going fast on the mini bike
 
@@ -57,6 +59,12 @@ Make a hoodie
 - [ ] tutorial "now land it" pink text not obvious enough
 - [ ] tutorial shouldnt do progression
 
+- [ ] Hdr / sdr testing with multiple monitors 
+
+- [ ] Slow down racers, but make it feel fast. 
+- [ ] Racers too fast if you crash you don't see anyone. Come catch up needed, more incentive to do tricks needed too. Dynamic speed?
+
+- [ ] add /tp command like MC / other in-game useful commands
 
 
 
@@ -78,7 +86,7 @@ Make a hoodie
   - [x] too easy to crash when steering a stoppie, allow some steering
   - [x] wire up trick battle arena @ eventstartcircle4
   
-  - [ ] when host starts an event have a smol countdown telling players whats starting / transition
+
   - [ ] add more incentive to doing stunts and driving around the map instead of just going from checkpoint to checkpoint
     - [ ] score is a reason but not obvious enough
     - [ ] need to give $ per trick done too?

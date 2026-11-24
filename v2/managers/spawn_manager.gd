@@ -411,6 +411,8 @@ func respawn_player_at(player_peer_id: int, pos: Vector3, basis: Basis):
 		return
 	var player_node := get_player_by_peer_id(player_peer_id)
 	player_node.rb_respawn_transform = Transform3D(basis, pos)
+	# Last call wins: a same-tick respawn_player_in_place (garage exit) would otherwise take priority
+	player_node.rb_respawn_transform_oneshot = Transform3D()
 	player_node.rb_do_respawn = true
 
 

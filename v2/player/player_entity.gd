@@ -106,10 +106,8 @@ const LAUNCH_SETTLE_SPEED: float = 0.5
 ## ...for this long, so the stall on first hitting the ground doesn't read as stopped.
 const LAUNCH_SETTLE_HOLD_SECS: float = 0.75
 
-## Horn plays (presses or loop restarts) allowed before it cools down.
-const HORN_SPAM_PLAYS: int = 5
-## Quiet time that forgives earlier plays.
-const HORN_SPAM_RESET_SECS: float = 3.0
+## Seconds of honking before the horn cools down; refills while quiet.
+const HORN_BUDGET_SECS: float = 3.0
 const HORN_COOLDOWN_SECS: float = 5.0
 
 const ENEMY_MARKER_MATERIAL: Material = preload("res://levels/assets/props/marker_red.tres")
@@ -165,6 +163,9 @@ var movement_locked: bool = false
 # Brake danger (local, display only)
 var grip_usage: float = 0.0
 #endregion
+
+## Horn spam lockout left (local, _process). Read by the HUD.
+var horn_cooldown_secs: float = 0.0
 
 # Discrete actions (rb_* pattern)
 var rb_do_respawn: bool = false
@@ -240,10 +241,7 @@ var _exhaust_decel_active: bool = false
 var _exhaust_coast_time: float = 0.0
 var _exhaust_burble_rolled: bool = false
 var _exhaust_prev_rpm: float = 0.0
-## Horn spam tracking (local, _process).
-var _horn_plays: int = 0
-var _horn_quiet_secs: float = 0.0
-var _horn_cooldown_secs: float = 0.0
+var _horn_budget_secs: float = HORN_BUDGET_SECS
 
 # Netcode metrics probe (debug_netcode_metrics) — predicted state snapshot taken before
 # netfox re-applies authoritative state each rollback loop, on the local client only.
@@ -447,23 +445,22 @@ func _update_exhaust_pops(delta: float) -> void:
 func _update_horn(delta: float) -> void:
 	if !audio_manager:
 		return
-	_horn_cooldown_secs = maxf(_horn_cooldown_secs - delta, 0.0)
+	horn_cooldown_secs = maxf(horn_cooldown_secs - delta, 0.0)
 	if horn_player.playing:
-		_horn_quiet_secs = 0.0
+		_horn_budget_secs -= delta
+		if _horn_budget_secs <= 0.0:
+			horn_player.stop()
+			_horn_budget_secs = HORN_BUDGET_SECS
+			horn_cooldown_secs = HORN_COOLDOWN_SECS
+			if is_local_client:
+				audio_manager.play_sfx(AudioManager.Sfx.MENU_ERR)
 	else:
-		_horn_quiet_secs += delta
-		if _horn_quiet_secs >= HORN_SPAM_RESET_SECS:
-			_horn_plays = 0
+		_horn_budget_secs = minf(_horn_budget_secs + delta, HORN_BUDGET_SECS)
 
 	var muted: bool = !is_local_client and settings_manager.current_settings["mute_other_horns"]
 	var held := input_controller.nfx_horn_held and !is_crashed and !muted
-	if held and !horn_player.playing and _horn_cooldown_secs == 0.0:
-		_horn_plays += 1
-		if _horn_plays > HORN_SPAM_PLAYS:
-			_horn_plays = 0
-			_horn_cooldown_secs = HORN_COOLDOWN_SECS
-		else:
-			audio_manager.get_sound_event(horn_definition.sfx).play_on(horn_player)
+	if held and !horn_player.playing and horn_cooldown_secs == 0.0:
+		audio_manager.get_sound_event(horn_definition.sfx).play_on(horn_player)
 	elif !held and horn_player.playing:
 		horn_player.stop()
 	# Every frame: a horn that ran out between frames never hits the stop branch.

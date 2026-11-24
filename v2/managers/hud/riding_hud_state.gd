@@ -33,6 +33,7 @@ const _RESPAWN_RING_POP_SECS := 0.4
 ## Event warning: how long a one-shot stays up, and how often a looping one shakes.
 const _WARNING_HOLD_SECS := 1.5
 const _WARNING_SHAKE_EVERY_SECS := 0.7
+const _HORN_COOLDOWN_ALPHA := 0.35
 ## Held trick rows per column — the height of the hints they swap in for.
 const _TRICK_ROWS_PER_COLUMN := 3
 
@@ -57,7 +58,6 @@ const _TRICK_ROWS_PER_COLUMN := 3
 @onready var _respawn_label: Label = %HUD_RespawnLabel
 @onready var _trick_rows: VBoxContainer = %HUD_TrickRows
 @onready var _pinned_label: Label = %HUD_PinnedLabel
-@onready var _trick_prompt_btn: InputPrompt = %HUD_TrickPromptBtn
 @onready var _trick_prompt_title: Label = %HUD_TrickPromptTitle
 @onready var _trick_prompt_rows: HBoxContainer = %HUD_TrickPromptRows
 @onready var _trick_stick: TrickStickIndicator = %HUD_TrickStick
@@ -72,6 +72,8 @@ const _TRICK_ROWS_PER_COLUMN := 3
 @onready var _held_item_name: Label = %HUD_HeldItemName
 @onready var _item_hint: HBoxContainer = %HUD_ItemHint
 @onready var _horn_drop_hint: Label = %HUD_HornDropHint
+@onready var _horn_hint: HBoxContainer = %HUD_HornHint
+@onready var _horn_prompt: InputPrompt = %HUD_HornPrompt
 @onready var _loadout_bar: LoadoutBar = %HUD_LoadoutBar
 @onready var _unlock_thumbnail: Thumbnail3D = %HUD_UnlockThumbnail
 
@@ -239,6 +241,12 @@ func Physics_Update(delta: float):
 		if not boost_controller.is_boosting and boost_controller.boost_amount < 1.0:
 			_boost_gauge.flash_rejected()
 	_prev_boost_held = boost_held
+	var typing := input_controller.is_typing()
+	for prompt in _prompts:
+		prompt.set_held(!typing and Input.is_action_pressed(prompt.action))
+	# Horn: blue while it sounds rather than while pressed, dimmed through the spam lockout.
+	_horn_prompt.set_held(player_entity.horn_player.playing)
+	_horn_hint.modulate.a = _HORN_COOLDOWN_ALPHA if player_entity.horn_cooldown_secs > 0.0 else 1.0
 	_trick_popups.track(player_entity, trick_manager.points_per_second, _challenge_tricks, delta)
 
 	# Live wheelie / stoppie stopwatch, only while a race leaderboard (and its challenges) is up.
@@ -482,7 +490,6 @@ func _show_trick_prompt(state: TrickController.TrickState):
 	_shown_trick_state = state
 	var held := state != TrickController.TrickState.NONE
 	_trick_prompt_title.text = "HUD_TRICKS_" + TrickController.TrickState.keys()[state]
-	_trick_prompt_btn.set_held(held)
 	_action_hints.visible = !held
 	_trick_prompt_rows.visible = held
 	for child in _trick_prompt_rows.get_children():
