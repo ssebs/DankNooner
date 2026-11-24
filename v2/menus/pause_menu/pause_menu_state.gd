@@ -38,6 +38,12 @@ const PAUSE_ICON := preload("res://resources/img/Icons/pause.png")
 @onready var profile_card: ProfileCard = %ProfileCard
 
 @onready var bg_tint: ColorRect = %BGTint
+@onready var confirm_box: Control = %ConfirmBox
+@onready var confirm_yes_btn: Button = %ConfirmYesBtn
+@onready var confirm_no_btn: Button = %ConfirmNoBtn
+
+## Taken from SteamManager while the leave prompt is up, so a dismissed prompt doesn't join later
+var _invite_game_id := ""
 
 # See managers/pause_manager.gd
 
@@ -48,11 +54,15 @@ func _ready():
 		return
 	# Always wired: Settings / Tricks opened from here are on screen when the host drops.
 	connection_manager.server_disconnected.connect(_on_server_disconnected)
+	steam_manager.invite_received.connect(_on_invite_received)
 
 
 func Enter(_state_context: StateContext):
 	ui.show()
+	confirm_box.hide()
 	resume_btn.pressed.connect(_on_resume_pressed)
+	confirm_yes_btn.pressed.connect(_on_invite_confirmed)
+	confirm_no_btn.pressed.connect(_close_invite_confirm)
 	main_menu_btn.pressed.connect(_on_main_menu_pressed)
 	respawn_btn.pressed.connect(_on_respawn_pressed)
 	cancel_event_btn.pressed.connect(_on_cancel_event_pressed)
@@ -101,11 +111,15 @@ func Enter(_state_context: StateContext):
 	lobby_panel.open(connection_manager, lobby_manager, steam_manager, multiplayer.is_server())
 
 	resume_btn.call_deferred("grab_focus")
+	if !steam_manager.pending_game_id.is_empty():
+		_ask_invite()
 
 
 func Exit(_state_context: StateContext):
 	ui.hide()
 	resume_btn.pressed.disconnect(_on_resume_pressed)
+	confirm_yes_btn.pressed.disconnect(_on_invite_confirmed)
+	confirm_no_btn.pressed.disconnect(_close_invite_confirm)
 	main_menu_btn.pressed.disconnect(_on_main_menu_pressed)
 	respawn_btn.pressed.disconnect(_on_respawn_pressed)
 	cancel_event_btn.pressed.disconnect(_on_cancel_event_pressed)
@@ -223,10 +237,54 @@ func _on_server_disconnected(reason: String):
 	_on_main_menu_pressed()
 
 
+## A Steam invite mid-match: pause and ask before leaving for it.
+func _on_invite_received():
+	# Not in a match: the play / lobby menu handles it.
+	if gamemode_manager.match_state != GamemodeManager.MatchState.IN_GAME:
+		return
+	if !save_manager.is_tutorial_complete():
+		steam_manager.pending_game_id = ""
+		UiToast.ShowToast(tr("TOAST_FINISH_TUTORIAL_FIRST"))
+		return
+	var current: MenuState = menu_manager.state_machine.current_state
+	var can_pause: bool = input_state_manager.current_input_state in [
+		InputStateManager.InputState.IN_GAME,
+		InputStateManager.InputState.IN_MINIGAME,
+		InputStateManager.InputState.IN_MAP,
+	]
+	if current == self and ui.visible:
+		_ask_invite()
+	# Enter() asks. Settings / Tricks / Saves opened from here come back to this menu too.
+	elif current.return_state == self or (current == self and can_pause):
+		pause_manager.do_pause()
+	# Else loading, or a tour / picker / results owns input: Enter() asks on the next pause.
+
+
+func _ask_invite():
+	_invite_game_id = steam_manager.take_pending_game_id()
+	confirm_box.show()
+	# After Enter()'s deferred resume_btn focus.
+	confirm_no_btn.call_deferred("grab_focus")
+
+
+## The play menu joins the pending invite on Enter, after the main menu hands it on.
+func _on_invite_confirmed():
+	steam_manager.pending_game_id = _invite_game_id
+	leave_session(main_menu_state)
+
+
+func _close_invite_confirm():
+	confirm_box.hide()
+	resume_btn.grab_focus()
+
+
 # func _on_back_pressed():
 # 	DebugUtils.DebugMsg("back pressed")
 
 
 #override
 func on_cancel_key_pressed():
+	if confirm_box.visible:
+		_close_invite_confirm()
+		return
 	_on_resume_pressed()

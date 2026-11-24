@@ -29,6 +29,12 @@ const AUTO_HOST_LOBBY_SIZE := 2
 @onready var lobby_panel: LobbyPanel = %LobbyPanel
 @onready var loading_ui: ColorRect = %LoadingUI
 @onready var timeout_timer: Timer = %TimeoutTimer
+@onready var confirm_box: Control = %ConfirmBox
+@onready var confirm_yes_btn: Button = %ConfirmYesBtn
+@onready var confirm_no_btn: Button = %ConfirmNoBtn
+
+## Taken from SteamManager while the leave prompt is up, so a dismissed prompt doesn't join later
+var _invite_game_id := ""
 
 
 func _ready():
@@ -37,6 +43,7 @@ func _ready():
 		return
 	# Always wired: Customize opened from here is on screen when the host drops.
 	connection_manager.server_disconnected.connect(_on_server_disconnected)
+	steam_manager.invite_received.connect(_on_invite_received)
 
 
 #region state lifecycle
@@ -60,6 +67,7 @@ func Enter(state_context: StateContext):
 
 	ui.show()
 	loading_ui.hide()
+	confirm_box.hide()
 	profile_card.show_save(
 		save_manager.save_slot, save_manager.current_save, save_manager.get_player_definition()
 	)
@@ -69,6 +77,8 @@ func Enter(state_context: StateContext):
 	level_select_panel.level_selected.connect(_on_level_selected)
 	customize_btn.pressed.connect(_on_customize_pressed)
 	profile_card.pressed.connect(_on_profile_card_pressed)
+	confirm_yes_btn.pressed.connect(_on_invite_confirmed)
+	confirm_no_btn.pressed.connect(_close_invite_confirm)
 	lobby_manager.lobby_players_updated.connect(_on_lobby_players_updated)
 
 	# Connection signals
@@ -98,6 +108,8 @@ func Exit(_state_context: StateContext):
 	level_select_panel.level_selected.disconnect(_on_level_selected)
 	customize_btn.pressed.disconnect(_on_customize_pressed)
 	profile_card.pressed.disconnect(_on_profile_card_pressed)
+	confirm_yes_btn.pressed.disconnect(_on_invite_confirmed)
+	confirm_no_btn.pressed.disconnect(_close_invite_confirm)
 	lobby_manager.lobby_players_updated.disconnect(_on_lobby_players_updated)
 
 	connection_manager.game_id_set.disconnect(_on_game_id_set)
@@ -171,6 +183,35 @@ func _on_server_disconnected(reason: String):
 		return
 	UiToast.ShowToast(tr(reason))
 	_on_back_pressed()
+
+
+## A Steam invite while this lobby (or Customize / Saves opened from it) is up: ask before leaving.
+func _on_invite_received():
+	var current: MenuState = menu_manager.state_machine.current_state
+	# Not in this lobby: the play / pause menu handles it.
+	if current != self and current.return_state != self:
+		return
+	_invite_game_id = steam_manager.take_pending_game_id()
+	if current != self:
+		# Customize's own exit does this too: the garage level isn't the lobby's.
+		if level_manager.current_level_name != LevelManager.LevelName.BG_GRAY_LEVEL:
+			level_manager.spawn_menu_level()
+		transitioned.emit(self, return_ctx)
+	confirm_box.show()
+	# After the transition's own focus grab.
+	confirm_no_btn.call_deferred("grab_focus")
+
+
+func _on_invite_confirmed():
+	steam_manager.pending_game_id = _invite_game_id
+	# The play menu joins it on Enter; Back could otherwise land on the server browser.
+	return_state = play_menu_state
+	_on_back_pressed()
+
+
+func _close_invite_confirm():
+	confirm_box.hide()
+	back_btn.grab_focus()
 
 
 func _on_client_connection_failed(reason: String):
@@ -277,6 +318,9 @@ func set_single_or_multiplayer_ui():
 
 #override
 func on_cancel_key_pressed():
+	if confirm_box.visible:
+		_close_invite_confirm()
+		return
 	_on_back_pressed()
 
 

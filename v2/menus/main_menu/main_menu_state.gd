@@ -58,7 +58,6 @@ func Enter(_state_context: StateContext):
 	credits_btn.pressed.connect(_on_credits_btn_pressed)
 	discord_btn.pressed.connect(_on_discord_btn_pressed)
 	wishlist_btn.pressed.connect(_on_wishlist_btn_pressed)
-	steam_manager.invite_received.connect(_on_invite_received)
 
 	# The save being played; switched from the Saves menu, so refreshed on every Enter.
 	profile_card.show_save(
@@ -66,7 +65,7 @@ func Enter(_state_context: StateContext):
 	)
 	steam_status_label.visible = steam_manager.is_logged_in()
 	if !steam_manager.pending_game_id.is_empty():
-		_on_invite_received.call_deferred()
+		_forward_invite.call_deferred()
 	elif DebugUtils.auto_host or DebugUtils.auto_join:
 		_on_play_btn_pressed.call_deferred()
 
@@ -90,7 +89,6 @@ func Exit(_state_context: StateContext):
 	credits_btn.pressed.disconnect(_on_credits_btn_pressed)
 	discord_btn.pressed.disconnect(_on_discord_btn_pressed)
 	wishlist_btn.pressed.disconnect(_on_wishlist_btn_pressed)
-	steam_manager.invite_received.disconnect(_on_invite_received)
 
 
 #region button handlers
@@ -133,6 +131,6 @@ func _on_quit_btn_pressed():
 #endregion
 
 
-## Play menu joins the pending invite on Enter
-func _on_invite_received():
+## Play menu joins the pending invite on Enter. Invites while open arrive there too (see PlayMenuState).
+func _forward_invite():
 	transitioned.emit(play_menu_state, StateContext.NewWithReturn(self))

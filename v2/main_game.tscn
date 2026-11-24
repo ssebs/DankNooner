@@ -354,7 +354,7 @@ crash_launch_mode = NodePath("StateMachine/CrashLaunchGameMode")
 script = ExtResource("4_6bm6p")
 metadata/_custom_type_script = "uid://ba7kyb4p3trb1"
 
-[node name="FreeRoamGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=989468386 node_paths=PackedStringArray("game_mode_event_hud_state", "level_manager", "npc_traffic_manager", "pickup_spawn_manager", "trick_manager", "riding_hud_state", "input_state_manager", "hud_manager", "save_manager", "tour_manager", "gamemode_manager", "spawn_manager")]
+[node name="FreeRoamGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=989468386 node_paths=PackedStringArray("game_mode_event_hud_state", "level_manager", "npc_traffic_manager", "pickup_spawn_manager", "trick_manager", "riding_hud_state", "input_state_manager", "hud_manager", "save_manager", "tour_manager", "pause_manager", "gamemode_manager", "spawn_manager")]
 script = ExtResource("25_6krrg")
 game_mode_event_hud_state = NodePath("../../../HUDManager/StateMachine/GamemodeEventHUDState")
 level_manager = NodePath("../../../LevelManager")
@@ -366,6 +366,7 @@ input_state_manager = NodePath("../../../InputStateManager")
 hud_manager = NodePath("../../../HUDManager")
 save_manager = NodePath("../../../SaveManager")
 tour_manager = NodePath("../../../TourManager")
+pause_manager = NodePath("../../../PauseManager")
 gamemode_manager = NodePath("../..")
 spawn_manager = NodePath("../../../SpawnManager")
 

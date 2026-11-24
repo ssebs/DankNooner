@@ -12,6 +12,7 @@ class_name FreeRoamGameMode extends GameModeType
 @export var hud_manager: HUDManager
 @export var save_manager: SaveManager
 @export var tour_manager: TourManager
+@export var pause_manager: PauseManager
 
 ## Trick round: banked combo points add up per human for ROUND_SECS, shown on the live
 ## leaderboard with the time left, then the winner is called out and it resets.
@@ -21,6 +22,8 @@ const LEADERBOARD_REFRESH_SECS: float = 0.25
 const CRASH_LOOP_WINDOW_MS: int = 1000
 ## Looped crashes in a row before giving up on the crash site for a full respawn.
 const CRASH_LOOP_LIMIT: int = 3
+## Heads-up before a host-picked event pulls everyone in.
+const EVENT_START_SECS: float = 3.0
 
 var _ctx: GamemodeStateContext
 ## The circle the local rider is in — ui_accept opens its picker, whose events the picker indexes.
@@ -39,6 +42,10 @@ var _running: Dictionary[int, FreeRoamActivity] = {}
 ## peer_id -> when they were last respawned in place / looped crashes in a row. Server only.
 var _in_place_respawn_ms: Dictionary[int, int] = {}
 var _crash_loops: Dictionary[int, int] = {}
+## The event the host picked, counting down to its start; null otherwise. Server only.
+var _starting_event: GameModeEvent
+var _starting_left: float = 0.0
+var _starting_shown: int = 0
 
 
 #override
@@ -280,9 +287,58 @@ func _on_game_mode_event_confirm_hud_submitted(peer_id: int, event_index: int):
 			return
 		request_start_activity.rpc_id(1, _entered_activity.get_path())
 		return
-	var event := _entered_circle.get_events()[event_index]
+	# Circles are host-only, so this runs on the server.
+	_starting_event = _entered_circle.get_events()[event_index]
+	_starting_left = EVENT_START_SECS
+	_starting_shown = 0
+	_rpc_event_starting.rpc()
+	for lobby_peer_id in gamemode_manager.lobby_manager.lobby_players:
+		# Player may not be spawned yet (late-join) — skip is intentional.
+		var player := spawn_manager.get_player_by_peer_id(lobby_peer_id)
+		if player != null:
+			CountdownTask.freeze(player)
+	_tick_event_start(0.0)
+
+
+## Every peer: drop whatever the local rider is doing before the host's event pulls them in.
+@rpc("call_local", "reliable")
+func _rpc_event_starting():
+	if (
+		input_state_manager.is_menu_open()
+		or input_state_manager.current_input_state == InputStateManager.InputState.IN_MAP
+	):
+		pause_manager.do_unpause()
+	_leave_picker_area(multiplayer.get_unique_id())
+	_end_activities()
+
+
+@rpc("call_local", "reliable")
+func _rpc_event_countdown_beep():
+	gamemode_manager.audio_manager.play_ding()
+
+
+## Server: shows each whole second left, then starts the event at 0.
+func _tick_event_start(delta: float):
+	_starting_left -= delta
+	var secs := ceili(_starting_left)
+	if secs == _starting_shown:
+		return
+	_starting_shown = secs
+	var lobby_players := gamemode_manager.lobby_manager.lobby_players
+	if secs > 0:
+		for peer_id in lobby_players:
+			riding_hud_state.push_event_warning(
+				peer_id, "EVENT_STARTING", false,
+				{"event": _starting_event.definition.name, "secs": str(secs)}
+			)
+		_rpc_event_countdown_beep.rpc()
+		return
+	for peer_id in lobby_players:
+		riding_hud_state.clear_event_warning(peer_id)
+	var event := _starting_event
+	_starting_event = null
 	gamemode_manager.change_gamemode.rpc_id(
-		1, event.definition.target_gamemode, peer_id, event.get_path()
+		1, event.definition.target_gamemode, multiplayer.get_unique_id(), event.get_path()
 	)
 
 
@@ -305,16 +361,10 @@ func Exit(_state_context: StateContext):
 	if game_mode_event_hud_state.ui.visible:
 		game_mode_event_hud_state.hide_ui_for_peer()
 
-	# Host started an event mid-activity — that event places and freezes riders itself.
-	if _activity != null:
-		_activity.finished.disconnect(_on_activity_finished)
-		_activity.end()
-		_activity = null
+	_end_activities()
 
 	if multiplayer.is_server():
-		for peer_id in _running:
-			_running[peer_id].server_end(peer_id, 0.0, spawn_manager)
-		_running.clear()
+		_starting_event = null
 		# Riders the host's event start caught in an open picker. Before the next mode's freezes.
 		for peer_id in gamemode_manager.lobby_manager.lobby_players:
 			# Player may not be spawned yet (late-join) — skip is intentional.
@@ -332,6 +382,8 @@ func Exit(_state_context: StateContext):
 func Update(delta: float):
 	if Engine.is_editor_hint() or !multiplayer.is_server():
 		return
+	if _starting_event != null:
+		_tick_event_start(delta)
 	_round_left -= delta
 	if _round_left <= 0.0:
 		_end_round()
@@ -429,6 +481,7 @@ func request_start_activity(activity_path: NodePath):
 	# The host started an event while this was in flight, the rider's busy, or someone's on it.
 	if (
 		gamemode_manager.get_current_gamemode() != self
+		or _starting_event != null
 		or _running.has(peer_id)
 		or (!activity.is_shared() and activity in _running.values())
 		or spawn_manager.get_player_by_peer_id(peer_id).is_crashed
@@ -478,6 +531,18 @@ func _rpc_begin_activity(activity_path: NodePath):
 func _on_activity_finished():
 	request_end_activity.rpc_id(1, _activity.get_result())
 	_activity = null
+
+
+## A host-picked event is pulling everyone in; it places and freezes riders itself.
+func _end_activities():
+	if _activity != null:
+		_activity.finished.disconnect(_on_activity_finished)
+		_activity.end()
+		_activity = null
+	if multiplayer.is_server():
+		for peer_id in _running:
+			_running[peer_id].server_end(peer_id, 0.0, spawn_manager)
+		_running.clear()
 
 
 #endregion
@@ -546,5 +611,7 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("save_manager must not be empty")
 	if tour_manager == null:
 		issues.append("tour_manager must not be empty")
+	if pause_manager == null:
+		issues.append("pause_manager must not be empty")
 
 	return issues

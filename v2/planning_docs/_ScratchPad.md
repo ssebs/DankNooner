@@ -41,17 +41,15 @@ Make a hoodie
 - [x] mute other players horn option or cooldown after 5x
 - [x] dont play horn while ded
 
-- [ ] menu navigation needs to be smoother
-  - [ ] change a color in customize inaccessible via controller
-  - [ ] general controller UX is bad when trying to switch menus / do stuff
-  - [ ] Look to GTA vi for hud/menu ideas (smoothness vs what it looks like)
 
-- [ ] joining another lobby while in game doesn't back you out first, so you never join
-- [ ] joining from customize menu doesnt let you til you leave
-- [ ] starting event in customize menu doesnt TP them properly
+- [x] joining another lobby while in game doesn't back you out first, so you never join
+- [x] joining from customize menu doesnt let you til you leave
+- [x] starting event in customize menu doesnt TP them properly
+
+- [x] when host starts an event have a smol countdown telling players whats starting / transition
+
 
 - [ ] preview audio values in settings, but only save on save.
-- [ ] when host starts an event have a smol countdown telling players whats starting / transition
 
 - [ ] can't do a wheelie while going fast on the mini bike
 
@@ -85,7 +83,10 @@ Make a hoodie
   - [x] in customize, hovering the item should show the challenge card
   - [x] too easy to crash when steering a stoppie, allow some steering
   - [x] wire up trick battle arena @ eventstartcircle4
-  
+  - [ ] menu navigation needs to be smoother
+    - [ ] change a color in customize inaccessible via controller
+    - [ ] general controller UX is bad when trying to switch menus / do stuff
+    - [ ] Look to GTA vi for hud/menu ideas (smoothness vs what it looks like)
 
   - [ ] add more incentive to doing stunts and driving around the map instead of just going from checkpoint to checkpoint
     - [ ] score is a reason but not obvious enough

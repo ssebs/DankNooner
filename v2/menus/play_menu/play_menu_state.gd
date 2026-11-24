@@ -39,6 +39,14 @@ const AUTO_JOIN_ADDR := "127.0.0.1"
 @onready var profile_card: ProfileCard = %ProfileCard
 
 
+func _ready():
+	super._ready()
+	if Engine.is_editor_hint():
+		return
+	# Always wired: menus opened from here or the main menu (Customize, Saves...) send it on.
+	steam_manager.invite_received.connect(_on_invite_received)
+
+
 func Enter(_state_context: StateContext):
 	ui.show()
 
@@ -52,7 +60,6 @@ func Enter(_state_context: StateContext):
 	host_mode_opt.item_selected.connect(_on_host_mode_selected)
 	code_entry.text_changed.connect(_on_code_text_changed)
 	server_browser_btn.pressed.connect(_on_server_browser_pressed)
-	steam_manager.invite_received.connect(_on_invite_received)
 	profile_card.pressed.connect(_on_profile_card_pressed)
 
 	profile_card.show_save(
@@ -111,7 +118,6 @@ func Exit(_state_context: StateContext):
 	host_mode_opt.item_selected.disconnect(_on_host_mode_selected)
 	code_entry.text_changed.disconnect(_on_code_text_changed)
 	server_browser_btn.pressed.disconnect(_on_server_browser_pressed)
-	steam_manager.invite_received.disconnect(_on_invite_received)
 	profile_card.pressed.disconnect(_on_profile_card_pressed)
 
 
@@ -202,7 +208,17 @@ func _on_join_btn_pressed():
 	join_game(code_entry.text.strip_edges())
 
 
+## In a session the pause / lobby menu asks first.
 func _on_invite_received():
+	var current: MenuState = menu_manager.state_machine.current_state
+	if current == main_menu_state:
+		transitioned.emit(self, StateContext.NewWithReturn(main_menu_state))
+		return
+	if current != self:
+		# Via the main menu: it swaps out the menu's level (garage) and sends the invite back here.
+		if current != lobby_menu_state and current.return_state in [main_menu_state, self]:
+			transitioned.emit(main_menu_state, StateContext.NewWithReturn(current))
+		return
 	if !save_manager.is_tutorial_complete():
 		steam_manager.pending_game_id = ""
 		UiToast.ShowToast(tr("TOAST_FINISH_TUTORIAL_FIRST"))
