@@ -34,13 +34,11 @@ Make a hoodie
 - [x] btn to open menu should go away once new menu pops up / merge these
 - [x] invite btn on pause menu for clients
 - [x] change stoppie challenge from 3s to 2.5s
-
-
 - [x] customize menu "All" skins should be explained if not already in tour
 - [x] show player level on race finish screen
 
-- [ ] lobby scroll list of players can be longer...
-- [ ] customize leave txt => exit
+- [x] lobby scroll list of players can be longer + adjust spacing
+- [x] customize leave txt => exit
 
 
 - [ ] menu navigation needs to be smoother

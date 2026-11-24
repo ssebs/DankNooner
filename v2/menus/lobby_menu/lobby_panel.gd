@@ -2,8 +2,12 @@
 ## Game ID + copy, Steam invite + visibility, player list + kick. Shared by the lobby and pause menus.
 class_name LobbyPanel extends VBoxContainer
 
+## Editor only: fills the list with fake rows to check scrolling/layout without real clients
+@export_tool_button("Preview Players") var preview_players_btn = _preview_players
+
 ## VisibilityOpt's items: friends-only, then public
 const VISIBILITY_PUBLIC_IDX := 1
+const PREVIEW_PLAYER_COUNT := 12
 
 @onready var ip_label: Label = %IPLabel
 @onready var ip_copy_btn: Button = %IPCopyBtn
@@ -99,6 +103,16 @@ func _on_lobby_players_updated(players: Dictionary) -> void:
 	for player_def: PlayerDefinition in players.values():
 		if player_def.steam_id != 0:
 			_steam_manager.request_avatar(player_def.steam_id)
+
+
+func _preview_players() -> void:
+	var players := {}
+	for i in PREVIEW_PLAYER_COUNT:
+		var player_def := PlayerDefinition.new()
+		player_def.username = "Player %d" % (i + 1)
+		players[i + 1] = player_def
+	player_list.clear()
+	player_list.update_from_dict(players)
 
 
 ## Only clients measure ping (netfox's time sync RTT to the host)

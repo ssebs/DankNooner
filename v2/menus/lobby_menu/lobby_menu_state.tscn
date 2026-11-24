@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://bl26780k5sr"]
 
 [ext_resource type="Script" uid="uid://d3f7uthyd114r" path="res://menus/lobby_menu/lobby_menu_state.gd" id="1_1jh13"]
-[ext_resource type="Theme" path="res://resources/themes/DankNoonerNeon.tres" id="2_lphm8"]
+[ext_resource type="Theme" uid="uid://duh1pqh4rllqu" path="res://resources/themes/DankNoonerNeon.tres" id="2_lphm8"]
 [ext_resource type="PackedScene" path="res://menus/lobby_menu/level_select_panel.tscn" id="3_lspanel"]
 [ext_resource type="Script" uid="uid://muodw5580tnr" path="res://addons/tattomoosa.spinner/spinner.gd" id="4_wpkl5"]
 [ext_resource type="PackedScene" path="res://menus/lobby_menu/lobby_panel.tscn" id="6_lpanel"]
@@ -138,11 +138,11 @@ metadata/_custom_type_script = "uid://muodw5580tnr"
 layout_mode = 2
 theme = ExtResource("2_lphm8")
 
-[node name="Body" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer"]
+[node name="Body" type="HBoxContainer" parent="UI/AspectContainer/MarginContainer" unique_id=1635144579]
 layout_mode = 2
 theme_override_constants/separation = 64
 
-[node name="LeftColumn" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/Body"]
+[node name="LeftColumn" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/Body" unique_id=132073648]
 layout_mode = 2
 size_flags_horizontal = 3
 
@@ -150,6 +150,7 @@ size_flags_horizontal = 3
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
+size_flags_vertical = 3
 
 [node name="TitleLabel" type="Label" parent="UI/AspectContainer/MarginContainer/Body/LeftColumn/SingleplayerUI" unique_id=1979153626]
 layout_mode = 2
@@ -157,9 +158,15 @@ size_flags_horizontal = 0
 theme_type_variation = &"TitleLabel"
 text = "FREE_ROAM_LABEL"
 
+[node name="Spacer" type="Control" parent="UI/AspectContainer/MarginContainer/Body/LeftColumn/SingleplayerUI" unique_id=2110177122]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
 [node name="MultiplayerUI" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/Body/LeftColumn" unique_id=904581325]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_vertical = 3
 
 [node name="TitleLabel" type="Label" parent="UI/AspectContainer/MarginContainer/Body/LeftColumn/MultiplayerUI" unique_id=1260742798]
 layout_mode = 2
@@ -171,11 +178,7 @@ text = "LOBBY_LABEL"
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
-
-[node name="Spacer" type="Control" parent="UI/AspectContainer/MarginContainer/Body/LeftColumn"]
-layout_mode = 2
 size_flags_vertical = 3
-mouse_filter = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/Body/LeftColumn" unique_id=495261937]
 custom_minimum_size = Vector2(320, 0)
@@ -202,11 +205,11 @@ custom_minimum_size = Vector2(512, 0)
 layout_mode = 2
 size_flags_vertical = 4
 
-[node name="RightColumn" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/Body"]
+[node name="RightColumn" type="VBoxContainer" parent="UI/AspectContainer/MarginContainer/Body" unique_id=1016310846]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="ProfileCard" parent="UI/AspectContainer/MarginContainer/Body/RightColumn" instance=ExtResource("7_card")]
+[node name="ProfileCard" parent="UI/AspectContainer/MarginContainer/Body/RightColumn" unique_id=198114923 instance=ExtResource("7_card")]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 8
