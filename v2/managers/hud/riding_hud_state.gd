@@ -763,6 +763,7 @@ func _rpc_flash_event_warning(text_key: String, looping: bool, args: Dictionary)
 		translated[key] = tr(args[key])
 	_event_warning.text = tr(text_key).format(translated)
 	_event_warning.show()
+	_target_compass.warning = looping
 	_event_warning_tween = create_tween()
 	if looping:
 		_event_warning_tween.set_loops()
@@ -788,6 +789,7 @@ func _rpc_clear_event_warning():
 		_event_warning_tween.kill()
 		_event_warning_tween = null
 	_event_warning.hide()
+	_target_compass.warning = false
 
 
 func _show_event_on_card() -> void:

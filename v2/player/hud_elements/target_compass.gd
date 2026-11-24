@@ -15,8 +15,12 @@ const NUDGE_PX: float = 4.0
 const NUDGE_HZ: float = 1.5
 const HALO_COLOR := Color(UtilsConstants.UI_BLUE, 0.4)
 const HALO_WIDTH: float = 8.0
+const WARNING_PULSE_HZ: float = 2.0
 
 @onready var _distance: Label = %Distance
+
+## Set by RidingHUDState while a looping event warning (wrong way) shows: pulses pink.
+var warning: bool = false
 
 var _local_player: PlayerEntity
 ## Bearing to the target, clockwise from camera-forward.
@@ -94,6 +98,12 @@ func _draw():
 		points[i] += nudge
 	var outline := points.duplicate()
 	outline.append(points[0])
-	draw_polyline(outline, HALO_COLOR, HALO_WIDTH, true)
-	draw_colored_polygon(points, Color.WHITE)
+	var halo := HALO_COLOR
+	var fill := Color.WHITE
+	if warning:
+		var pulse := sin(_nudge_t * TAU * WARNING_PULSE_HZ) * 0.5 + 0.5
+		halo = Color(UtilsConstants.UI_MAGENTA, lerpf(0.4, 0.9, pulse))
+		fill = Color.WHITE.lerp(UtilsConstants.UI_MAGENTA, pulse)
+	draw_polyline(outline, halo, HALO_WIDTH, true)
+	draw_colored_polygon(points, fill)
 	draw_polyline(outline, UtilsConstants.UI_GLASS, 2.0, true)

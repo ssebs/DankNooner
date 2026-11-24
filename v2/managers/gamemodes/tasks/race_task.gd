@@ -376,14 +376,20 @@ func _route_ordinal(ckpt: CheckPointMarker, p: Dictionary) -> int:
 	return lap_ordinal
 
 
-func _check_wrong_way(player: PlayerEntity, peer_id: int, p: Dictionary) -> void:
-	var to_gate := _expected_checkpoint(p).global_position - player.global_position
-	var dist := to_gate.length()
-	p["best_dist"] = minf(p["best_dist"], dist)
+## True while `player` moves away from `target` and is `margin` past its closest approach, which it
+## tracks in p["best_dist"] (missing = INF). Shared with CheckpointTask's drive to the start.
+static func is_wrong_way(player: PlayerEntity, target: Vector3, margin: float, p: Dictionary) -> bool:
+	var to_target := target - player.global_position
+	var dist := to_target.length()
+	p["best_dist"] = minf(p.get("best_dist", INF), dist)
 	var heading_away := (
-		player.velocity.length() > WRONG_WAY_MIN_SPEED and player.velocity.dot(to_gate) < 0.0
+		player.velocity.length() > WRONG_WAY_MIN_SPEED and player.velocity.dot(to_target) < 0.0
 	)
-	var wrong_way: bool = heading_away and dist - p["best_dist"] >= wrong_way_margin
+	return heading_away and dist - p["best_dist"] >= margin
+
+
+func _check_wrong_way(player: PlayerEntity, peer_id: int, p: Dictionary) -> void:
+	var wrong_way := is_wrong_way(player, _expected_checkpoint(p).global_position, wrong_way_margin, p)
 	var was_wrong_way: bool = p["wrong_way_since_ms"] > 0
 	if wrong_way == was_wrong_way:
 		if wrong_way and Time.get_ticks_msec() - p["wrong_way_since_ms"] >= WRONG_WAY_RESPAWN_MS:

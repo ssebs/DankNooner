@@ -219,6 +219,10 @@
 
 ## Done ✅
 
+- [x] tell them theyre going wrong way driving to the start of a race
+
+- [x] hide the racing line before race starts
+
 - [x] Rewards are skin unlocks? Or currency to buy unlocks
   - [x] Xp unlocks, money buys items?
 - [x] fix late-join lag: clients sync to host tick, two-way drift snap

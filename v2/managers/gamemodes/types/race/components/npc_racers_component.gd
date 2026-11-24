@@ -24,6 +24,11 @@ func race_start() -> void:
 	npc_race_manager.bake_racing_line(race_mode.get_event())
 
 
+## Hidden through pre-race runners like the drive to the start.
+func race_runner_start() -> void:
+	npc_race_manager.reveal_racing_line()
+
+
 func race_end() -> void:
 	race_mode.race_task.lap_completed.disconnect(_on_lap_completed)
 	var race_task := npc_race_manager.race_task

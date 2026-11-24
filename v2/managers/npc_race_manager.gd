@@ -43,6 +43,8 @@ var free_ride: bool = false
 
 ## Server only. The line every bot rides, baked by bake_racing_line; null until then.
 var racing_line: NPCRacingLine
+## Server only. Players see the line once reveal_racing_line runs; a bot route never reveals it.
+var _line_revealed: bool = false
 
 var _npcs: Dictionary[int, NPCRiderEntity] = {}
 ## Grid-slot spawn transform per NPC — crash-respawn fallback until the NPC
@@ -120,6 +122,7 @@ func despawn_all_npcs() -> void:
 		rpc_despawn_npc.rpc(npc_id)
 	# Its navmesh belongs to the level being torn down; the next race bakes its own.
 	racing_line = null
+	_line_revealed = false
 	rpc_hide_racing_line.rpc()
 	_bake_generation += 1
 	# Races without bots never swap a mesh in — skip is intentional
@@ -167,13 +170,22 @@ func bake_racing_line(event: GameModeEvent) -> void:
 	)
 	for npc_id in _npcs:
 		_race_state(npc_id).racing_line = racing_line
-	# Only races show players the line; a bot route stays hidden
-	if race_task != null:
+	if _line_revealed:
 		rpc_show_racing_line.rpc(
 			racing_line.get_points(), racing_line.closed
 		)
 	if _draw_racing_line:
 		_draw_line()
+
+
+## Server only. The race proper has started (the grid), so show players the line, now or once
+## the bake lands.
+func reveal_racing_line() -> void:
+	_line_revealed = true
+	# Still baking — the bake shows it when it lands — skip is intentional
+	if racing_line == null:
+		return
+	rpc_show_racing_line.rpc(racing_line.get_points(), racing_line.closed)
 
 
 ## Server only. A late joiner's level just loaded — resend every live bot at its
@@ -183,9 +195,9 @@ func sync_npcs_to_peer(peer_id: int) -> void:
 	for npc_id in _npcs:
 		var npc := _npcs[npc_id]
 		rpc_spawn_npc.rpc_id(peer_id, npc_id, npc.global_position, npc.global_basis)
-	# Still baking (the broadcast when it lands reaches them), or a hidden bot route — skip is
-	# intentional
-	if racing_line == null or race_task == null:
+	# Still baking or not revealed yet (the broadcast when it is reaches them), or a hidden bot
+	# route — skip is intentional
+	if racing_line == null or !_line_revealed:
 		return
 	rpc_show_racing_line.rpc_id(
 		peer_id, racing_line.get_points(), racing_line.closed

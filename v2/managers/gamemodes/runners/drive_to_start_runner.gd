@@ -15,6 +15,9 @@ func _ready():
 	_task.objective_key = "RACE_DRIVE_TO_START"
 	_task.hide_trigger_on_pass = true
 	_task.respawn_in_place = true
+	# Every frame, to watch for the wrong way
+	_task.eval_when = GameModeTask.EvalWhen.ALWAYS
+	_task.wrong_way_margin = 40.0
 	add_child(_task)
 
 

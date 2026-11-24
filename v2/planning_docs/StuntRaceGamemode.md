@@ -87,6 +87,9 @@ Riders leave the pumps free and ride to the event's `start_zone` (a `start_zone.
 `TriggerZone` wearing the event circle's `start_ring.tscn`, a label and a light beam). The runner
 builds its own `CheckpointTask` (`respawn_in_place`, `hide_trigger_on_pass`: each rider stops
 seeing the zone once through it), so the zone is linked once, on the event.
+Its `wrong_way_margin` warns a rider heading away from the zone (`RaceTask.is_wrong_way`, the race's
+check) but never respawns them, since roads can wind away from a far start. `TargetCompass` pulses
+pink while any looping event warning (wrong way) shows.
 Once the last rider arrives, the race runner grids and counts everyone in as usual. The minimap
 and `TargetCompass` point at the zone meanwhile, and the camera is held facing it briefly as the
 step begins. Until the race runner starts, the event's props are hidden and uncollided
