@@ -246,12 +246,17 @@ func earn(peer_id: int, money: int, xp: int):
 	rpc_earn.rpc_id(peer_id, money, xp)
 
 
-## `data` plus the earned columns; NPC rows stay blank.
+## `data` plus the level (after the name) + earned columns; NPC rows stay blank.
 func with_payouts(data: ResultsData) -> ResultsData:
+	data.columns.insert(1, "Level")
+	data.headers.insert(1, tr("LB_LEVEL"))
 	data.columns.append_array(["Money", "XP"])
 	data.headers.append_array(["💵", "⭐ %s" % tr("LB_XP")])
 	for row in data.rows:
-		var payout: Dictionary = _payouts.get(row.get("_peer_id", 0), {})
+		var peer_id: int = row.get("_peer_id", 0)
+		if lobby_manager.lobby_players.has(peer_id):
+			row["Level"] = "%d" % lobby_manager.lobby_players[peer_id].level()
+		var payout: Dictionary = _payouts.get(peer_id, {})
 		if !payout.is_empty():
 			row["Money"] = "+" + MoneyLabel.format(payout["money"])
 			row["XP"] = "+" + MoneyLabel.group_digits(payout["xp"])

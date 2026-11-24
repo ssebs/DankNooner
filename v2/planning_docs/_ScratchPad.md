@@ -36,8 +36,9 @@ Make a hoodie
 - [x] change stoppie challenge from 3s to 2.5s
 
 
-- [ ] customize menu "All" skins should be explained if not already in tour
-- [ ] show player level on race finish screen
+- [x] customize menu "All" skins should be explained if not already in tour
+- [x] show player level on race finish screen
+
 - [ ] lobby scroll list of players can be longer...
 - [ ] customize leave txt => exit
 
