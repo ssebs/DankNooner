@@ -78,7 +78,7 @@ func Enter(state_context: StateContext):
 
 	timeout_timer.timeout.connect(_on_timeout)
 
-	# Only the host owns the Steam lobby friends get invited to
+	# Only the host owns the Steam lobby, so only it sets the visibility
 	lobby_panel.open(
 		connection_manager, lobby_manager, steam_manager,
 		return_ctx.mode == LobbyStateContext.Mode.HOST

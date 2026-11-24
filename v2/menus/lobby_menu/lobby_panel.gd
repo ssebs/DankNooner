@@ -17,10 +17,10 @@ var _lobby_manager: LobbyManager
 var _steam_manager: SteamManager
 
 
-## Call from the owning menu's Enter(). can_invite: whether this peer owns the Steam lobby
+## Call from the owning menu's Enter(). is_host: whether this peer owns the Steam lobby
 func open(
 	connection_manager: ConnectionManager, lobby_manager: LobbyManager,
-	steam_manager: SteamManager, can_invite: bool
+	steam_manager: SteamManager, is_host: bool
 ) -> void:
 	_connection_manager = connection_manager
 	_lobby_manager = lobby_manager
@@ -36,11 +36,12 @@ func open(
 	ping_timer.timeout.connect(_on_ping_timer_timeout)
 	ping_timer.start()
 
+	# Any Steam lobby member can invite; other transports' clients aren't in one
 	invite_btn.visible = (
-		can_invite and _connection_manager.connection_mode == ConnectionManager.ConnectionMode.STEAM
+		_connection_manager.connection_mode == ConnectionManager.ConnectionMode.STEAM
 	)
-	# Other transports' Steam lobby only carries invites, so it stays friends-only
-	visibility_opt.visible = invite_btn.visible
+	# Only the owner can change the lobby type. Other transports' lobby stays friends-only
+	visibility_opt.visible = is_host and invite_btn.visible
 	_on_game_id_set(_connection_manager.conn_addr)
 	_on_lobby_players_updated(_lobby_manager.lobby_players)
 

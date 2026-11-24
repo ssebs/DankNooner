@@ -93,6 +93,7 @@ var _respawn_pulse_t: float = 0.0
 ## Countdown keeping the quick-tap "Respawning..." text up for a split second after release.
 var _respawn_flash_t: float = 0.0
 var _event_warning_tween: Tween = null
+var _in_event_picker_area := false
 var _unlock_tween: Tween = null
 ## Local-only marker for the respawn point you saved (see _rpc_respawn_point_set). A child of your
 ## player so it goes with them; hidden once anything else moves the point.
@@ -351,6 +352,10 @@ func _update_pitch_icon():
 #region signal handlers
 func _on_input_state_changed(new_state: InputStateManager.InputState) -> void:
 	minimap.set_expanded(new_state == InputStateManager.InputState.IN_MAP)
+	# The open picker (or pause over it) replaces the hint.
+	_event_picker_hint.visible = (
+		_in_event_picker_area and new_state == InputStateManager.InputState.IN_GAME
+	)
 
 
 func _on_gear_changed(new_gear: int):
@@ -381,6 +386,7 @@ func _on_match_ended():
 
 ## Local, from FreeRoamGameMode: the rider is in a circle whose picker they can open.
 func set_event_picker_hint(shown: bool):
+	_in_event_picker_area = shown
 	_event_picker_hint.visible = shown
 
 
