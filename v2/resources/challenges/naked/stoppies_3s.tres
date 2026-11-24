@@ -8,5 +8,5 @@ script = ExtResource("1_chal")
 title_key = "CHAL_COUNT_STOPPIE"
 stat = "STOPPIE"
 target = 10.0
-min_value = 3.0
+min_value = 2.5
 reward_mod = ExtResource("2_reward")

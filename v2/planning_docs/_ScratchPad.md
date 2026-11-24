@@ -31,11 +31,11 @@ Make a hoodie
 - [x] stop making players wait when doing fill up before race that you have to drive to, once they hit the btn they can start moving.
 - [x] friend names are too big/in the way (maybe move them to a hight set by viewport Y?)
 - [x] player names should be diff color in leaderboard/trick feed
-
-
 - [x] btn to open menu should go away once new menu pops up / merge these
 - [x] invite btn on pause menu for clients
-- [ ] change stoppie challenge from 3s to 2.5s
+- [x] change stoppie challenge from 3s to 2.5s
+
+
 - [ ] customize menu "All" skins should be explained if not already in tour
 - [ ] show player level on race finish screen
 - [ ] lobby scroll list of players can be longer...
