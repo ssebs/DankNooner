@@ -84,6 +84,10 @@ class ComboState:
 	var combo_score := 0.0
 	var combo_multiplier := 1
 	var combo_boost_earned := 0.0
+	var recent_tricks := PackedInt32Array()
+	var trick_freshness := 1.0
+	var hold_secs := 0.0
+	var catch_up_mult := 1.0
 	var boost_amount := 0.0
 	var boost_burn_target := -1.0
 	var boost_burn_rate := 0.0

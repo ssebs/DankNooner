@@ -39,6 +39,7 @@ const COLOR_EVENT := UtilsConstants.UI_GREEN
 ## No palette match; the only orange on the map.
 const COLOR_GARAGE := Color(1.0, 0.55, 0.1)
 const COLOR_GAS_STATION := UtilsConstants.UI_GOLD
+const COLOR_BONUS_RAMP := UtilsConstants.UI_GOLD
 const ICON_SELF := preload("res://resources/img/Icons/arrowUp.png")
 const ICON_CHECKPOINT := preload("res://resources/img/Icons/target.png")
 const ICON_EVENT := preload("res://resources/img/Icons/star.png")
@@ -56,6 +57,7 @@ const LEGEND := {
 	"MAP_LEGEND_EVENT": [COLOR_EVENT, ICON_EVENT],
 	"MAP_LEGEND_GARAGE": [COLOR_GARAGE, ICON_GARAGE],
 	"MAP_LEGEND_GAS_STATION": [COLOR_GAS_STATION, ICON_GAS_STATION],
+	"MAP_LEGEND_BONUS_RAMP": [COLOR_BONUS_RAMP, ICON_EVENT],
 }
 
 @onready var _sub_viewport: SubViewport = %MinimapSubViewport
@@ -71,6 +73,9 @@ var has_checkpoint: bool = false
 ## A pre-race target (e.g. drive to the start) rather than a race checkpoint; TargetCompass
 ## always points at these.
 var checkpoint_is_guide: bool = false
+## The stunt race's current bonus ramp (BonusRampComponent), every racer's.
+var bonus_ramp_pos: Vector3
+var has_bonus_ramp: bool = false
 
 var _local_player: PlayerEntity
 var _active: bool = false
@@ -128,6 +133,7 @@ func deactivate() -> void:
 	_local_player = null
 	# A race left mid-way never sends the clear; races resend it every frame anyway.
 	has_checkpoint = false
+	has_bonus_ramp = false
 	_sub_viewport.render_target_update_mode = SubViewport.UPDATE_DISABLED
 
 
@@ -285,6 +291,8 @@ func get_markers(expanded: bool) -> Array[Dictionary]:
 
 	if has_checkpoint:
 		markers.append(marker(checkpoint_pos, COLOR_CHECKPOINT, ICON_CHECKPOINT))
+	if has_bonus_ramp:
+		markers.append(marker(bonus_ramp_pos, COLOR_BONUS_RAMP, ICON_EVENT))
 	return markers
 
 

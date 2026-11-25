@@ -36,6 +36,19 @@ const _WARNING_SHAKE_EVERY_SECS := 0.7
 const _HORN_COOLDOWN_ALPHA := 0.35
 ## Held trick rows per column — the height of the hints they swap in for.
 const _TRICK_ROWS_PER_COLUMN := 3
+## Combo tell (_update_combo_tell): only in these modes; no combo this long mutes the music.
+const _COMBO_TELL_MODES: Array[GameModeType.Kind] = [
+	GameModeType.Kind.STUNT_RACE, GameModeType.Kind.TRICK_BATTLE
+]
+const _IDLE_TELL_SECS := 4.0
+## ProfileCard.show_challenges rebuilds every row's data; progress crawls, so a few Hz is plenty
+## (it ran every physics tick, several times in a slow frame).
+const _CHALLENGES_REFRESH_SECS := 0.25
+## The minimap and RPM bar neon eases UI_BLUE -> UI_MAGENTA as the combo multiplier climbs to DANK.
+const _GLOW_TWEEN_SECS := 0.6
+## The after-respawn clutch-up tip retires once the rider has clutched up this many times.
+const _CLUTCH_TIP_STOP_AFTER := 3.0
+const _CLUTCH_TIP_HOLD_SECS := 3.0
 
 @onready var minimap: Minimap = %Minimap
 @onready var _rpm_bar: ProgressBar = %HUD_RPMProgress
@@ -52,6 +65,7 @@ const _TRICK_ROWS_PER_COLUMN := 3
 @onready var _target_compass: TargetCompass = %TargetCompass
 @onready var _compass_strip: CompassStrip = %CompassStrip
 @onready var _event_warning: Label = %HUD_EventWarning
+@onready var _dank_badge: Label = %HUD_DankBadge
 @onready var _event_tricks: Label = %HUD_EventTricks
 @onready var _boost_gauge: BoostGauge = %BoostGauge
 @onready var _respawn_bar: ProgressBar = %HUD_RespawnProgress
@@ -130,11 +144,34 @@ var _shown_gamepad: bool = false
 var _shown_trick_state := TrickController.TrickState.NONE
 ## Seconds trick_state() has differed from _shown_trick_state.
 var _trick_state_diff_t: float = 0.0
+## Crashed since the last respawn — only a crash's respawn shows the clutch-up tip.
+var _crashed_since_respawn: bool = false
+## Seconds since the last combo ran (_update_combo_tell).
+var _idle_t: float = 0.0
+## In DANK mode last frame, to call out entering it.
+var _was_dank: bool = false
+## Last frame's trick, to catch a clutch-up's wheelie starting.
+var _prev_trick := TrickController.Trick.NONE
+## Duplicated neon styleboxes (same trick as _rpm_fill_style), so a per-frame recolour redraws
+## only their node instead of re-theming the whole HUD.
+var _glow_boxes: Array[StyleBoxFlat] = []
+## 0 = UI_BLUE, 1 = UI_MAGENTA (DANK).
+var _glow: float = 0.0
+var _glow_target: float = 0.0
+var _glow_tween: Tween
+var _challenges_refresh_t: float = 0.0
 
 func _ready() -> void:
 	hide_ui()
 	# Event text starts hidden in code, not in the scene — the editor flips label visibility.
 	clear_event_text()
+	_dank_badge.hide()
+	_dank_badge.add_theme_color_override("font_color", UtilsConstants.UI_MAGENTA)
+	for glow_slot: Array in [[minimap, "panel"], [_rpm_bar, "background"]]:
+		var control: Control = glow_slot[0]
+		var box := control.get_theme_stylebox(glow_slot[1]).duplicate() as StyleBoxFlat
+		control.add_theme_stylebox_override(glow_slot[1], box)
+		_glow_boxes.append(box)
 	_held_item_panel.hide()
 	_item_hint.hide()
 	_horn_drop_hint.hide()
@@ -172,6 +209,7 @@ func Enter(_state_context: StateContext):
 	player_entity.crashed.connect(_on_crashed)
 	player_entity.uncrashed.connect(_on_respawned)
 	player_entity.respawned.connect(_on_respawned)
+	player_entity.respawned.connect(_on_respawned_clutch_tip)
 	# Local-only: expand the minimap into the full map while IN_MAP.
 	input_state_mgr.input_state_changed.connect(_on_input_state_changed)
 	input_state_mgr.respawn_quick_fired.connect(_on_respawn_quick_fired)
@@ -202,6 +240,16 @@ func Exit(_state_context: StateContext):
 	player_entity.crashed.disconnect(_on_crashed)
 	player_entity.uncrashed.disconnect(_on_respawned)
 	player_entity.respawned.disconnect(_on_respawned)
+	player_entity.respawned.disconnect(_on_respawned_clutch_tip)
+	player_entity.audio_manager.set_music_tell(AudioManager.MusicTell.OPEN)
+	_dank_badge.hide()
+	_was_dank = false
+	if _glow_tween:
+		_glow_tween.kill()
+	_glow_target = 0.0
+	_set_glow(0.0)
+	# Menus (the trick demo level) aren't events
+	TrickSpotLabel.events_active = false
 	input_state_mgr.input_state_changed.disconnect(_on_input_state_changed)
 	input_state_mgr.respawn_quick_fired.disconnect(_on_respawn_quick_fired)
 	input_state_mgr.loadout_pick_changed.disconnect(_on_loadout_pick_changed)
@@ -226,7 +274,10 @@ func Physics_Update(delta: float):
 	_fps_label.text = tr("HUD_FPS").format({"value": int(Engine.get_frames_per_second())})
 	var player_def := save_manager.get_player_definition()
 	_profile_card.show_stats(player_def)
-	_profile_card.show_challenges(player_def.bike_skin.bike_type, save_manager.current_save, true)
+	_challenges_refresh_t -= delta
+	if _challenges_refresh_t <= 0.0:
+		_challenges_refresh_t = _CHALLENGES_REFRESH_SECS
+		_profile_card.show_challenges(player_def.bike_skin.bike_type, save_manager.current_save, true)
 
 	# Boost meter + combo multiplier are server-authoritative (TrickManager) and arrive
 	# via RollbackSynchronizer, so poll the synced vars rather than tracking them here.
@@ -247,11 +298,17 @@ func Physics_Update(delta: float):
 	# Horn: blue while it sounds rather than while pressed, dimmed through the spam lockout.
 	_horn_prompt.set_held(player_entity.horn_player.playing)
 	_horn_hint.modulate.a = _HORN_COOLDOWN_ALPHA if player_entity.horn_cooldown_secs > 0.0 else 1.0
-	_trick_popups.track(player_entity, trick_manager.points_per_second, _challenge_tricks, delta)
+	var dank := _is_dank()
+	_trick_popups.track(player_entity, trick_manager.points_per_second, _challenge_tricks, dank, delta)
 
 	# Live wheelie / stoppie stopwatch, only while a race leaderboard (and its challenges) is up.
 	# Display-only local accumulation — the challenge's authoritative best is server-side.
 	var trick := trick_controller.current_trick
+	if trick != _prev_trick and trick in TrickController.WHEELIE_TRICKS and movement_controller.is_clutch_dumping():
+		save_manager.add_stat("clutch_ups", 1.0)
+	_prev_trick = trick
+	_update_combo_tell(dank, delta)
+	TrickSpotLabel.events_active = gamemode_manager.current_game_mode != GameModeType.Kind.FREE_ROAM
 	var pitch_held: bool = (
 		not player_entity.is_crashed
 		and (trick in TrickController.WHEELIE_TRICKS or trick == TrickController.Trick.STOPPIE)
@@ -326,6 +383,54 @@ func Physics_Update(delta: float):
 		)
 
 
+## DANK mode (SSX Tricky's "Tricky"): the top combo multiplier, in _COMBO_TELL_MODES.
+func _is_dank() -> bool:
+	return (
+		gamemode_manager.current_game_mode in _COMBO_TELL_MODES
+		and trick_controller.combo_multiplier > ComboRules.COMBO_MULT_THRESHOLDS.size()
+		and !player_entity.is_crashed
+	)
+
+
+## Riding plain sounds flatter than tricking: idle mutes the music. The HUD's neon turns pink as the
+## multiplier climbs; DANK shows the badge and opens the music (the multiplier step already plays
+## the rizz).
+func _update_combo_tell(dank: bool, delta: float):
+	var active := gamemode_manager.current_game_mode in _COMBO_TELL_MODES
+	_idle_t = 0.0 if trick_controller.combo_time > 0.0 or !active else _idle_t + delta
+	var steps := ComboRules.COMBO_MULT_THRESHOLDS.size()
+	var glow := 0.0
+	if active and !player_entity.is_crashed:
+		glow = float(trick_controller.combo_multiplier - 1) / steps
+	if glow != _glow_target:
+		_glow_target = glow
+		if _glow_tween:
+			_glow_tween.kill()
+		_glow_tween = create_tween()
+		_glow_tween.tween_method(_set_glow, _glow, glow, _GLOW_TWEEN_SECS)
+	if dank and !_was_dank:
+		_dank_badge.show()
+		HUDFlash.pop(_dank_badge)
+	elif !dank and _was_dank:
+		_dank_badge.hide()
+	_was_dank = dank
+	var tell := AudioManager.MusicTell.COMBO
+	if dank or !active:
+		tell = AudioManager.MusicTell.OPEN
+	elif _idle_t >= _IDLE_TELL_SECS:
+		tell = AudioManager.MusicTell.IDLE
+	player_entity.audio_manager.set_music_tell(tell)
+
+
+## Recolours the neon, keeping each box's own border / glow alpha.
+func _set_glow(t: float):
+	_glow = t
+	var color := UtilsConstants.UI_BLUE.lerp(UtilsConstants.UI_MAGENTA, t)
+	for box in _glow_boxes:
+		box.border_color = Color(color, box.border_color.a)
+		box.shadow_color = Color(color, box.shadow_color.a)
+
+
 ## The bike icon under the score: pitch vs the balance point while wheelieing / stoppieing /
 ## airborne (the landing-snap window counts as the balance point in the air).
 func _update_pitch_icon():
@@ -371,6 +476,7 @@ func _on_gear_changed(new_gear: int):
 
 
 func _on_crashed(_peer_id: int):
+	_crashed_since_respawn = true
 	_game_msg.text = tr("HUD_CRASHED")
 	_game_msg.visible = true
 	_crash_respawn_hint.visible = true
@@ -382,6 +488,18 @@ func _on_crashed(_peer_id: int):
 func _on_respawned():
 	_game_msg.visible = false
 	_crash_respawn_hint.visible = false
+
+
+## Back from a crash with nothing to boost on: remind how to open a combo, until the rider clutches
+## up unprompted.
+func _on_respawned_clutch_tip():
+	if !_crashed_since_respawn:
+		return
+	_crashed_since_respawn = false
+	var stats: Dictionary = save_manager.current_save["progression"].get("stats", {})
+	var clutch_ups: float = stats.get("lifetime", {}).get("clutch_ups", 0.0)
+	if boost_controller.boost_amount < 1.0 and clutch_ups < _CLUTCH_TIP_STOP_AFTER:
+		_trick_popups.pop_callout(tr("HINT_CLUTCH_UP"), TrickPopups.CALLOUT_COLOR, _CLUTCH_TIP_HOLD_SECS)
 
 
 ## Every peer: clear what the next match would otherwise open with (the server only clears these
@@ -818,13 +936,14 @@ func _show_event_on_card() -> void:
 
 ## Server-side: pop a banked combo's score on its rider's HUD. Called from TrickManager. bonus: part
 ## of it came from a suggested trick.
-func push_score_popup(peer_id: int, points: int, multiplier: int, bonus: bool) -> void:
-	_rpc_score_popup.rpc_id(peer_id, points, multiplier, bonus)
+## money: what the combo adds to this event's payout (0 outside score modes).
+func push_score_popup(peer_id: int, points: int, multiplier: int, bonus: bool, money: int) -> void:
+	_rpc_score_popup.rpc_id(peer_id, points, multiplier, bonus, money)
 
 
 @rpc("call_local", "reliable")
-func _rpc_score_popup(points: int, multiplier: int, bonus: bool):
-	_trick_popups.pop_score(points, multiplier, bonus)
+func _rpc_score_popup(points: int, multiplier: int, bonus: bool, money: int):
+	_trick_popups.pop_score(points, multiplier, bonus, money)
 
 
 ## Server-side: log a rider's banked combo, or a crash and the combo it voided, on every HUD.
@@ -859,6 +978,16 @@ func _rpc_trickfeed(
 	_trick_feed.push(
 		username, is_own, is_bot, tricks, points, multiplier, crashed, launch_m, crash_hint
 	)
+
+
+## Server-side: tell `peer_id` a rival just passed them on score.
+func push_passed_on_score(peer_id: int, passer_name: String) -> void:
+	_rpc_passed_on_score.rpc_id(peer_id, passer_name)
+
+
+@rpc("call_local", "reliable")
+func _rpc_passed_on_score(passer_name: String):
+	_trick_feed.push_passed(passer_name)
 
 
 ## Server-side: show a (pre-localized) callout on every rider's HUD, e.g. a round winner.

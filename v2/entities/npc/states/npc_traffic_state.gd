@@ -10,11 +10,19 @@ class_name NPCTrafficState extends State
 signal crashed(victim: Node3D)
 ## A player passed through our NearMissArea and out again without crashing.
 signal near_missed(player: PlayerEntity)
+## A player clipped us at a shallow angle and low closing speed: they wobble off, not crash.
+## `normal` is our flat side facing them.
+signal glanced(player: PlayerEntity, normal: Vector3)
+## A player is right in front and about to be hit: honk + flash high beams.
+signal honked
 
 @export var npc: NPCRiderEntity
 ## A racer within this far ahead on our lane path gets followed rather than passed
 ## (traffic doesn't overtake in v1). Must cover braking distance from cruise + the gap.
 @export var follow_detect_range: float = 36.0
+## Seconds ahead at our speed we look for a racer to follow, when that's further than
+## follow_detect_range (like NPCRaceState.avoid_lookahead_time).
+@export var follow_lookahead_time: float = 3.0
 ## Forward cone for players and race bots; traffic ahead comes off lane_riders instead.
 @export var follow_detect_angle: float = 0.7
 ## Relative speed (m/s) that makes rider-to-rider contact an actual impact — riders
@@ -25,6 +33,12 @@ signal near_missed(player: PlayerEntity)
 @export var junction_timeout: float = 8.0
 ## Sat still this long counts as a full stop, at a STOP sign or before turning right on red.
 @export var full_stop_time: float = 1.0
+## Honk at a player we're following (_rider_ahead) and would reach within honk_ttc seconds at our
+## closing speed, if that's over honk_min_closing_speed (m/s).
+@export var honk_ttc: float = 1.5
+@export var honk_min_closing_speed: float = 5.0
+## Seconds between honks.
+@export var honk_cooldown: float = 4.0
 
 ## Room a stopped queue leaves between riders, beyond both their half lengths.
 const QUEUE_GAP := 1.5
@@ -62,6 +76,7 @@ var _passing: Dictionary[Node3D, int] = {}
 # Sideways offset off our lane left by a lane change, eased out as we drive
 var _lane_shift := 0.0
 var _next_lane_check_ms := 0
+var _honk_cooldown_left := 0.0
 
 
 func Enter(_state_context: StateContext):
@@ -117,6 +132,7 @@ func Physics_Update(delta: float):
 	target_speed = _gate(target_speed, delta)
 	npc.ramp_speed(target_speed, delta)
 	_stopped_time = _stopped_time + delta if is_zero_approx(npc.current_speed) else 0.0
+	_update_honk(blocker, delta)
 	follower.advance(npc.current_speed * delta)
 	_track_lane(follower.lane)
 	_lane_shift = move_toward(_lane_shift, 0.0, npc.current_speed * delta * LANE_CHANGE_SLOPE)
@@ -132,8 +148,8 @@ func Physics_Update(delta: float):
 ## baker's vehicle width of the path and not oncoming, so one beside the lane doesn't stop us.
 func _rider_ahead(from: TrafficLaneFollower) -> Node3D:
 	var best: Node3D = null
-	var best_dist := follow_detect_range
-	var starts := from.lanes_ahead(follow_detect_range)
+	var best_dist := maxf(follow_detect_range, npc.current_speed * follow_lookahead_time)
+	var starts := from.lanes_ahead(best_dist)
 	for lane in starts:
 		for other: NPCTrafficState in lane_riders[lane]:
 			# Recovered onto another lane and not ticked since — skip is intentional
@@ -162,6 +178,21 @@ func _rider_ahead(from: TrafficLaneFollower) -> Node3D:
 		best = racer
 		best_dist = dist
 	return best
+
+
+## Honk once per honk_cooldown at `blocker` (_rider_ahead: on our lane path, not oncoming) if it's a
+## player inside honk_ttc at the current closing speed.
+func _update_honk(blocker: Node3D, delta: float) -> void:
+	_honk_cooldown_left -= delta
+	var player := blocker as PlayerEntity
+	# Following no one, traffic or a race bot — skip is intentional
+	if _honk_cooldown_left > 0.0 or player == null or player.is_crashed:
+		return
+	var to := (player.global_position - npc.global_position).slide(Vector3.UP)
+	var closing := (npc.velocity - player.velocity).dot(to.normalized())
+	if closing > honk_min_closing_speed and to.length() < closing * honk_ttc:
+		_honk_cooldown_left = honk_cooldown
+		honked.emit()
 
 
 ## Fastest `rider` can go and still stop a queue's spacing (EXIT_CLEARANCE) behind a racer `dist`
@@ -333,10 +364,35 @@ func _on_contact(other: Node3D) -> void:
 	# The crash_collision mask also catches level obstacles
 	if !racer.is_in_group(UtilsConstants.GROUPS["Racers"]):
 		return
-	# A player has no body to bump off, so any touch crashes them
-	if racer is not PlayerEntity and (npc.velocity - racer.velocity).length() < contact_min_speed_delta:
+	if racer is PlayerEntity:
+		if _try_glance(racer):
+			return
+	elif (npc.velocity - racer.velocity).length() < contact_min_speed_delta:
 		return
 	crashed.emit(racer)
+
+
+## A player heading within (90 - CRASH_MAX_ANGLE_DEG) of our line, closing under
+## WOBBLE_RAM_MAX_SPEED, glances off (same limits as a wall / rider hit). Anything else crashes.
+func _try_glance(player: PlayerEntity) -> bool:
+	var closing: float = (npc.velocity - player.velocity).length()
+	if closing >= CrashController.WOBBLE_RAM_MAX_SPEED:
+		return false
+	var fwd := (-npc.global_basis.z).slide(Vector3.UP).normalized()
+	var their_fwd := (-player.global_basis.z).slide(Vector3.UP).normalized()
+	var off_line := rad_to_deg(acos(clampf(absf(fwd.dot(their_fwd)), 0.0, 1.0)))
+	if off_line > 90.0 - CrashController.CRASH_MAX_ANGLE_DEG:
+		return false
+	# Already wobbling off an earlier touch — once per wobble, like a wall glance
+	if !player.wobble_controller.is_wobbling:
+		var to := (player.global_position - npc.global_position).slide(Vector3.UP)
+		var side := to - fwd * to.dot(fwd)
+		var normal := side.normalized() if side.length() > 0.01 else npc.global_basis.x
+		glanced.emit(player, normal)
+	# A clip isn't a near miss
+	if _passing.has(player):
+		_passing[player] = -1
+	return true
 
 
 ## Shot (ItemManager) or reported by a racer that detected the contact from its side.

@@ -17,7 +17,7 @@ const BOOST_SEGMENT_SECS: float = 1.0  # one segment = 1s of boost, spent piecem
 const BOOST_FULL_BURN_SECS: float = 4.0  # rate for a burn-it-all double-tap: BOOST_SEGMENTS over this
 const BOOST_DOUBLE_TAP_SECS: float = 0.5  # a second tap inside this window burns all remaining boost
 const BOOST_ACCEL_MULT: float = 1.8  # engine drive multiplier while boosting
-const BOOST_SPEED_MULT: float = 1.25  # raises both the gear cap and bd.max_speed ceiling
+const BOOST_SPEED_MULT: float = 1.5  # raises both the gear cap and bd.max_speed ceiling; the only way past it
 
 ## Boost meter in SEGMENTS, 0..BOOST_SEGMENTS. Filled server-side by TrickManager from trick
 ## points; drained here in the rollback tick, so the local client predicts the drain and
@@ -81,6 +81,15 @@ func on_movement_rollback_tick(delta: float):
 		return
 
 	ComboRules.drain_burn(trick_controller, self, delta)
+
+
+## Spend `amount` more of the meter, on top of any burn running (a landing's auto-burn,
+## TrickController._award_trick_landing). Rollback tick.
+func burn(amount: float):
+	if boost_burn_target < 0.0:
+		boost_burn_target = boost_amount
+		boost_burn_rate = 1.0 / BOOST_SEGMENT_SECS
+	boost_burn_target = maxf(boost_burn_target - amount, 0.0)
 
 
 ## +1 segment, clamped to full. Called from PlayerEntity's rollback tick (rb_add_boost) so the

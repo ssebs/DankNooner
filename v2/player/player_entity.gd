@@ -189,6 +189,13 @@ var rb_set_boost_amount: float = 0.0
 ## rollback tick + resim machinery as rb_add_boost.
 var rb_near_miss: bool = false
 var rb_near_miss_score: float = 0.0
+## Set by SpawnManager.glance_player — clipped traffic: wobble off rb_glance_normal and bank the
+## combo. Rides the same rollback tick + resim machinery as rb_near_miss.
+var rb_do_glance: bool = false
+var rb_glance_normal: Vector3 = Vector3.ZERO
+## Server only: trick boost fill multiplier for this rider's race standing (CatchUpComponent). The
+## rollback tick copies it into the synced TrickController.catch_up_mult.
+var catch_up_target: float = 1.0
 ## Freeze/unfreeze, set by CountdownTask + gamemode teardown. movement_locked is synced state, so
 ## applying it in the rollback tick lets the freeze reach clients — a write from outside never syncs.
 var rb_lock_movement: bool = false
@@ -222,6 +229,7 @@ var _respawn_target: Transform3D = Transform3D()
 var _boost_grant_tick: int = -1
 var _boost_grant_amount: float = 0.0
 var _near_miss_tick: int = -1
+var _glance_tick: int = -1
 
 ## Same resim protection for freezes — a dropped unlock leaves the rider frozen for good.
 var _lock_tick: int = -1
@@ -342,6 +350,16 @@ func _rollback_tick(delta: float, tick: int, _is_fresh: bool):
 		trick_controller.on_near_miss(rb_near_miss_score)
 	elif tick == _near_miss_tick:
 		trick_controller.on_near_miss(rb_near_miss_score)
+
+	if rb_do_glance:
+		rb_do_glance = false
+		_glance_tick = tick
+		_apply_glance()
+	elif tick == _glance_tick:
+		_apply_glance()
+
+	if multiplayer.is_server():
+		trick_controller.catch_up_mult = catch_up_target
 
 	# Run other controllers (ORDER MATTERS)
 	# Boost first — ahead of every controller AND evaluated even while crashed (unlike the
@@ -787,11 +805,20 @@ func _apply_respawn_state():
 	# completed combos is yours to keep. Must run BEFORE the do_reset() loop below, which
 	# clears the combo state this reads.
 	boost_controller.apply_crash_void(trick_controller.combo_boost_earned)
+	# Crashed while behind the race leader: back with a segment to catch up on.
+	if is_crashed and trick_controller.catch_up_mult > 1.0:
+		boost_controller.boost_amount = maxf(boost_controller.boost_amount, 1.0)
 	is_crashed = false
 	for child in controllers_node.get_children():
 		if !child.has_method("do_reset"):
 			continue
 		child.do_reset()
+
+
+## A glancing traffic hit (rb_do_glance): wobble off it and end the combo cleanly, so it banks.
+func _apply_glance():
+	crash_controller.glance_off(rb_glance_normal)
+	ComboRules.end_combo(trick_controller)
 
 
 ## Rammed by another racer (AI or human) — the one who hit us detected it and

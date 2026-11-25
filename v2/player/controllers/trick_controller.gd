@@ -181,6 +181,15 @@ var combo_multiplier: int = 1
 ## Score the combo in progress has earned (see ComboRules.HELD_TRICK_SCORE / ONE_TIME_TRICK_SCORE).
 ## TrickManager banks it when the combo ends.
 var combo_score: float = 0.0
+## The last few tricks started (ComboRules.RECENT_TRICK_WINDOW), for repeat decay.
+var recent_tricks := PackedInt32Array()
+## The current trick's pay rate (score and boost), lowered by repeats. 1 = fresh.
+var trick_freshness: float = 1.0
+## Seconds the current trick has been held; past ComboRules.stale_hold_secs it pays less.
+var hold_secs: float = 0.0
+## Trick boost fill multiplier for being behind the race leader. Written in the rollback tick from
+## the server-only PlayerEntity.catch_up_target, so clients just carry the server's value.
+var catch_up_mult: float = 1.0
 ## Full flips this jump (TrickManager counts each; the BACKFLIP / FRONTFLIP trick fires once).
 var air_flips: int:
 	get:
@@ -198,6 +207,8 @@ var _shuvs_awarded: int = 0
 ## Synced — last tick was a real jump (past AIR_TRICK_MIN_AIRTIME). MovementController zeroes
 ## air_time on the landing tick, so the landing check needs last tick's value.
 var _was_airborne: bool = false
+## Synced — boost_amount on the last grounded tick, so a landing knows what its jump earned.
+var _takeoff_boost: float = 0.0
 ## Gesture state (all synced: read/written in the rollback tick and gates tricks, so combo_time,
 ## which is synced, stays consistent on resim). Direction the stick is pushed (NO_DIR = neutral)
 ## and for how long, whether this press is the second of a double tap; plus a released tap waiting
@@ -439,9 +450,17 @@ func _latch_shuvit():
 
 ## Touching down from a real jump past the wheelie / stoppie threshold banks a bonus. The landing
 ## tick already detected that trick, so combo time keeps running as a normal wheelie / stoppie.
+## Landing on the gas auto-burns the boost that jump earned (a bail on the same tick crashes in
+## CrashController right after, and the crash cancels the burn).
 func _award_trick_landing():
 	if _was_airborne and is_landed_in_trick():
 		ComboRules.award_landing(self, boost_controller)
+	var landed := _was_airborne and movement_controller.is_on_floor
+	var earned := boost_controller.boost_amount - _takeoff_boost
+	if landed and earned > 0.0 and input_controller.nfx_throttle > 0.5:
+		boost_controller.burn(earned)
+	if movement_controller.is_on_floor:
+		_takeoff_boost = boost_controller.boost_amount
 	_was_airborne = (
 		not movement_controller.is_on_floor
 		and movement_controller.air_time >= AIR_TRICK_MIN_AIRTIME
@@ -600,6 +619,7 @@ func do_reset():
 	_air_flips_awarded = 0
 	_shuvs_awarded = 0
 	_was_airborne = false
+	_takeoff_boost = 0.0
 	_wheelie_exit_hold = 0.0
 	_hold_dir = NO_DIR
 	_hold_time = 0.0
@@ -614,6 +634,16 @@ func do_reset():
 
 func is_in_wheelie() -> bool:
 	return current_trick in [Trick.WHEELIE_SITTING, Trick.WHEELIE_MOD, Trick.DRIFT_WHEELIE]
+
+
+## The current trick pays less: a repeat, or held too long.
+func is_stale() -> bool:
+	if current_trick == Trick.NONE:
+		return false
+	return (
+		trick_freshness < 1.0
+		or hold_secs >= ComboRules.stale_hold_secs(current_trick, _wheelie_score_mult())
+	)
 
 
 ## A full flip completed this jump.

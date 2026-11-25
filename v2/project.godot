@@ -24,7 +24,7 @@ config/icon="uid://c3b2p5gk67ghq"
 
 [audio]
 
-buses/default_bus_layout="res://utils/custom_audio_middleware/default_bus_layout.tres"
+buses/default_bus_layout="uid://cebtmaicx3lk7"
 
 [autoload]
 

@@ -12,7 +12,9 @@
    - Double-tap (a second press within `BOOST_DOUBLE_TAP_SECS`) → burns all remaining boost as one longer boost.
    - Under one full segment → press is rejected, gauge blinks.
 5. **Crashing voids the run** — that combo's score is discarded, not partially credited, and the boost it earned is taken back. Boost banked by *earlier completed* combos survives (see `combo_boost_earned` below).
-6. While boosting, **full throttle is forced** (you accelerate even off the gas) and the **automatic transmission is forced on** regardless of the `auto_transmission` setting — a boost spent bouncing off the rev limiter in the wrong gear is a wasted boost.
+6. **Boost is the only way past the bike's top speed** (`BOOST_SPEED_MULT`), and landing a jump
+   on the gas auto-burns the boost that jump earned (see [Trick incentives](#trick-incentives)).
+7. While boosting, **full throttle is forced** (you accelerate even off the gas) and the **automatic transmission is forced on** regardless of the `auto_transmission` setting — a boost spent bouncing off the rev limiter in the wrong gear is a wasted boost.
 
 ## Where the logic lives (and why it's split)
 
@@ -65,6 +67,54 @@ Passing traffic close without hitting it scores into the combo like a one-time t
 
 Traffic only — race bots and animals don't count.
 
+### Trick incentives
+
+The trick line has to beat the straight line. Riding plain caps lower than boosting, and repeating
+one easy trick stops paying.
+
+- **Repeat decay (rollback, `ComboRules.start_trick`).** `recent_tricks` holds the last
+  `RECENT_TRICK_WINDOW` tricks started (across combos; the wheelie variants count as one). A trick
+  already in it starts at `trick_freshness` = `REPEAT_DECAY` per earlier copy, floored at
+  `MIN_FRESHNESS`. Freshness scales that trick's held score, one-time score and boost. A held
+  trick restarting mid-combo straight after itself (a drift's slip flickering, a nose bobbing at
+  the threshold) is the same hold: no repeat, and its hold time keeps running.
+- **Hold cap (`ComboRules.accrue`).** `hold_secs` times the current trick. Past
+  `stale_hold_secs` (`EASY_HOLD_STALE_SECS` for `EASY_HOLD_TRICKS` below the balance point, else
+  `HARD_HOLD_STALE_SECS`) its held score drops to `REPEAT_DECAY`. `combo_time`, so the multiplier,
+  keeps rising: the cap was meant to stop hold-only farming, but it made x3 near unreachable.
+- **Shown, not hidden.** A repeat's callout pops smaller and grey; the live "+N" greys while
+  `TrickController.is_stale()`.
+- **Landing boost (`TrickController._award_trick_landing`, Mario Kart's trick boost).** Touching
+  down from a real jump with the throttle held auto-burns the boost that jump earned (air tricks,
+  flips, the landing award), from the meter via `BoostController.burn`, on top of any burn
+  running. What it earned = `boost_amount` now minus on the last grounded tick (`_takeoff_boost`,
+  synced), so a burn spent mid-air comes off it. A bail on the landing tick crashes right after,
+  which cancels the burn.
+- **Catch-up (`CatchUpComponent`, races).** The server sets `PlayerEntity.catch_up_target` from race
+  place (`ComboRules.catch_up_mult`: `CATCH_UP_PER_PLACE` per place behind the leader, up to
+  `CATCH_UP_MAX_MULT`). The rollback tick copies it on the server into the synced
+  `TrickController.catch_up_mult`, so clients just carry it. It scales every trick-earned boost
+  chunk (`_add_boost`), never Gas Cans. A crash while behind respawns with at least one segment
+  (`_apply_respawn_state`). Bots don't get it.
+- **Traffic glance.** Clipping traffic at a shallow angle (see
+  [Architecture](./Architecture.md#npc-traffic-manager)) runs `rb_do_glance`: a wobble plus
+  `ComboRules.end_combo`, so the combo banks like a clean end. `TrickManager` banks a combo whose
+  `combo_time` drops by more than `RESTART_SLACK_SECS` between frames, since a glance mid-trick
+  ends and restarts the combo inside one frame.
+- **Riding tell (`RidingHUDState._update_combo_tell`, local; stunt races and trick battles only,
+  `_COMBO_TELL_MODES`, music stays open elsewhere).** No combo for `_IDLE_TELL_SECS`:
+  `AudioManager.set_music_tell(IDLE)` closes the MusicDuck low-pass and dips it. In a combo:
+  `COMBO` (partly open). **DANK mode** (`RidingHUDState._is_dank`: the top combo multiplier, like
+  SSX Tricky's "Tricky") is visual only, no extra score: the magenta `HUD_DankBadge` under the event
+  warning (top centre) while it lasts, the multiplier reads "x3 DANK" (`HUD_COMBO_DANK`), it and the
+  live score turn magenta, and the music opens fully. On the way up, the minimap and RPM bar neon
+  (border + glow) tweens `UI_BLUE` to `UI_MAGENTA` by multiplier step (`_set_glow`). It recolours
+  duplicated per-node styleboxes, never the shared `hud_neon.tres` ones: changing a theme stylebox
+  re-themes every HUD control, measured at +2 to 5 ms a frame. The boost trail
+  stays boost-only. Leaving the riding HUD opens the music again. The filter and amplify live on MusicDuck in `default_bus_layout.tres`.
+- **Clutch-up tip.** A respawn with under one segment pops `HINT_CLUTCH_UP`, until the rider has
+  clutched up `_CLUTCH_TIP_STOP_AFTER` times (career stat `clutch_ups`).
+
 ## Tunables
 
 > Values live in the source — this lists what each knob *does*, not what it's currently set to.
@@ -86,6 +136,9 @@ Consts, deliberately **not** `@export`: this code runs inside the rollback tick 
 | `LANDING_TRICK_SCORE` | Score banked when a real jump (past `AIR_TRICK_MIN_AIRTIME`) touches down past the wheelie or stoppie threshold. Also awards `BOOST_PER_AIR_TRICK`. |
 | `NEAR_MISS_MIN_SPEED` / `NEAR_MISS_MAX_SPEED` | HUD speed tiers: under min scores nothing, up to max scores `NEAR_MISS_SCORE`, past it `NEAR_MISS_MAX_SCORE`. |
 | `NEAR_MISS_COMBO_SECS` / `BOOST_PER_NEAR_MISS` | Combo time and boost (before multiplier) each near miss adds. |
+| `RECENT_TRICK_WINDOW` / `REPEAT_DECAY` / `MIN_FRESHNESS` | Repeat decay: how many recent tricks count, the pay per earlier copy, and its floor. |
+| `EASY_HOLD_STALE_SECS` / `HARD_HOLD_STALE_SECS` / `EASY_HOLD_TRICKS` | How long one trick can be held before its held score drops. |
+| `CATCH_UP_PER_PLACE` / `CATCH_UP_MAX_MULT` | Boost fill bonus per race place behind the leader, and its cap. |
 
 **Keep `COMBO_MULT_THRESHOLDS` in the same ballpark as the meter fill time implied by `BOOST_PER_SEC`.** The gauge is the only feedback the player can see, so a multiplier that steps far behind it reads as broken. Changing one without re-checking the other has already caused a false bug report once.
 
@@ -104,7 +157,7 @@ Same rollback-determinism reason for being consts.
 | `BOOST_FULL_BURN_SECS` | Sets the burn rate for a double-tap "use it all" (`BOOST_SEGMENTS` over this many secs), so emptying a full meter runs this long. |
 | `BOOST_DOUBLE_TAP_SECS` | Second-tap window: a press this soon after the first burns all remaining boost instead of one segment. |
 | `BOOST_ACCEL_MULT` | Engine drive multiplier while boosting. |
-| `BOOST_SPEED_MULT` | Raises both the gear cap and the `bd.max_speed` ceiling while boosting. |
+| `BOOST_SPEED_MULT` | Raises both the gear cap and the `bd.max_speed` ceiling while boosting. The only way past the bike's top speed; `MovementController.OVER_CAP_BLEED` eases speed back down after. |
 
 ### Scoring — `managers/trick_manager.gd`
 

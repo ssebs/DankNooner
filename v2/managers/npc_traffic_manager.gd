@@ -20,6 +20,8 @@ signal player_near_missed(player: PlayerEntity)
 @export var settings_manager: SettingsManager
 ## Used to crash a player a traffic rider rammed.
 @export var spawn_manager: SpawnManager
+## Traffic honks (car horn on the rider's HornPlayer).
+@export var audio_manager: AudioManager
 ## Round-robin source of bike riders' character skins, same as NPCRaceManager.
 ## The vehicle itself is rolled per rider from the map's roster, not taken from here.
 @export var npc_definitions: Array[PlayerDefinition] = [
@@ -64,6 +66,8 @@ const LOD_INTERVAL_MS: int = 250
 ## A client hides a rider not synced for this long. Covers several missed packets at the
 ## synchronizer's replication_interval, or riders blink on lossy links.
 const SYNC_STALE_MS: int = 500
+## How long a traffic honk sounds.
+const HONK_SECS: float = 0.4
 
 var _npcs: Dictionary[int, NPCRiderEntity] = {}
 ## Server-side copy of each rider's rolled _skins index, kept so a peer whose level
@@ -347,10 +351,24 @@ func rpc_spawn_npc(npc_id: int, skin_index: int, pos: Vector3, basis: Basis):
 	var traffic_state := _traffic_state(npc_id)
 	traffic_state.crashed.connect(_on_npc_crashed.bind(npc_id))
 	traffic_state.near_missed.connect(player_near_missed.emit)
+	traffic_state.glanced.connect(_on_npc_glanced)
+	traffic_state.honked.connect(_on_npc_honked.bind(npc_id))
 	npc.driving = true
 	# StateMachine._ready defers its own transition into the idle state — queue
 	# ours behind it so the rider isn't flipped straight back to idle.
 	npc.state_machine.request_state_change.call_deferred(traffic_state)
+
+
+## Every peer: a short honk and a high-beam flash from the rider.
+@rpc("call_local", "reliable")
+func rpc_honk(npc_id: int):
+	# Not spawned on this peer yet (late join / level still loading) — skip is intentional
+	if !_npcs.has(npc_id):
+		return
+	var npc := _npcs[npc_id]
+	audio_manager.get_sound_event(AudioManager.Sfx.CAR_HORN).play_on(npc.horn_player)
+	get_tree().create_timer(HONK_SECS).timeout.connect(npc.horn_player.stop)
+	npc.flash_high_beams()
 
 
 @rpc("call_local", "reliable")
@@ -597,6 +615,15 @@ func _on_npc_crashed(victim: Node3D, npc_id: int) -> void:
 		(victim as NPCRiderEntity).report_hit(_npcs[npc_id])
 
 
+## A player clipped a rider: they wobble off it (see NPCTrafficState._try_glance), the rider drives on.
+func _on_npc_glanced(player: PlayerEntity, normal: Vector3) -> void:
+	spawn_manager.glance_player.rpc(int(player.name), normal)
+
+
+func _on_npc_honked(npc_id: int) -> void:
+	rpc_honk.rpc(npc_id)
+
+
 func _respawn_after_delay(npc_id: int) -> void:
 	get_tree().create_timer(randf_range(respawn_delay_min, respawn_delay_max)).timeout.connect(
 		_place_on_lane.bind(npc_id), CONNECT_ONE_SHOT
@@ -662,6 +689,8 @@ func _get_configuration_warnings() -> PackedStringArray:
 		issues.append("settings_manager must not be empty")
 	if spawn_manager == null:
 		issues.append("spawn_manager must not be empty")
+	if audio_manager == null:
+		issues.append("audio_manager must not be empty")
 	if npc_definitions.is_empty():
 		issues.append("npc_definitions must not be empty")
 	return issues

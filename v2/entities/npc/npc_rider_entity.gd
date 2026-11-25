@@ -76,6 +76,9 @@ const NET_LERP_SPEED: float = 12.0
 const STOP_LINE_BUFFER: float = 2.5
 ## Metres NearMissArea reaches past the collision shape — a player leaving it uncrashed passed us close.
 const NEAR_MISS_MARGIN: float = 1.0
+## High-beam flash on a honk: this many on/off blinks, each phase this long.
+const HIGH_BEAM_FLASHES: int = 2
+const HIGH_BEAM_FLASH_SECS: float = 0.1
 
 @onready var visual_root: RiderVisual = %VisualRoot
 @onready var name_label: Label3D = %NameLabel
@@ -86,6 +89,8 @@ const NEAR_MISS_MARGIN: float = 1.0
 @onready var near_miss_shape: CollisionShape3D = $NearMissArea/CollisionShape3D
 @onready var synchronizer: MultiplayerSynchronizer = $MultiplayerSynchronizer
 @onready var boost_trail: BoostTrail = %BoostTrail
+@onready var horn_player: AudioStreamPlayer3D = %HornPlayer
+@onready var high_beams: SpotLight3D = %HighBeams
 ## Ground probes under each wheel, as on the player. Off unless a race bot is driving (NPCRaceState):
 ## traffic rides rails and never reads them.
 @onready var front_raycast: RayCast3D = %FrontRayCast
@@ -274,6 +279,16 @@ func _process(delta: float) -> void:
 		return
 	var weight := 1.0 - exp(-NET_LERP_SPEED * delta)
 	global_transform = global_transform.interpolate_with(_sync_pose(), weight)
+
+
+## Two quick flashes of the high beams (traffic honking at a player).
+func flash_high_beams() -> void:
+	var tween := high_beams.create_tween()
+	for i in HIGH_BEAM_FLASHES:
+		tween.tween_callback(high_beams.show)
+		tween.tween_interval(HIGH_BEAM_FLASH_SECS)
+		tween.tween_callback(high_beams.hide)
+		tween.tween_interval(HIGH_BEAM_FLASH_SECS)
 
 
 ## LOD drawing (see NPCTrafficManager): a hidden rider skips render smoothing and its rig.

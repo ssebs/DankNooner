@@ -105,6 +105,11 @@ func _score(peer_id: int) -> float:
 
 
 #override
+func _pays_for_tricks() -> bool:
+	return true
+
+
+#override
 func _results_title_key() -> String:
 	return "TRICK_BATTLE_COMPLETE"
 

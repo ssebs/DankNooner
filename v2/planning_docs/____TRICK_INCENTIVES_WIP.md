@@ -1,6 +1,14 @@
 # Trick Incentives (WIP)
 
-High-level design. Nothing here is built yet.
+**Status 2026-11-24:** every section built, untested. How it works now lives in
+[ComboAndBoost](./ComboAndBoost.md#trick-incentives), [StuntRaceGamemode](./StuntRaceGamemode.md),
+[GamemodeSystem](./GamemodeSystem.md#races) and [Architecture](./Architecture.md#npc-traffic-manager).
+Delete this doc once playtested. Changes from the plan below: score gates were built then deleted
+(unclear in game), the "lower starting multiplier" gap rule was dropped, and the tab is "Tips".
+Landing boost auto-burns the boost the jump earned (throttle held) instead of a free boost. The
+combo tell (DANK + idle music) runs only in stunt races and trick battles; DANK = top multiplier,
+visual only (top-centre badge, "x3 DANK", pink live score + neon glow). Stale holds pay less
+instead of freezing the multiplier, and the combo grace is longer, so x3 is reachable.
 
 ## Problem
 
@@ -56,8 +64,8 @@ course, and the game should show players that while they ride.
 - **Bonus ramps.** Some ramps glow and call out a specific trick ("BACKFLIP HERE 4x"). Landing it
   pays a multiplier. The trick rotates over the race, and the ramp shows on the compass strip.
   Inspired by the CS2 deathmatch bonus weapon.
-- **Score gates.** A checkpoint only counts cleanly if you pass through it mid-combo (or above a
-  multiplier threshold); otherwise there's a time penalty.
+- **Score gates.** A checkpoint only counts cleanly if you pass through it mid-combo; otherwise it
+  costs points.
 
 ## 4. Make the reward visible
 
@@ -83,7 +91,6 @@ course, and the game should show players that while they ride.
 
 Stops riding plain, and spamming one easy trick, from paying well.
 
-- **Straight riding:** gaps between combos lower the next combo's starting multiplier.
 - **Repeated tricks:** each trick has a freshness value. Repeating it within a combo (or within
   the last few tricks) pays less each time; a different trick restores it.
 - **Holding one trick:** after a while, holding one easy trick (a long wheelie) still keeps the
@@ -152,8 +159,6 @@ Draft rules (✓ = system exists today):
 | Traffic | ✓ Pass close to traffic for near-miss points.                                                 | near misses   |
 | Traffic | Clipping traffic at an angle ends your combo but keeps its score. Hitting it head-on crashes. | §8            |
 | Events  | Glowing ramps ask for a trick. Land it for a big multiplier.                                  | §3            |
-| Events  | Hit checkpoints mid-combo or lose time.                                                       | §3            |
-| Events  | Score cuts time off your finish.                                                              | §3            |
 
 Open: the tab's name ("Tips", "Rules", "How to Score").
 

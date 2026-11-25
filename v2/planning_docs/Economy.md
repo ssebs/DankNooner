@@ -48,7 +48,10 @@ Built.
 - **Where:** the server computes it in `RunnerGameMode._pay_out()`, called from
   `_show_results()`, which every results-showing mode goes through. It pays each rider through `RunnerGameMode.earn()`, which RPCs them; their
   client writes its own save via `rpc_earn`, which also pops `+$N` and `+N XP` off the riding
-  HUD. The results screen shows the earned money and XP columns. Modes add score through the
+  HUD. The results screen shows the earned money and XP columns, and in score modes how much of
+  the money the score paid (`RunnerGameMode.score_money`). Each banked combo's pop also shows the
+  "+$N" it adds (`trick_money`) in modes where trick score pays (`_pays_for_tricks`: stunt race,
+  trick battle). Modes add score through the
   `_payout_score` override (`TimedScoreGameMode` for trick battle and long jump, stunt races,
   crash launch).
 - **Time attack** never reaches the results screen: every lap pays a fraction of the base, and a

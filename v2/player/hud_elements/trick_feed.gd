@@ -1,7 +1,7 @@
 @tool
-## Kill-feed style log of every rider's banked combos and bails, mid-left, newest on top. Each line
-## flashes in (HUDFlash) and fades out after HOLD_SECS. Fed by RidingHUDState from the server's
-## TrickManager.
+## Kill-feed style log of every rider's banked combos and bails, mid-left, newest on top, plus
+## rivals passing you on score (stunt races). Each line flashes in (HUDFlash) and fades out after
+## HOLD_SECS. Fed by RidingHUDState from the server's TrickManager / LeaderboardComponent.
 class_name TrickFeed extends VBoxContainer
 
 @export var font_size: int = 20
@@ -31,6 +31,12 @@ func push(
 	launch_m: float,
 	crash_hint: String
 ) -> void:
+	var text := _format(username, is_own, is_bot, tricks, points, multiplier, crashed, launch_m, crash_hint)
+	push_line(text, FLASH_BAIL_COLOR if crashed else FLASH_OWN_COLOR if is_own else FLASH_COLOR)
+
+
+## A line of BBCode.
+func push_line(text: String, flash_color: Color) -> void:
 	var line := RichTextLabel.new()
 	line.bbcode_enabled = true
 	line.fit_content = true
@@ -40,7 +46,7 @@ func push(
 	line.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	line.add_theme_font_size_override("normal_font_size", font_size)
 	line.add_theme_font_size_override("bold_font_size", font_size)
-	line.text = _format(username, is_own, is_bot, tricks, points, multiplier, crashed, launch_m, crash_hint)
+	line.text = text
 	add_child(line)
 	move_child(line, 0)
 	while get_child_count() > MAX_LINES:
@@ -48,12 +54,19 @@ func push(
 		remove_child(oldest)
 		oldest.queue_free()
 
-	var flash_color := FLASH_BAIL_COLOR if crashed else FLASH_OWN_COLOR if is_own else FLASH_COLOR
 	HUDFlash.flash_in(line, flash_color)
 	var tween := line.create_tween()
 	tween.tween_interval(HOLD_SECS)
 	tween.tween_property(line, "modulate:a", 0.0, FADE_OUT_SECS)
 	tween.tween_callback(line.queue_free)
+
+
+## "[b]Name[/b] passed you on score", all magenta.
+func push_passed(username: String) -> void:
+	# [lb] escapes BBCode in the username.
+	var shown := "[b]%s[/b]" % username.replace("[", "[lb]")
+	var text := tr("FEED_PASSED_ON_SCORE").format({"name": shown})
+	push_line("[color=#%s]%s[/color]" % [UtilsConstants.UI_MAGENTA.to_html(false), text], FLASH_COLOR)
 
 
 ## [b]Name[/b]  Bailed 23m  …Wheelie → Knee Knocker → Drift (+2)  [b]+1240 ×3[/b] — a bail strikes
@@ -69,16 +82,7 @@ func _format(
 	launch_m: float,
 	crash_hint: String
 ) -> String:
-	# [lb] escapes BBCode in the username.
-	var name_color := (
-		UtilsConstants.NAME_OWN_COLOR if is_own
-		else UtilsConstants.NAME_BOT_COLOR if is_bot
-		else UtilsConstants.NAME_PLAYER_COLOR
-	)
-	var shown_name := (
-		"[color=#%s]%s[/color]" % [name_color.to_html(false), username.replace("[", "[lb]")]
-	)
-	var parts := PackedStringArray(["[b]%s[/b]" % shown_name])
+	var parts := PackedStringArray(["[b]%s[/b]" % _shown_name(username, is_own, is_bot)])
 	if crashed:
 		var bailed := tr(crash_hint if crash_hint != "" else "FEED_BAILED")
 		# Bots don't measure a launch
@@ -103,3 +107,13 @@ func _format(
 		points_text = "[color=#%s]%s[/color]" % [points_color.to_html(false), points_text]
 		parts.append("[b]%s[/b]" % points_text)
 	return "  ".join(parts)
+
+
+func _shown_name(username: String, is_own: bool, is_bot: bool) -> String:
+	var name_color := (
+		UtilsConstants.NAME_OWN_COLOR if is_own
+		else UtilsConstants.NAME_BOT_COLOR if is_bot
+		else UtilsConstants.NAME_PLAYER_COLOR
+	)
+	# [lb] escapes BBCode in the username.
+	return "[color=#%s]%s[/color]" % [name_color.to_html(false), username.replace("[", "[lb]")]

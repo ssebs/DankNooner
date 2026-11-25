@@ -46,6 +46,15 @@ The stunt race is `RaceGameMode` with `race_type = STUNT_RACE`: the shared race 
   - Placement: `FinishBonusComponent`, `placement_points` by finish place among every racer, bots
     included.
   - Knockouts: `KnockoutScoringComponent`, `points_per_knockout` each.
+- **Bonus ramps** (`BonusRampComponent`): one `Ramp` in the level at a time asks for a trick from
+  `trick_pool`, shown as a gold "BACKFLIP HERE 10x" over its lip and a star on the compass strip /
+  minimap (`Minimap.bonus_ramp_pos`). Leaving the ground within `takeoff_radius` of the lip and
+  landing clean with that trick shown in the air banks the trick's score × `score_mult` straight
+  onto the rider's trick score. Ramp and trick rotate every `rotate_secs`. Players only.
+- **Catch-up** (`CatchUpComponent`, races too): see
+  [ComboAndBoost](./ComboAndBoost.md#trick-incentives).
+- **Trick spot labels:** every `Ramp.trick_spot` ramp ("BIG AIR") and grind rail ("RAIL") floats a
+  `TrickSpotLabel` during events (never free roam), fading out up close and far away.
 - **Knockouts** go through `SpawnManager.knock_out_rider(victim, aggressor_id)`: ramming
   (`CrashController`, a bot's `NPCRaceManager._on_npc_crashed`), Oil Slick, Shotgun, the Bat on a
   bot. Bots count both ways, as victims and aggressors; a bot only counts once it actually goes down

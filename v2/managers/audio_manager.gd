@@ -95,6 +95,9 @@ enum MusicType {
 	FREE_ROAM,
 	EVENT,
 }
+## How the music reflects the local rider's combo (RidingHUDState): muffled and dipped while
+## riding plain, partly open mid-combo, fully open on a hot combo and off the riding HUD.
+enum MusicTell { OPEN, IDLE, COMBO }
 
 @export var settings_manager: SettingsManager
 @export_tool_button("Play Startup") var tool_btn_1 = play_startup
@@ -103,6 +106,12 @@ enum MusicType {
 ## How far music dips while ducked (settings menu, horns).
 @export var music_duck_db: float = -12.0
 @export var music_duck_time: float = 0.3
+## Music tell (set_music_tell): MusicDuck's low-pass cutoff per MusicTell, and the idle dip.
+@export var music_idle_cutoff_hz: float = 700.0
+@export var music_combo_cutoff_hz: float = 8000.0
+@export var music_open_cutoff_hz: float = 20000.0
+@export var music_idle_db: float = -4.0
+@export var music_tell_time: float = 0.8
 
 ## Map of settings_manager key → audio bus name. Buses are defined in `default_bus_layout.tres`
 ## (must be created in the editor — runtime AudioServer.add_bus() doesn't work on web exports).
@@ -212,6 +221,8 @@ var _music_track: SoundEvent
 ## Whatever currently holds the music ducked; see set_music_ducked().
 var _music_duckers: Array[Object] = []
 var _music_duck: Tween
+var _music_tell := MusicTell.OPEN
+var _music_tell_tween: Tween
 var _audio_disabled := false
 var _app_focused := true
 
@@ -544,6 +555,27 @@ func set_music_ducked(source: Object, ducked: bool):
 		target,
 		music_duck_time
 	)
+
+
+## MusicDuck's effects (default_bus_layout.tres): 0 low-pass, 1 amplify.
+func set_music_tell(tell: MusicTell):
+	if tell == _music_tell:
+		return
+	_music_tell = tell
+	var idx := AudioServer.get_bus_index(&"MusicDuck")
+	var low_pass := AudioServer.get_bus_effect(idx, 0) as AudioEffectLowPassFilter
+	var amplify := AudioServer.get_bus_effect(idx, 1) as AudioEffectAmplify
+	var cutoffs := {
+		MusicTell.OPEN: music_open_cutoff_hz,
+		MusicTell.IDLE: music_idle_cutoff_hz,
+		MusicTell.COMBO: music_combo_cutoff_hz,
+	}
+	if _music_tell_tween:
+		_music_tell_tween.kill()
+	_music_tell_tween = create_tween().set_parallel()
+	_music_tell_tween.tween_property(low_pass, "cutoff_hz", cutoffs[tell], music_tell_time)
+	var db := music_idle_db if tell == MusicTell.IDLE else 0.0
+	_music_tell_tween.tween_property(amplify, "volume_db", db, music_tell_time)
 
 
 func _play_next_music(fade_time: float):

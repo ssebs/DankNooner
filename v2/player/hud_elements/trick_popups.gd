@@ -8,6 +8,9 @@
 ##    wheelieing / stoppieing / airborne, plus the race wheelie stopwatch
 ##  - up and right of center: a callout for every trick started (TRICK_CALLOUTS, else the trick's
 ##    name), timed HOLD_CALLOUTS, and any server-sent callout
+##  - a repeated trick's callout is smaller and grey; the live "+N" greys while the trick held is
+##    stale (TrickController.is_stale)
+##  - a banked combo's "+$N" under its score pop, in score modes
 ## Sfx: rizz on a combo multiplier step up, ding on a score pop. Callouts stay silent.
 ## Each pop enters with a HUDFlash verb (callouts wheelie, scores pop, bails shake), holds, then
 ## sinks as it fades. Each is its own Label, so rapid pops stack instead of resetting.
@@ -45,6 +48,14 @@ const SCORE_COLOR := Color.WHITE
 ## The live score and its pop while a suggested trick doubled it.
 const BONUS_COLOR := UtilsConstants.UI_GOLD
 const MULTIPLIER_COLOR := UtilsConstants.UI_GOLD
+## The live score and multiplier while DANK (RidingHUDState._is_dank).
+const DANK_COLOR := UtilsConstants.UI_MAGENTA
+## A stale trick (repeat / held too long): its callout and the live score.
+const STALE_COLOR := UtilsConstants.UI_GREY
+const STALE_CALLOUT_SCALE: float = 0.7
+const MONEY_COLOR := MoneyLabel.COLOR
+## The "+$N" pop, from the score pop's center.
+const MONEY_OFFSET := Vector2(0.0, 48.0)
 const MULTIPLIER_GAP_PX: float = 12.0
 
 ## Pop origins, as offsets from this control's center.
@@ -153,8 +164,10 @@ func _ready():
 
 
 ## Every frame, for the local rider: the live combo points and callout conditions.
+## dank: RidingHUDState._is_dank, shown on the multiplier and the live score.
 func track(
-	player: PlayerEntity, points_per_second: float, bonus_tricks: PackedInt32Array, delta: float
+	player: PlayerEntity, points_per_second: float, bonus_tricks: PackedInt32Array, dank: bool,
+	delta: float
 ) -> void:
 	var tc := player.trick_controller
 	_live.visible = tc.combo_time > 0.0 and not player.is_crashed
@@ -165,9 +178,15 @@ func track(
 	_last_multiplier = tc.combo_multiplier if _live.visible else 1
 	if _live.visible:
 		_live.text = "+%d" % int(tc.combo_score * points_per_second * tc.combo_multiplier)
-		_multiplier.text = tr("HUD_COMBO").format({"value": tc.combo_multiplier})
+		_multiplier.text = tr("HUD_COMBO_DANK" if dank else "HUD_COMBO").format({"value": tc.combo_multiplier})
+		_multiplier.modulate = DANK_COLOR if dank else MULTIPLIER_COLOR
 		var bonus := tc.current_trick in bonus_tricks
-		_live.modulate = BONUS_COLOR if bonus else SCORE_COLOR
+		_live.modulate = (
+			BONUS_COLOR if bonus
+			else STALE_COLOR if tc.is_stale()
+			else DANK_COLOR if dank
+			else SCORE_COLOR
+		)
 	# Placed even while hidden — the icon row anchors under it.
 	_center_on(_live, size / 2.0 + SCORE_ORIGIN)
 	_multiplier.reset_size()
@@ -185,8 +204,10 @@ func track(
 	_was_flipped = tc.has_flipped()
 
 
-func pop_score(points: int, _multiplier: int, bonus: bool) -> void:
+func pop_score(points: int, _multiplier: int, bonus: bool, money: int) -> void:
 	HUDFlash.pop(_spawn("+%d" % points, BONUS_COLOR if bonus else SCORE_COLOR, SCORE_ORIGIN))
+	if money > 0:
+		HUDFlash.pop(_spawn("+" + MoneyLabel.format(money), MONEY_COLOR, SCORE_ORIGIN + MONEY_OFFSET))
 	audio_manager.play_ding()
 
 
@@ -261,9 +282,13 @@ func _ease_icon(weight: float) -> void:
 
 
 ## text is already localized.
-func pop_callout(text: String, color: Color = CALLOUT_COLOR, hold: float = HOLD_SECS) -> void:
+func pop_callout(
+	text: String, color: Color = CALLOUT_COLOR, hold: float = HOLD_SECS, scale_by: float = 1.0
+) -> void:
 	var holder := Control.new()
 	holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	holder.pivot_offset = size / 2.0 + CALLOUT_ORIGIN
+	holder.scale = Vector2.ONE * scale_by
 	add_child(holder)
 	_callouts.append(holder)
 	HUDFlash.wheelie(spawn_pop(holder, text, color, size / 2.0 + CALLOUT_ORIGIN, SINK_PX, hold))
@@ -294,11 +319,16 @@ func _track_trick_start(tc: TrickController) -> void:
 		return
 	if ComboRules.HELD_TRICK_SCORE.has(trick):
 		_last_named = trick
+	var text := ""
 	if TRICK_CALLOUTS.has(trick):
-		pop_callout(tr(TRICK_CALLOUTS[trick]))
+		text = tr(TRICK_CALLOUTS[trick])
 	else:
 		var trick_name := tr("TRICK_NAME_" + TrickController.trick_to_str(trick)).to_upper()
-		pop_callout(tr("CALLOUT_TRICK_NAME").format({"trick": trick_name}))
+		text = tr("CALLOUT_TRICK_NAME").format({"trick": trick_name})
+	if tc.trick_freshness >= 1.0:
+		pop_callout(text)
+	else:
+		pop_callout(text, STALE_COLOR, HOLD_SECS, STALE_CALLOUT_SCALE)
 
 
 func _track_hold_callouts(player: PlayerEntity, delta: float) -> void:

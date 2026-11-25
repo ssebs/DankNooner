@@ -17,6 +17,11 @@ var combo_grace: float = 0.0
 var combo_boost_earned: float = 0.0
 var combo_multiplier: int = 1
 var combo_score: float = 0.0
+var recent_tricks := PackedInt32Array()
+var trick_freshness: float = 1.0
+var hold_secs: float = 0.0
+## Bots get no catch-up (CatchUpComponent sets players only).
+var catch_up_mult: float = 1.0
 var boost_amount: float = 0.0
 ## Synced to clients.
 var boost_burn_target: float = -1.0

@@ -35,6 +35,10 @@ signal combo_voided(peer_id: int, lost_duration: float, lost_points: float)
 ## the multiplier.
 @export var points_per_second: float = 10.0
 
+## combo_time this far under last frame's means a new combo started (see _track_combo). Above any
+## netcode jitter, under a combo's first frames.
+const RESTART_SLACK_SECS: float = 0.25
+
 ## Counted per rotation (see _track_flips), not as holds.
 const FLIP_TRICKS: Array[TrickController.Trick] = [
 	TrickController.Trick.BACKFLIP, TrickController.Trick.FRONTFLIP
@@ -121,6 +125,11 @@ func _track_combo(peer_id: int, rider: Node3D, delta: float):
 	var tc = rider.trick_controller  # TrickController or NPCTrickController
 	var elapsed: float = tc.combo_time
 
+	# Dropped well below last frame's: a combo ended (a traffic glance) and the next began between
+	# frames, so this one never read 0.
+	if elapsed > 0.0 and elapsed + RESTART_SLACK_SECS < st["prev_time"]:
+		_bank(peer_id, rider, st)
+
 	if elapsed > 0.0:
 		st["peak_mult"] = maxi(st["peak_mult"], tc.combo_multiplier)
 		st["prev_time"] = elapsed
@@ -141,7 +150,11 @@ func _track_combo(peer_id: int, rider: Node3D, delta: float):
 
 	if st["prev_time"] <= 0.0:
 		return
+	_bank(peer_id, rider, st)
 
+
+## The combo just ended cleanly: add its points, feed and pop it.
+func _bank(peer_id: int, rider: Node3D, st: Dictionary):
 	var duration: float = st["prev_time"]
 	var multiplier: int = st["peak_mult"]
 	var bonus: bool = st["bonus_score"] > 0.0
@@ -161,7 +174,7 @@ func _track_combo(peer_id: int, rider: Node3D, delta: float):
 	combo_banked.emit(peer_id, points, duration, multiplier, holds)
 	# A bot has no HUD to pop on
 	if peer_id >= 0:
-		riding_hud_state.push_score_popup(peer_id, int(points), multiplier, bonus)
+		riding_hud_state.push_score_popup(peer_id, int(points), multiplier, bonus, _points_money(peer_id, points))
 
 
 ## One holds entry per new rotation, under the flip trick latched at its start (the trick fires at
@@ -195,6 +208,11 @@ func get_score(peer_id: int) -> float:
 	return _peer_states[peer_id]["points"]
 
 
+## Bank `points` straight onto this peer's score, outside any combo (a bonus ramp landing).
+func add_points(peer_id: int, points: float):
+	_peer_states[peer_id]["points"] += points
+
+
 ## What the combo in progress would bank if it ended now (0 when none is open).
 func get_open_combo_points(peer_id: int) -> float:
 	var st := _peer_states[peer_id]
@@ -226,6 +244,12 @@ func reset_peer(peer_id: int):
 		"crashed": crashed,
 		"bail": old.get("bail", {}),
 	}
+
+
+## What `points` will pay at the results, or 0 where trick score doesn't pay.
+func _points_money(peer_id: int, points: float) -> int:
+	var mode := gamemode_manager.get_current_gamemode()
+	return (mode as RunnerGameMode).trick_money(peer_id, points) if mode is RunnerGameMode else 0
 
 
 ## Tricks that score 2x for this peer (SuggestedTricksChallenge). Empty to clear.

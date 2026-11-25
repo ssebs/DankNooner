@@ -4,13 +4,20 @@
 ## results-only). The live board orders by race position (TIME_ATTACK: best lap), so its order and
 ## Pos always agree. Results order by standing, fixed by race_type: STUNT_RACE by
 ## RaceGameMode.score, TIME_ATTACK by session best lap, otherwise race position — and their Pos is
-## that final placement, not finish order.
+## that final placement, not finish order. In STUNT_RACE each refresh also tells every human who just
+## passed them on score (the trick feed).
 class_name LeaderboardComponent extends RaceComponent
 
 ## Cadence for pushing the live leaderboard to clients (a few Hz — the values crawl).
 const REFRESH_SECS: float = 0.25
 
 var _refresh_accum: float = 0.0
+## STUNT_RACE: racer_id -> score at the last refresh.
+var _prev_scores: Dictionary[int, float] = {}
+
+
+func race_start() -> void:
+	_prev_scores.clear()
 
 
 func tick(delta: float) -> void:
@@ -42,6 +49,8 @@ func tick(delta: float) -> void:
 	rows.sort_custom(
 		func(a, b): return _ranks_above(a["_sort_key"], a["peer_id"], b["_sort_key"], b["peer_id"])
 	)
+	if _by_score():
+		_push_score_passes(rows)
 	var tricks := PackedInt32Array()
 	if race_mode.challenges != null:
 		tricks = race_mode.challenges.hint_tricks()
@@ -50,6 +59,26 @@ func tick(delta: float) -> void:
 
 func race_end() -> void:
 	race_mode.riding_hud_state.clear_leaderboard()
+
+
+## A rider strictly behind a human on score last refresh and strictly ahead now passed them.
+func _push_score_passes(rows: Array) -> void:
+	var scores: Dictionary[int, float] = {}
+	for row in rows:
+		scores[row["peer_id"]] = race_mode.score(row["peer_id"])
+	for victim: int in scores:
+		if victim < 0 or !_prev_scores.has(victim):
+			continue
+		for passer: int in scores:
+			var was_behind: bool = _prev_scores.get(passer, INF) < _prev_scores[victim]
+			if was_behind and scores[passer] > scores[victim]:
+				var passer_name: String = (
+					race_mode.npc_racers.npc_race_manager.get_npc(passer).username
+					if passer < 0
+					else _username(passer)
+				)
+				race_mode.riding_hud_state.push_passed_on_score(victim, passer_name)
+	_prev_scores = scores
 
 
 ## Rebuilt live on every refresh — bots keep racing through the results countdown, so one that

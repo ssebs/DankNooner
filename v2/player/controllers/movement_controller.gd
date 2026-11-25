@@ -28,6 +28,10 @@ const WHEELIE_RISE_RATE_SCALE: float = 0.25
 ## snaps up even when WHEELIE_RISE_RATE_SCALE is low). Higher = a stronger pop; too high loops light
 ## bikes off a hard dump. See _calc_normal_wheelie_target and _apply_wheelie_pitch.
 const WHEELIE_CLUTCH_KICK_BOOST: float = 0.75
+## Share of the kick's climb rate left at speed, so a clutch-up still clears the wheelie threshold
+## inside CLUTCH_KICK_WINDOW in a tall gear. The loft (target) keeps fading to 0, so a low-gear dump at
+## speed lofts no higher than before. See _clutch_kick_falloff.
+const CLUTCH_KICK_MIN_FALLOFF: float = 0.6
 ## Steering authority while up on the front wheel, above WHEELIE_STEER_FULL_SPEED (mirrors STOPPIE_STEER_SCALE).
 const WHEELIE_STEER_SCALE: float = 0.5
 ## At/below this speed the wheelie steering cut is lifted so tight circle wheelies stay possible.
@@ -38,9 +42,6 @@ const MIN_STEER_SPEED: float = 0.5
 const WHEELIE_REAR_BRAKE_DROP: float = 3.0
 
 const CLUTCH_KICK_WINDOW: float = 0.2
-# Clutch pops are a low-speed launch move. Above this fraction of max_speed (e.g. rolling fast
-# downhill on slope gravity) a clutch dump must NOT loft the front — use a power wheelie instead.
-const CLUTCH_POP_MAX_SPEED_FRAC: float = 0.4
 # Bunny hop: from a wheelie up to HOP_MAX_BALANCE_FRAC of the balance point, lean forward with the gas
 # off. The nose rocks down on the ground and the rear launches once it passes level. Airtime
 # 2 * HOP_VELOCITY / FALL_GRAVITY (0.23s) stays under AIR_TRICK_MIN_AIRTIME, so it's a bump to the
@@ -49,12 +50,14 @@ const HOP_MAX_BALANCE_FRAC: float = 0.5
 const HOP_VELOCITY: float = 4.6
 # Nose-down rate per radian of wheelie (1/s) — the rock down to level always takes 1 / this (~0.125s).
 const HOP_PITCH_KICK: float = 8.0
-# Wheel-force (power × bd.acceleration) floor to start a wheelie / clutch-pop — auto-scales by bike
+# Wheel-force (power × bd.acceleration) floor to start a power wheelie — auto-scales by bike
 # strength. Kept low enough that a light bike (the mini) clears it across a usable RPM band, not just
 # a sliver at peak; this also makes clutch-ups easier in general. NOT the loop threshold (that's the
 # balance-point crossing).
 const POWER_WHEELIE_MIN_FORCE: float = 15.0
 const FALL_GRAVITY: float = 40
+## Speed lost per second while over the bike's cap, so the end of a boost or a landing kick eases off.
+const OVER_CAP_BLEED: float = 15.0
 const AIR_DRAG: float = 11.0 # speed loss while airborne. TODO - turn into a curve
 const MIN_SPEED_FROM_AIR_DRAG: float = 5.0
 # Unstable surface (collision layer 5) — gravel/sand/etc. Scaled by bike's unstable_surface_factor.
@@ -588,6 +591,7 @@ func _speed_calc(delta: float):
 	var is_boosting: bool = player_entity.boost_controller.is_boosting
 	var boost_accel: float = BoostController.BOOST_ACCEL_MULT if is_boosting else 1.0
 	var boost_speed: float = BoostController.BOOST_SPEED_MULT if is_boosting else 1.0
+	var start_speed := speed
 	drive = 0.0
 
 	# Balance lock hovers the bike — hold speed steady (pitch is held in _pitch_angle_calc).
@@ -663,7 +667,11 @@ func _speed_calc(delta: float):
 	if unstable_factor > 0 and speed > 0:
 		speed -= speed * UNSTABLE_DRAG_RATE * unstable_factor * delta
 
-	speed = minf(speed, bd.max_speed * boost_speed)
+	# Over the cap (a boost ended, a landing kick) bleeds down instead of snapping to it, and never
+	# climbs (a steep downhill's slope gravity outruns the bleed).
+	var cap: float = bd.max_speed * boost_speed
+	if speed > cap:
+		speed = maxf(minf(speed, start_speed) - OVER_CAP_BLEED * delta, cap)
 
 
 ## Calculate roll_angle & set player_entity.rotation
@@ -1007,10 +1015,9 @@ func _apply_wheelie_pitch(
 		var rate_scale = 1.0 if punch_through else WHEELIE_RISE_RATE_SCALE
 		var climb = spd * rate_scale
 		# Clutch dump snaps the front up fast — added AFTER rate_scale so a low WHEELIE_RISE_RATE_SCALE
-		# doesn't blunt the pop. Fades with speed (a launch move).
+		# doesn't blunt the pop. Fades with speed.
 		if _clutch_kick_window > 0:
-			var speed_falloff = 1.0 - clampf(speed / (bd.max_speed * 0.3), 0.0, 1.0)
-			climb += bd.rotation_speed * WHEELIE_CLUTCH_KICK_BOOST * speed_falloff
+			climb += bd.rotation_speed * WHEELIE_CLUTCH_KICK_BOOST * _clutch_kick_falloff(bd, CLUTCH_KICK_MIN_FALLOFF)
 		pitch_angle = move_toward(pitch_angle, wheelie_target, climb * delta)
 	elif pitch_angle > 0:
 		var decay_speed = (
@@ -1121,15 +1128,12 @@ func _can_initiate_wheelie(in_wheelie: bool) -> bool:
 	if abs(roll_angle) >= deg_to_rad(10):
 		return false
 
-	# Clutch dump pop — gates on POTENTIAL power (ignores engagement, since clutch_value is still ~1.0
-	# at the dump instant) × acceleration, the same wheel-force units as the power gate below. A bike
-	# too weak to loft (mini) can't clutch-pop one either, and a tall gear (3rd+) lacks the torque.
+	# Clutch dump pop, at any speed and in any gear: the dump is itself the torque spike, so it skips
+	# the power gate below. That's what lets the mini open a combo at speed. POTENTIAL power, since
+	# clutch_value is still ~1.0 at the dump instant.
 	var clutch_pop = _clutch_kick_window > 0 and input_controller.nfx_throttle > 0.5
 	if clutch_pop:
-		# Low-speed launch move only — don't let slope-inflated downhill speed clutch-pop a wheelie.
-		if speed > bd.max_speed * CLUTCH_POP_MAX_SPEED_FRAC:
-			return false
-		return gearing_controller.get_potential_power_output() * bd.acceleration > POWER_WHEELIE_MIN_FORCE
+		return gearing_controller.get_potential_power_output() > 0.0
 
 	# Power wheelie — needs forward motion + throttle + delivered force. Lean-back is NOT required
 	# (it only boosts the target in _calc_normal_wheelie_target); throttle + power alone lofts the
@@ -1253,10 +1257,9 @@ func _is_brake_slide_input() -> bool:
 
 ## Calculate wheelie target. Loft is driven by the bike's real wheel force (get_power_output ×
 ## acceleration — the SAME quantity the start gate uses), mapped straight to an angle. A strong or
-## peaky power band drives the target past the balance point (loops); a weaker one tops out below it;
-## a bike too weak to clear the start gate never gets here (the mini). All of it follows the existing
-## power_curve, gearing and acceleration — no per-bike wheelie flag. Lean adds authority on a capable
-## bike; the start gate (not this function) is what keeps a too-weak bike from lofting at all.
+## peaky power band drives the target past the balance point (loops); a weaker one tops out below it.
+## A bike too weak for the power gate (the mini in a tall gear) only gets here off a clutch-up. All
+## of it follows the existing power_curve, gearing and acceleration — no per-bike wheelie flag.
 func _calc_normal_wheelie_target(bd: BikeSkinDefinition) -> float:
 	var max_wheelie_rad = deg_to_rad(bd.max_wheelie_angle_deg)
 	# Unstable surfaces shrink the achievable target so reaching the balance point takes more input.
@@ -1268,15 +1271,19 @@ func _calc_normal_wheelie_target(bd: BikeSkinDefinition) -> float:
 	if _clutch_kick_window > 0:
 		# Clutch dump: engagement ~0 so get_power_output() reads ~0 — use potential power, then add the
 		# dump's torque SPIKE so a clutch-up lofts harder than steady power (biggest at low speed).
-		var speed_falloff := 1.0 - clampf(speed / (bd.max_speed * 0.3), 0.0, 1.0)
 		power_out = maxf(power_out, gearing_controller.get_potential_power_output())
-		power_out *= 1.0 + WHEELIE_CLUTCH_KICK_BOOST * speed_falloff
+		power_out *= 1.0 + WHEELIE_CLUTCH_KICK_BOOST * _clutch_kick_falloff(bd, 0.0)
 	var power_target = power_out * bd.acceleration * WHEELIE_FORCE_TO_ANGLE
 	if power_target <= 0.0:
-		return 0.0 # no power = no wheelie; lean alone can't float one (keeps the mini planted)
+		return 0.0 # no power = no wheelie; lean alone can't float one
 	# Lean-back (negative) adds on top, lean-forward trims — as a fraction of max_wheelie.
 	var target = power_target - input_controller.nfx_lean * WHEELIE_LEAN_INFLUENCE * max_wheelie_rad
 	return clampf(target, 0.0, max_wheelie_rad) * unstable_scale
+
+
+## The clutch kick's strength: full from a standstill, fading to `min_falloff` by 30% of max_speed.
+func _clutch_kick_falloff(bd: BikeSkinDefinition, min_falloff: float) -> float:
+	return maxf(1.0 - clampf(speed / (bd.max_speed * 0.3), 0.0, 1.0), min_falloff)
 
 
 ## Above balance point — unstable. Drifts toward crash unless rider leans forward.

@@ -56,6 +56,8 @@
 [ext_resource type="Script" uid="uid://uin83k8612ay" path="res://managers/gamemodes/types/race/components/pickups_component.gd" id="60_pickups"]
 [ext_resource type="Script" uid="uid://v7s40o2ju0jg" path="res://managers/gamemodes/types/race/race_gamemode.gd" id="60_racgm"]
 [ext_resource type="Script" uid="uid://b1k6yj01eqpsi" path="res://managers/gamemodes/types/race/components/style_scoring_component.gd" id="60_style_scoring"]
+[ext_resource type="Script" path="res://managers/gamemodes/types/race/components/bonus_ramp_component.gd" id="60_bonus_ramp"]
+[ext_resource type="Script" path="res://managers/gamemodes/types/race/components/catch_up_component.gd" id="60_catch_up"]
 [ext_resource type="Script" uid="uid://c5ej5fq2aphma" path="res://managers/gamemodes/types/race/components/time_attack_component.gd" id="60_time_attack"]
 [ext_resource type="Script" uid="uid://cgy57qlo3xy0x" path="res://managers/gamemodes/types/race/components/traffic_component.gd" id="60_traffic"]
 [ext_resource type="Script" uid="uid://bohgpnc0q47hq" path="res://managers/steam_manager.gd" id="61_steam"]
@@ -386,10 +388,11 @@ gamemode_manager = NodePath("../..")
 spawn_manager = NodePath("../../../SpawnManager")
 metadata/_custom_type_script = "uid://2sjea5ct6un7"
 
-[node name="RaceGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=1735586093 node_paths=PackedStringArray("traffic", "npc_racers", "leaderboard", "riding_hud_state", "lobby_manager", "audio_manager", "results_hud", "input_state_manager", "save_manager", "hud_manager", "tour_manager", "gamemode_manager", "spawn_manager")]
+[node name="RaceGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=1735586093 node_paths=PackedStringArray("traffic", "npc_racers", "catch_up", "leaderboard", "riding_hud_state", "lobby_manager", "audio_manager", "results_hud", "input_state_manager", "save_manager", "hud_manager", "tour_manager", "gamemode_manager", "spawn_manager")]
 script = ExtResource("60_racgm")
 traffic = NodePath("Traffic")
 npc_racers = NodePath("NPCRacers")
+catch_up = NodePath("CatchUp")
 leaderboard = NodePath("Leaderboard")
 riding_hud_state = NodePath("../../../HUDManager/StateMachine/RidingHUDState")
 lobby_manager = NodePath("../../../LobbyManager")
@@ -412,11 +415,15 @@ script = ExtResource("60_npc_racers")
 npc_race_manager = NodePath("../../../../NPCRaceManager")
 race_mode = NodePath("..")
 
+[node name="CatchUp" type="Node" parent="ManagerManager/GamemodeManager/StateMachine/RaceGameMode" node_paths=PackedStringArray("race_mode")]
+script = ExtResource("60_catch_up")
+race_mode = NodePath("..")
+
 [node name="Leaderboard" type="Node" parent="ManagerManager/GamemodeManager/StateMachine/RaceGameMode" unique_id=845758258 node_paths=PackedStringArray("race_mode")]
 script = ExtResource("60_leaderboard")
 race_mode = NodePath("..")
 
-[node name="StuntRaceGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=569716093 node_paths=PackedStringArray("traffic", "npc_racers", "pickups", "style_scoring", "finish_bonus", "knockout_scoring", "challenges", "leaderboard", "riding_hud_state", "lobby_manager", "audio_manager", "results_hud", "input_state_manager", "save_manager", "hud_manager", "tour_manager", "gamemode_manager", "spawn_manager")]
+[node name="StuntRaceGameMode" type="Node" parent="ManagerManager/GamemodeManager/StateMachine" unique_id=569716093 node_paths=PackedStringArray("traffic", "npc_racers", "pickups", "style_scoring", "finish_bonus", "knockout_scoring", "bonus_ramps", "catch_up", "challenges", "leaderboard", "riding_hud_state", "lobby_manager", "audio_manager", "results_hud", "input_state_manager", "save_manager", "hud_manager", "tour_manager", "gamemode_manager", "spawn_manager")]
 script = ExtResource("60_racgm")
 race_type = 1
 traffic = NodePath("Traffic")
@@ -425,6 +432,8 @@ pickups = NodePath("Pickups")
 style_scoring = NodePath("StyleScoring")
 finish_bonus = NodePath("FinishBonus")
 knockout_scoring = NodePath("KnockoutScoring")
+bonus_ramps = NodePath("BonusRamps")
+catch_up = NodePath("CatchUp")
 challenges = NodePath("Challenges")
 leaderboard = NodePath("Leaderboard")
 riding_hud_state = NodePath("../../../HUDManager/StateMachine/RidingHUDState")
@@ -466,6 +475,15 @@ race_mode = NodePath("..")
 
 [node name="KnockoutScoring" type="Node" parent="ManagerManager/GamemodeManager/StateMachine/StuntRaceGameMode" unique_id=1131967318 node_paths=PackedStringArray("race_mode")]
 script = ExtResource("60_knockout_scoring")
+race_mode = NodePath("..")
+
+[node name="BonusRamps" type="Node" parent="ManagerManager/GamemodeManager/StateMachine/StuntRaceGameMode" node_paths=PackedStringArray("trick_manager", "race_mode")]
+script = ExtResource("60_bonus_ramp")
+trick_manager = NodePath("../../../../TrickManager")
+race_mode = NodePath("..")
+
+[node name="CatchUp" type="Node" parent="ManagerManager/GamemodeManager/StateMachine/StuntRaceGameMode" node_paths=PackedStringArray("race_mode")]
+script = ExtResource("60_catch_up")
 race_mode = NodePath("..")
 
 [node name="Challenges" type="Node" parent="ManagerManager/GamemodeManager/StateMachine/StuntRaceGameMode" unique_id=1704626482 node_paths=PackedStringArray("trick_manager", "race_mode")]
@@ -615,11 +633,12 @@ spawn_manager = NodePath("../SpawnManager")
 item_manager = NodePath("../ItemManager")
 npc_definitions = Array[ExtResource("35_iihm1")]([ExtResource("20_npcdef")])
 
-[node name="NPCTrafficManager" type="Node" parent="ManagerManager" unique_id=1218916395 node_paths=PackedStringArray("level_manager", "settings_manager", "spawn_manager") groups=["Managers"]]
+[node name="NPCTrafficManager" type="Node" parent="ManagerManager" unique_id=1218916395 node_paths=PackedStringArray("level_manager", "settings_manager", "spawn_manager", "audio_manager") groups=["Managers"]]
 script = ExtResource("99_npctm")
 level_manager = NodePath("../LevelManager")
 settings_manager = NodePath("../SettingsManager")
 spawn_manager = NodePath("../SpawnManager")
+audio_manager = NodePath("../AudioManager")
 npc_definitions = Array[ExtResource("35_iihm1")]([ExtResource("20_pk5u2")])
 
 [node name="AnimalSpawnManager" type="Node" parent="ManagerManager" unique_id=1218916393 node_paths=PackedStringArray("level_manager") groups=["Managers"]]

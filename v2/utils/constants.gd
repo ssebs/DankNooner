@@ -115,10 +115,12 @@ const UI_GREEN: Color = Color(0.2, 1.0, 0.55)
 const UI_RED: Color = Color(1.0, 0.24, 0.24)
 ## Live info (event timers) and checkpoints — the checkpoint gates' neon.
 const UI_MAGENTA: Color = Color(1.0, 0.32, 0.97)
+## Bots' names, stale tricks.
+const UI_GREY: Color = Color(0.6, 0.6, 0.6)
 ## Rider names (leaderboard, trick feed): yours, other players', bots'.
 const NAME_OWN_COLOR: Color = UI_GREEN
 const NAME_PLAYER_COLOR: Color = UI_BLUE
-const NAME_BOT_COLOR: Color = Color(0.6, 0.6, 0.6)
+const NAME_BOT_COLOR: Color = UI_GREY
 ## Panel fills, darkest first; UI_GLASS also outlines HUD text.
 const UI_GLASS: Color = Color(0.02, 0.027, 0.06)
 

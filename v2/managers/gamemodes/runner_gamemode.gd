@@ -192,6 +192,24 @@ func _payout_score(_peer_id: int) -> float:
 	return 0.0
 
 
+## Override: banked trick points count toward _payout_score, so a combo's bank pop shows its "+$".
+func _pays_for_tricks() -> bool:
+	return false
+
+
+## Money `points` of banked trick score adds to this peer's payout; 0 where tricks don't pay.
+func trick_money(peer_id: int, points: float) -> int:
+	return score_money(peer_id, points) if _pays_for_tricks() else 0
+
+
+## Money `points` of score adds to this peer's payout (score x rate x level); 0 outside score modes.
+func score_money(peer_id: int, points: float) -> int:
+	if !_is_score_mode():
+		return 0
+	var level := lobby_manager.lobby_players[peer_id].level()
+	return level_payout(int(points * UtilsConstants.PAYOUT_SCORE_MONEY_RATE), level)
+
+
 ## Money or XP for finishing at `place` (0 = 1st): base × place multiplier + score × rate, before
 ## level_payout. In score modes, a 0 score gets the floor multiplier whatever its place.
 static func place_payout(
@@ -223,7 +241,11 @@ func _pay_out(data: ResultsData):
 		var money := place_payout(def.payout_money, money_rate, place, score, _is_score_mode())
 		var xp := place_payout(def.payout_xp, xp_rate, place, score, _is_score_mode())
 		DebugUtils.DebugMsg("[economy] results peer %d: place %d, score %.0f" % [peer_id, place, score])
+		# Before earn(), which can level the rider up
+		var from_score := score_money(peer_id, score)
 		earn(peer_id, money, xp)
+		if _is_score_mode():
+			_payouts[peer_id]["score_money"] = from_score
 		gamemode_manager.event_placed.emit(peer_id, place == 0 and (score > 0.0 or !_is_score_mode()))
 
 
@@ -246,10 +268,14 @@ func earn(peer_id: int, money: int, xp: int):
 	rpc_earn.rpc_id(peer_id, money, xp)
 
 
-## `data` plus the level (after the name) + earned columns; NPC rows stay blank.
+## `data` plus the level (after the name) + earned columns (in score modes, how much of the money
+## the score paid); NPC rows stay blank.
 func with_payouts(data: ResultsData) -> ResultsData:
 	data.columns.insert(1, "Level")
 	data.headers.insert(1, tr("LB_LEVEL"))
+	if _is_score_mode():
+		data.columns.append("ScoreMoney")
+		data.headers.append("💰 %s" % tr("LB_SCORE_MONEY"))
 	data.columns.append_array(["Money", "XP"])
 	data.headers.append_array(["💵", "⭐ %s" % tr("LB_XP")])
 	for row in data.rows:
@@ -258,6 +284,8 @@ func with_payouts(data: ResultsData) -> ResultsData:
 			row["Level"] = "%d" % lobby_manager.lobby_players[peer_id].level()
 		var payout: Dictionary = _payouts.get(peer_id, {})
 		if !payout.is_empty():
+			if payout.has("score_money"):
+				row["ScoreMoney"] = "+" + MoneyLabel.format(payout["score_money"])
 			row["Money"] = "+" + MoneyLabel.format(payout["money"])
 			row["XP"] = "+" + MoneyLabel.group_digits(payout["xp"])
 	return data

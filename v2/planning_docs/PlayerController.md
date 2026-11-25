@@ -148,12 +148,15 @@ On `do_respawn`, PlayerEntity iterates `_Controllers` children and calls `do_res
   - Editor tools: Init IK from Bike, Save Default Pose, Play Default Pose
 - **MovementController** (`movement_controller.gd`)
   - Runs in `_rollback_tick()` via `on_movement_rollback_tick()`
-  - `_speed_calc()` — derives speed from velocity, applies acceleration from `gearing_controller.get_power_output()`, engine braking, braking
+  - `_speed_calc()` — derives speed from velocity, applies acceleration from `gearing_controller.get_power_output()`, engine braking, braking. Over the cap (`max_speed`, raised by boost) speed bleeds down at `OVER_CAP_BLEED` instead of snapping, so a boost's end or a landing kick eases off. Over the cap speed can only fall (slope gravity can't push it higher)
   - `_steer_calc()` — curve-based lean factor, turn radius from speed, applies `rotate_y()` and lean angle
   - `_velocity_calc()` — sets `player_entity.velocity` along forward dir, slope following, gravity
   - `_pitch_angle_calc()` — wheelie physics:
-    - Clutch dump detection (`_update_clutch_dump_detection()`)
-    - Power wheelie initiation (lean back + throttle + RPM threshold)
+    - Clutch dump detection (`_update_clutch_dump_detection()`). A clutch-up lofts at any speed
+      and in any gear (it skips the power gate), which is what lets the mini open a combo at speed;
+      its kick's climb rate fades with speed down to `CLUTCH_KICK_MIN_FALLOFF`, while its extra loft
+      still fades to nothing
+    - Power wheelie initiation (throttle + wheel force over `POWER_WHEELIE_MIN_FORCE`)
     - Balance point zone with instability
     - Lean forward recovery
     - Bunny hop (`_bunny_hop_calc()`): from a wheelie up to `HOP_MAX_BALANCE_FRAC` of the balance

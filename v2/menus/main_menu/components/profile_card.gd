@@ -220,8 +220,8 @@ func show_stats(player_def: PlayerDefinition) -> void:
 
 
 ## Today's dailies and the bike type's challenges, unfinished first. Rows are updated in place, so
-## the riding HUD calls this every frame. juice: a row whose count went up pops (punches when it
-## finishes) and the panel peeks open.
+## the riding HUD calls this a few times a second. juice: a row whose count went up pops (punches
+## when it finishes) and the panel peeks open.
 func show_challenges(bike_type: BikeTypeDefinition, save_dict: Dictionary, juice: bool) -> void:
 	var shown := _challenge_progress
 	_challenge_progress = {}

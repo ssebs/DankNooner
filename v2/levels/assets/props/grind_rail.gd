@@ -9,6 +9,9 @@ extends Node3D
 		length = v
 		apply_length()
 
+## Metres above the rail's origin its "RAIL" TrickSpotLabel floats during events.
+const LABEL_HEIGHT: float = 3.0
+
 @onready var rail: GrayBoxStaticBody = %Rail
 @onready var post_1: GrayBoxStaticBody = %Post1
 @onready var post_2: GrayBoxStaticBody = %Post2
@@ -16,6 +19,11 @@ extends Node3D
 
 func _ready():
 	apply_length()
+	if Engine.is_editor_hint():
+		return
+	var label := TrickSpotLabel.new("SPOT_RAIL")
+	label.position = Vector3.UP * LABEL_HEIGHT
+	add_child(label)
 
 
 func apply_length():

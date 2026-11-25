@@ -24,6 +24,8 @@ enum RaceType { RACE, STUNT_RACE, TIME_ATTACK }
 @export var style_scoring: StyleScoringComponent
 @export var finish_bonus: FinishBonusComponent
 @export var knockout_scoring: KnockoutScoringComponent
+@export var bonus_ramps: BonusRampComponent
+@export var catch_up: CatchUpComponent
 @export var challenges: ChallengesComponent
 @export var time_attack: TimeAttackComponent
 @export var leaderboard: LeaderboardComponent
@@ -65,8 +67,8 @@ func Enter(state_context: StateContext):
 	# Hook order: scoring before the leaderboard reads it.
 	_components.assign(
 		[
-			traffic, npc_racers, pickups, style_scoring, finish_bonus,
-			knockout_scoring, challenges, time_attack, leaderboard
+			traffic, npc_racers, pickups, style_scoring, finish_bonus, knockout_scoring,
+			bonus_ramps, catch_up, challenges, time_attack, leaderboard
 		]
 		.filter(func(c): return c != null)
 	)
@@ -228,6 +230,11 @@ func _is_score_mode() -> bool:
 #override
 func _payout_score(peer_id: int) -> float:
 	return score(peer_id)
+
+
+#override
+func _pays_for_tricks() -> bool:
+	return race_type == RaceType.STUNT_RACE
 
 
 #override

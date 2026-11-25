@@ -196,6 +196,8 @@ configuration warnings) list what each `race_type` needs; the rest are optional.
 | StyleScoring | — | ✓ | — |
 | FinishBonus | — | ✓ | — |
 | KnockoutScoring | — | ✓ | — |
+| BonusRamps | — | optional | — |
+| CatchUp | optional | optional | — |
 | Challenges | — | ✓ | — |
 | Pickups | — | ✓ | ✓ |
 | TimeAttack | — | — | ✓ |
@@ -209,8 +211,12 @@ configuration warnings) list what each `race_type` needs; the rest are optional.
   - `RACE` → race position.
   - `STUNT_RACE` → `RaceGameMode.score()`: every component's `score(peer_id)` summed.
     `StyleScoring` = banked trick points, `FinishBonus` = points by finish place among humans,
-    `KnockoutScoring` = points per knockout credited via `SpawnManager.player_knocked_out`. All
-    freeze at the finish line. Axis weighting = each component's own points tunable.
+    `KnockoutScoring` = points per knockout credited via `SpawnManager.player_knocked_out`.
+    `BonusRamps` adds its points to the rider's banked trick score
+    (`TrickManager.add_points`), so it lands in `StyleScoring`. All freeze at the finish line. Axis
+    weighting = each component's own points tunable.
+  - Each leaderboard refresh also tells a human who just passed them on score (trick feed,
+    `RidingHUDState.push_passed_on_score`).
   - `TIME_ATTACK` → session best lap.
 - **Display:** the live board orders by race position (TIME_ATTACK: best lap), so its order and Pos
   column agree. Results order by standing, and their Pos column is the final placement.

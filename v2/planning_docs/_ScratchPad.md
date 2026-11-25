@@ -26,10 +26,11 @@ Make a hoodie
 ---
 
 - [ ] add more incentive to doing stunts and driving around the map instead of just going from checkpoint to checkpoint
-  - [ ] score is a reason but not obvious enough
-  - [ ] need to give $ per trick done too?
-  - [ ] Maybe during stunt race you have to land a specific tricks off a ramp for 4x points like CS2 bonus weapon in death match?
-  - [ ] can't do a wheelie while going fast on the mini bike
+  - [x] score is a reason but not obvious enough
+  - [x] need to give $ per trick done too?
+  - [x] Maybe during stunt race you have to land a specific tricks off a ramp for 4x points like CS2 bonus weapon in death match?
+  - [x] can't do a wheelie while going fast on the mini bike
+  - [ ] see ____TRICK_INCENTIVES_WIP.md
 
 - [ ] pinned trick should be more obvious (glow when doing wrong trick in tutorial)
 - [ ] tutorial "now land it" pink text not obvious enough
@@ -39,6 +40,7 @@ Make a hoodie
 - [ ] Slow down racers, but make it feel fast. 
 - [ ] Racers too fast if you crash you don't see anyone. Come catch up needed, more incentive to do tricks needed too. Dynamic speed?
 
+- [ ] Stunt Race => SSX Tricky but for Motorcycles
 
 ---
 

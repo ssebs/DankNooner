@@ -48,7 +48,7 @@ const HIGHSIDE_LAUNCH_FORCE: float = 14.0
 const WOBBLE_RAM_MAX_SPEED: float = 15.0
 ## Angular kick (rad/s) applied to both riders on a low-speed player-to-player tap, or a glancing wall hit.
 const WOBBLE_RAM_STRENGTH: float = 6.0
-## Fraction of speed lost on a glancing (non-crash) layer-2 wall hit.
+## Fraction of speed lost on a glancing (non-crash) wall or traffic hit.
 const WALL_GLANCE_SPEED_LOSS: float = 0.25
 ## A grabbed front brake (KBM: any press — a digital brake always grabs) held this long (s) while
 ## leaned past WASHOUT_MIN_LEAN_DEG above WASHOUT_MIN_SPEED washes the front out. Easing off saves it.
@@ -315,19 +315,10 @@ func _detect_crash():
 					_crash_rammed_racer(collider)
 					trigger_crash(CrashType.WALL)
 					return
-				# Glancing hit: reflect heading off the wall, wobble away + speed penalty.
-				# Once per wobble so contact can't stack it.
+				# Glancing hit, once per wobble so contact can't stack it.
 				if not wobble_controller.is_wobbling:
-					var fwd := -player_entity.global_transform.basis.z
-					var fwd_flat := Vector3(fwd.x, 0.0, fwd.z).normalized()
 					var n: Vector3 = collision.get_normal()
-					var n_flat := Vector3(n.x, 0.0, n.z).normalized()
-					# Mirror only the into-wall part — a heading already angled away is left alone.
-					var reflected := fwd_flat - 2.0 * minf(fwd_flat.dot(n_flat), 0.0) * n_flat
-					player_entity.rotate_y(fwd_flat.signed_angle_to(reflected, Vector3.UP))
-					var away := signf(fwd.signed_angle_to(n, Vector3.UP))
-					wobble_controller.wobble_vel += away * WOBBLE_RAM_STRENGTH
-					movement_controller.speed *= 1.0 - WALL_GLANCE_SPEED_LOSS
+					glance_off(n)
 					DebugUtils.DebugMsg(
 						"wall glance wobble (angle=%.1f) collider=%s shape=%s pos=%s normal=%s"
 						% [
@@ -339,6 +330,20 @@ func _detect_crash():
 						]
 					)
 					return
+
+
+## Glancing hit off a surface facing `n` (a wall, a traffic rider's side): reflect heading off it,
+## wobble away + speed penalty.
+func glance_off(n: Vector3) -> void:
+	var fwd := -player_entity.global_transform.basis.z
+	var fwd_flat := Vector3(fwd.x, 0.0, fwd.z).normalized()
+	var n_flat := Vector3(n.x, 0.0, n.z).normalized()
+	# Mirror only the into-wall part — a heading already angled away is left alone.
+	var reflected := fwd_flat - 2.0 * minf(fwd_flat.dot(n_flat), 0.0) * n_flat
+	player_entity.rotate_y(fwd_flat.signed_angle_to(reflected, Vector3.UP))
+	var away := signf(fwd.signed_angle_to(n, Vector3.UP))
+	wobble_controller.wobble_vel += away * WOBBLE_RAM_STRENGTH
+	movement_controller.speed *= 1.0 - WALL_GLANCE_SPEED_LOSS
 
 
 ## Walls, obstacles and racers: anything on layer 2.

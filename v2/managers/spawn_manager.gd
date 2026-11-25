@@ -245,6 +245,17 @@ func crash_player(player_peer_id: int):
 	get_player_by_peer_id(player_peer_id).rb_do_crash = true
 
 
+## A traffic rider was clipped at a glancing angle: the player wobbles off `normal` and their combo
+## banks instead of crashing. Server only; see NPCTrafficState._try_glance.
+@rpc("any_peer", "call_local", "reliable")
+func glance_player(player_peer_id: int, normal: Vector3):
+	if !_sender_is_server():
+		return
+	var player := get_player_by_peer_id(player_peer_id)
+	player.rb_glance_normal = normal
+	player.rb_do_glance = true
+
+
 ## Server-only. Crash a rider on someone else's account (ram, oil slick, shotgun), crediting the
 ## aggressor unless the victim was already down or took themselves out.
 func knock_out(victim_peer_id: int, aggressor_peer_id: int) -> void:

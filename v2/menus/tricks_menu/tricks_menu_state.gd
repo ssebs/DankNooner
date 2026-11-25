@@ -1,5 +1,6 @@
 @tool
-## Trick list built from TrickController.BINDINGS, so it always matches the live control scheme.
+## Trick list built from TrickController.BINDINGS, so it always matches the live control scheme,
+## plus a Tips tab of the scoring and boost rules (TIPS).
 ## From the main menu it opens over the TrickDemo level, demoing the row whose Show button is pressed
 ## on the active loadout; from pause it's the list alone.
 class_name TricksMenuState extends MenuState
@@ -55,6 +56,16 @@ const STATE_HOWTO_TRICKS: Dictionary = {
 		TrickController.Trick.BLUNTSLIDE,
 	],
 }
+
+## Tips tab: tip ids by group, each shown as TIP_<ID>_TITLE over TIP_<ID>_BODY under a
+## TIP_GROUP_<GROUP> heading. One short rule per tip; add one only with the system it describes.
+const TIPS: Dictionary = {
+	"COMBO": ["HOLD_TO_COMBO", "GRACE", "CRASH_VOID", "REPEAT", "HOLD_CAP"],
+	"BOOST": ["BOOST_FILL", "PAST_CAP", "LANDING_KICK", "CATCH_UP", "CLUTCH_UP"],
+	"TRAFFIC": ["NEAR_MISS", "GLANCE"],
+	"EVENTS": ["BONUS_RAMP"],
+}
+const TIP_TITLE_COLOR := UtilsConstants.UI_GOLD
 
 @onready var state_tabs: PromptTabContainer = %StateTabs
 @onready var close_tricks_btn: Button = %CloseTricksBtn
@@ -140,6 +151,22 @@ func _build_tabs():
 	var howto_list := _add_tab("TRICKS_HOWTO_TAB")
 	for trick in HOWTO_TRICKS:
 		_add_row(howto_list, TrickController.TrickState.NONE).populate_howto(trick)
+
+	var tips_list := _add_tab("TRICKS_TIPS_TAB")
+	for group: String in TIPS:
+		var heading := Label.new()
+		heading.theme_type_variation = &"TableHeaderLabel"
+		heading.text = "TIP_GROUP_" + group
+		tips_list.add_child(heading)
+		for tip: String in TIPS[group]:
+			var title := Label.new()
+			title.text = "TIP_%s_TITLE" % tip
+			title.modulate = TIP_TITLE_COLOR
+			tips_list.add_child(title)
+			var body := Label.new()
+			body.text = "TIP_%s_BODY" % tip
+			body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			tips_list.add_child(body)
 
 
 ## Adds a scrolling tab and returns its row list.

@@ -1,12 +1,13 @@
-[gd_resource type="AudioBusLayout" format=3]
+[gd_resource type="AudioBusLayout" format=3 uid="uid://cebtmaicx3lk7"]
+
+[sub_resource type="AudioEffectLowPassFilter" id="AudioEffectLowPassFilter_tell"]
+resource_name = "LowPassFilter"
+cutoff_hz = 20000.0
+
+[sub_resource type="AudioEffectAmplify" id="AudioEffectAmplify_tell"]
+resource_name = "Amplify"
 
 [resource]
-bus/0/name = &"Master"
-bus/0/solo = false
-bus/0/mute = false
-bus/0/bypass_fx = false
-bus/0/volume_db = 0.0
-bus/0/send = &""
 bus/1/name = &"Menu"
 bus/1/solo = false
 bus/1/mute = false
@@ -25,6 +26,10 @@ bus/3/mute = false
 bus/3/bypass_fx = false
 bus/3/volume_db = 0.0
 bus/3/send = &"Master"
+bus/3/effect/0/effect = SubResource("AudioEffectLowPassFilter_tell")
+bus/3/effect/0/enabled = true
+bus/3/effect/1/effect = SubResource("AudioEffectAmplify_tell")
+bus/3/effect/1/enabled = true
 bus/4/name = &"Music"
 bus/4/solo = false
 bus/4/mute = false
