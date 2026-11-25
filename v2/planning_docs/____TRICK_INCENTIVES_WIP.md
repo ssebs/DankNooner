@@ -9,6 +9,7 @@ Landing boost auto-burns the boost the jump earned (throttle held) instead of a 
 combo tell (DANK + idle music) runs only in stunt races and trick battles; DANK = top multiplier,
 visual only (top-centre badge, "x3 DANK", pink live score + neon glow). Stale holds pay less
 instead of freezing the multiplier, and the combo grace is longer, so x3 is reachable.
+Clutch-up at any speed applies to every bike (confirmed). A fast rear-end into traffic crashes.
 
 ## Problem
 
@@ -48,8 +49,8 @@ course, and the game should show players that while they ride.
 - **Lower top speed, boost goes past it.** Lower the stock top speed and let boost push past it.
   Riding plain caps lower; boosting is the only way above the cap. Covers "slow racers down but
   make it feel fast".
-- **Landing boost.** A clean landing gives an instant speed kick that grows with the trick /
-  combo size, so taking a ramp is faster than going around it.
+- **Landing boost.** Landing a jump on the throttle auto-burns the boost that jump earned, so
+  taking a ramp is faster than going around it. (Built first as a free boost; playtest changed it.)
 - **Shortcuts through tricks (level design).** Place ramps and rails where they cut corners, so
   the trick is the racing line.
 
@@ -64,8 +65,7 @@ course, and the game should show players that while they ride.
 - **Bonus ramps.** Some ramps glow and call out a specific trick ("BACKFLIP HERE 4x"). Landing it
   pays a multiplier. The trick rotates over the race, and the ramp shows on the compass strip.
   Inspired by the CS2 deathmatch bonus weapon.
-- **Score gates.** A checkpoint only counts cleanly if you pass through it mid-combo; otherwise it
-  costs points.
+- ~~**Score gates.**~~ Built, then deleted after playtest: unclear in game.
 
 ## 4. Make the reward visible
 
@@ -80,10 +80,10 @@ course, and the game should show players that while they ride.
   authored). Shows within a range and fades on approach. Names the opportunity, not the input
   ("GAP", "RAIL", "BIG AIR"). Hidden in free roam.
 - **Idle-boost tell (SSX Tricky style).** Presentation follows combo state:
-  - *Idle* (no combo for a while): muted HUD and quieter music (MusicDuck bus).
-  - *In combo*: normal.
-  - *High multiplier / full boost*: saturated HUD, music filter opens, boost trail on.
-  Riding plain should feel flatter than tricking. The music is the main hook.
+  - *Idle* (no combo for a while): muffled, quieter music (MusicDuck bus). No HUD dim (looked broken).
+  - *In combo*: normal; the HUD neon tweens blue to pink per multiplier step.
+  - *DANK* (top multiplier): badge, "x3 DANK", pink score, music fully open. No HUD tint.
+  Stunt races and trick battles only. Riding plain should feel flatter than tricking.
 - **Clutch-up reminder after respawn.** One line, shown only when boost is below one segment.
   Stops showing once the player has done clutch-ups on their own a few times. Depends on §7.
 
@@ -93,9 +93,9 @@ Stops riding plain, and spamming one easy trick, from paying well.
 
 - **Repeated tricks:** each trick has a freshness value. Repeating it within a combo (or within
   the last few tricks) pays less each time; a different trick restores it.
-- **Holding one trick:** after a while, holding one easy trick (a long wheelie) still keeps the
-  combo alive but stops raising the multiplier. Harder holds (balance point) can run longer
-  before they stop paying.
+- **Holding one trick:** after a while, holding one easy trick (a long wheelie) pays less score.
+  Harder holds (balance point) can run longer first. (Built first as freezing the multiplier, which
+  made x3 near unreachable.)
 - **Visible:** callouts show a stale repeat as stale (greyed out / reduced multiplier), so it
   doesn't feel like a hidden nerf.
 - Lives in `ComboRules.accrue()` (rollback tick); any new state is a RollbackSynchronizer state
@@ -119,11 +119,13 @@ speed cap a clutch-up is blocked outright.
 - **Glancing traffic hits wobble, not crash.** Today any traffic touch crashes the player
   (`NPCTrafficState`, "any touch crashes them"); the glancing-angle wobble only covers walls and
   riders (`CrashController`). Route glancing traffic hits through the same wobble + reflect +
-  speed-loss path. Head-on / high-speed hits still crash.
+  speed-loss path. Head-on / high-speed hits, and rear-ends closing faster than
+  `contact_min_speed_delta`, still crash.
   - A glance **ends the combo but banks its score**, like a clean combo end. Only a real crash
     voids the combo.
-- **Honks.** Traffic honks when a player is close and closing fast. Doubles as a warning cue.
-  Reuses the positional horn audio.
+- **Honks.** Traffic honks at the player it's following (on its lane path) when closing fast.
+  Doubles as a warning cue. Reuses the positional horn audio. (A straight-ahead check honked too
+  far ahead on bends; playtest.)
 - **Yield earlier.** Traffic slows for riders ahead too late. Likely cause: the detection range
   (`follow_detect_range`) is a fixed distance, while players close in much faster than traffic.
   Candidate: a time-based lookahead scaled by closing speed, like the race bots'
@@ -150,14 +152,14 @@ Draft rules (✓ = system exists today):
 | Combo   | ✓ Drop a trick and you have a moment to start the next one before the combo ends.             | grace window  |
 | Combo   | ✓ Crashing loses the combo you're in. Boost from earlier combos is safe.                      | crash void    |
 | Combo   | Repeating the same trick pays less. Mix it up.                                                | §6            |
-| Combo   | Holding one easy trick keeps the combo alive but stops raising the multiplier.                | §6            |
+| Combo   | Holding one easy trick too long pays less. Switch it up.                                      | §6            |
 | Boost   | ✓ Tricks fill boost. Tap to burn a segment, double-tap to burn it all.                        | ComboAndBoost |
 | Boost   | Boost is the only way past your bike's top speed.                                             | §1            |
-| Boost   | Land clean for a speed kick.                                                                  | §1            |
+| Boost   | Land a jump on the gas to burn the boost it earned right away.                                | §1            |
 | Boost   | Behind the leader? Tricks fill boost faster.                                                  | §2            |
 | Boost   | Clutch-up (hold clutch, rev, release) to pop a wheelie at any speed.                          | §7            |
 | Traffic | ✓ Pass close to traffic for near-miss points.                                                 | near misses   |
-| Traffic | Clipping traffic at an angle ends your combo but keeps its score. Hitting it head-on crashes. | §8            |
+| Traffic | Clipping traffic at an angle ends your combo but keeps its score. Hitting it end on crashes.  | §8            |
 | Events  | Glowing ramps ask for a trick. Land it for a big multiplier.                                  | §3            |
 
 Open: the tab's name ("Tips", "Rules", "How to Score").

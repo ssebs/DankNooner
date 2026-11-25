@@ -373,7 +373,8 @@ func _on_contact(other: Node3D) -> void:
 
 
 ## A player heading within (90 - CRASH_MAX_ANGLE_DEG) of our line, closing under
-## WOBBLE_RAM_MAX_SPEED, glances off (same limits as a wall / rider hit). Anything else crashes.
+## WOBBLE_RAM_MAX_SPEED, glances off (same limits as a wall / rider hit), unless it hit end on
+## faster than contact_min_speed_delta. Anything else crashes.
 func _try_glance(player: PlayerEntity) -> bool:
 	var closing: float = (npc.velocity - player.velocity).length()
 	if closing >= CrashController.WOBBLE_RAM_MAX_SPEED:
@@ -383,10 +384,14 @@ func _try_glance(player: PlayerEntity) -> bool:
 	var off_line := rad_to_deg(acos(clampf(absf(fwd.dot(their_fwd)), 0.0, 1.0)))
 	if off_line > 90.0 - CrashController.CRASH_MAX_ANGLE_DEG:
 		return false
+	var to := (player.global_position - npc.global_position).slide(Vector3.UP)
+	var side := to - fwd * to.dot(fwd)
+	# Nose to tail (a rear-end) is an impact past contact_min_speed_delta, as between riders
+	var end_on := absf(to.dot(fwd)) > side.length()
+	if end_on and absf((npc.velocity - player.velocity).dot(fwd)) > contact_min_speed_delta:
+		return false
 	# Already wobbling off an earlier touch — once per wobble, like a wall glance
 	if !player.wobble_controller.is_wobbling:
-		var to := (player.global_position - npc.global_position).slide(Vector3.UP)
-		var side := to - fwd * to.dot(fwd)
 		var normal := side.normalized() if side.length() > 0.01 else npc.global_basis.x
 		glanced.emit(player, normal)
 	# A clip isn't a near miss

@@ -152,8 +152,8 @@ On `do_respawn`, PlayerEntity iterates `_Controllers` children and calls `do_res
   - `_steer_calc()` — curve-based lean factor, turn radius from speed, applies `rotate_y()` and lean angle
   - `_velocity_calc()` — sets `player_entity.velocity` along forward dir, slope following, gravity
   - `_pitch_angle_calc()` — wheelie physics:
-    - Clutch dump detection (`_update_clutch_dump_detection()`). A clutch-up lofts at any speed
-      and in any gear (it skips the power gate), which is what lets the mini open a combo at speed;
+    - Clutch dump detection (`_update_clutch_dump_detection()`). A clutch-up lofts on every bike at
+      any speed and in any gear (it skips the power gate), which is what lets the mini open a combo at speed;
       its kick's climb rate fades with speed down to `CLUTCH_KICK_MIN_FALLOFF`, while its extra loft
       still fades to nothing
     - Power wheelie initiation (throttle + wheel force over `POWER_WHEELIE_MIN_FORCE`)
