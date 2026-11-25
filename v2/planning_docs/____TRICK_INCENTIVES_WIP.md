@@ -58,8 +58,6 @@ course, and the game should show players that while they ride.
   Inspired by the CS2 deathmatch bonus weapon.
 - **Score gates.** A checkpoint only counts cleanly if you pass through it mid-combo (or above a
   multiplier threshold); otherwise there's a time penalty.
-- **Score-weighted finish.** Final standing uses time minus a bonus per score threshold, so
-  tricks directly buy time.
 
 ## 4. Make the reward visible
 
@@ -139,23 +137,23 @@ tab to the tricks menu (`TricksMenuState`, opened from the main and pause menus)
 
 Draft rules (✓ = system exists today):
 
-| Group | Rule | Source |
-| --- | --- | --- |
-| Combo | ✓ Hold any trick to start a combo. Keep chaining to raise the multiplier. | ComboAndBoost |
-| Combo | ✓ Drop a trick and you have a moment to start the next one before the combo ends. | grace window |
-| Combo | ✓ Crashing loses the combo you're in. Boost from earlier combos is safe. | crash void |
-| Combo | Repeating the same trick pays less. Mix it up. | §6 |
-| Combo | Holding one easy trick keeps the combo alive but stops raising the multiplier. | §6 |
-| Boost | ✓ Tricks fill boost. Tap to burn a segment, double-tap to burn it all. | ComboAndBoost |
-| Boost | Boost is the only way past your bike's top speed. | §1 |
-| Boost | Land clean for a speed kick. | §1 |
-| Boost | Behind the leader? Tricks fill boost faster. | §2 |
-| Boost | Clutch-up (hold clutch, rev, release) to pop a wheelie at any speed. | §7 |
-| Traffic | ✓ Pass close to traffic for near-miss points. | near misses |
-| Traffic | Clipping traffic at an angle ends your combo but keeps its score. Hitting it head-on crashes. | §8 |
-| Events | Glowing ramps ask for a trick. Land it for a big multiplier. | §3 |
-| Events | Hit checkpoints mid-combo or lose time. | §3 |
-| Events | Score cuts time off your finish. | §3 |
+| Group   | Rule                                                                                          | Source        |
+| ------- | --------------------------------------------------------------------------------------------- | ------------- |
+| Combo   | ✓ Hold any trick to start a combo. Keep chaining to raise the multiplier.                     | ComboAndBoost |
+| Combo   | ✓ Drop a trick and you have a moment to start the next one before the combo ends.             | grace window  |
+| Combo   | ✓ Crashing loses the combo you're in. Boost from earlier combos is safe.                      | crash void    |
+| Combo   | Repeating the same trick pays less. Mix it up.                                                | §6            |
+| Combo   | Holding one easy trick keeps the combo alive but stops raising the multiplier.                | §6            |
+| Boost   | ✓ Tricks fill boost. Tap to burn a segment, double-tap to burn it all.                        | ComboAndBoost |
+| Boost   | Boost is the only way past your bike's top speed.                                             | §1            |
+| Boost   | Land clean for a speed kick.                                                                  | §1            |
+| Boost   | Behind the leader? Tricks fill boost faster.                                                  | §2            |
+| Boost   | Clutch-up (hold clutch, rev, release) to pop a wheelie at any speed.                          | §7            |
+| Traffic | ✓ Pass close to traffic for near-miss points.                                                 | near misses   |
+| Traffic | Clipping traffic at an angle ends your combo but keeps its score. Hitting it head-on crashes. | §8            |
+| Events  | Glowing ramps ask for a trick. Land it for a big multiplier.                                  | §3            |
+| Events  | Hit checkpoints mid-combo or lose time.                                                       | §3            |
+| Events  | Score cuts time off your finish.                                                              | §3            |
 
 Open: the tab's name ("Tips", "Rules", "How to Score").
 
