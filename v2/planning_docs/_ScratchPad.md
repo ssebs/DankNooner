@@ -25,8 +25,11 @@ Make a hoodie
 ## NOW
 ---
 
-
-- [ ] can't do a wheelie while going fast on the mini bike
+- [ ] add more incentive to doing stunts and driving around the map instead of just going from checkpoint to checkpoint
+  - [ ] score is a reason but not obvious enough
+  - [ ] need to give $ per trick done too?
+  - [ ] Maybe during stunt race you have to land a specific tricks off a ramp for 4x points like CS2 bonus weapon in death match?
+  - [ ] can't do a wheelie while going fast on the mini bike
 
 - [ ] pinned trick should be more obvious (glow when doing wrong trick in tutorial)
 - [ ] tutorial "now land it" pink text not obvious enough
@@ -57,10 +60,7 @@ Make a hoodie
     - [ ] general controller UX is bad when trying to switch menus / do stuff
     - [ ] Look to GTA vi for hud/menu ideas (smoothness vs what it looks like)
 
-  - [ ] add more incentive to doing stunts and driving around the map instead of just going from checkpoint to checkpoint
-    - [ ] score is a reason but not obvious enough
-    - [ ] need to give $ per trick done too?
-    - [ ] Maybe during stunt race you have to land a specific tricks off a ramp for 4x points like CS2 bonus weapon in death match?
+
   - [ ] more wheelie tricks (air/ground are good for now, need wheelie variants)
   - [ ] disable some `dbg_` commands (progression), but keep TP/helpers
 
